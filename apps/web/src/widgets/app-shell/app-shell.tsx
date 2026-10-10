@@ -51,9 +51,11 @@ const Content = ({ children }: { children: ReactNode }) => {
   const open = isExpanded || isHovered || isMobileOpen;
 
   return (
-    <div className={`flex min-h-dvh flex-col transition-all duration-300 ${open ? 'lg:pl-64' : 'lg:pl-20'}`}>
+    <div
+      className={`flex min-h-dvh flex-col transition-all duration-300 print:pl-0 ${open ? 'lg:pl-64' : 'lg:pl-20'}`}
+    >
       <AppHeader />
-      <main id="main" className="min-w-0 flex-1 p-4 sm:p-6">
+      <main id="main" className="min-w-0 flex-1 p-4 sm:p-6 print:p-0">
         {children}
       </main>
     </div>
@@ -69,7 +71,7 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
 
   return (
     <SidebarProvider>
-      <div className="min-h-dvh bg-bg">
+      <div className="min-h-dvh bg-bg print:bg-white">
         <AppSidebar />
         <Backdrop />
         <Content>{children}</Content>
