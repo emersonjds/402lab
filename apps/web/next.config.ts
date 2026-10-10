@@ -1,6 +1,8 @@
+import createNextIntlPlugin from 'next-intl/plugin';
 import type { NextConfig } from 'next';
 
 const apiUrl = process.env.API_URL ?? 'http://localhost:8080';
+const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
   transpilePackages: ['@402lab/shared'],
@@ -14,4 +16,4 @@ const nextConfig: NextConfig = {
 };
 
 // eslint-disable-next-line no-restricted-syntax -- next reads this config as a default export
-export default nextConfig;
+export default withNextIntl(nextConfig);
