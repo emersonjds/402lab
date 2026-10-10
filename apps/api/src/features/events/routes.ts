@@ -1,29 +1,50 @@
+import type { ServerResponse } from 'node:http';
+
 import type { FastifyPluginCallbackZod } from 'fastify-type-provider-zod';
 
 import { callerOf } from '../../shared/auth/authenticate.js';
-import { errorSchema } from '../../shared/errors.js';
+import { AppError, errorSchema } from '../../shared/errors.js';
 import type { EventsBus } from '../../shared/events-bus.js';
 
 const HEARTBEAT_INTERVAL_MS = 15_000;
+const STREAMS_PER_OWNER = 3;
+/** setTimeout fires at once past 2^31-1 ms (~24.8 days). */
+const MAX_TIMER_MS = 2 ** 31 - 1;
 
 export interface EventOptions {
   bus: EventsBus;
 }
 
 export const eventRoutes: FastifyPluginCallbackZod<EventOptions> = (app, { bus }, done) => {
+  const openStreams = new Map<string, Set<ServerResponse>>();
+
+  // Fastify's own onClose waits for open connections: streams end before it.
+  app.addHook('preClose', (closed) => {
+    openStreams.forEach((streams) => {
+      streams.forEach((stream) => stream.end());
+    });
+    closed();
+  });
+
   app.get(
     '/events',
     {
       schema: {
         tags: ['events'],
-        summary: "Server-sent stream of the caller's live events (one JSON LiveEvent per `data:`)",
+        summary:
+          "Server-sent stream of the caller's live events (one JSON LiveEvent per `data:`); at most 3 per owner, closed when the session expires",
         security: [{ cookie: [] }, { bearer: [] }],
-        response: { 401: errorSchema },
+        response: { 401: errorSchema, 403: errorSchema, 429: errorSchema },
       },
     },
     (request, reply) => {
-      const ownerAddress = callerOf(request).address;
+      const { address: ownerAddress, expiresAt } = callerOf(request);
+      const streams = openStreams.get(ownerAddress) ?? new Set<ServerResponse>();
+      if (streams.size >= STREAMS_PER_OWNER) throw new AppError(429, 'too_many_streams');
+
       const stream = reply.raw;
+      streams.add(stream);
+      openStreams.set(ownerAddress, streams);
 
       reply.hijack();
       stream.writeHead(200, {
@@ -39,10 +60,19 @@ export const eventRoutes: FastifyPluginCallbackZod<EventOptions> = (app, { bus }
       const heartbeat = setInterval(() => {
         stream.write(': heartbeat\n\n');
       }, HEARTBEAT_INTERVAL_MS);
+      const sessionEnd = setTimeout(
+        () => {
+          stream.end();
+        },
+        Math.min(MAX_TIMER_MS, Math.max(0, expiresAt * 1000 - Date.now())),
+      );
 
       stream.once('close', () => {
         clearInterval(heartbeat);
+        clearTimeout(sessionEnd);
         unsubscribe();
+        streams.delete(stream);
+        if (streams.size === 0) openStreams.delete(ownerAddress);
       });
     },
   );
