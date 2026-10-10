@@ -26,6 +26,7 @@ const configSchema = z.object({
   /** solana-keygen JSON array of 64 bytes; parsed by `loadTreasurySigner`, never logged. */
   TREASURY_SECRET_KEY: optional(z.string()),
   SPLIT_WORKER_ENABLED: z.stringbool().default(true),
+  RECONCILIATION_ENABLED: z.stringbool().default(true),
 });
 
 export type Config = z.infer<typeof configSchema>;

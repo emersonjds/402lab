@@ -1,4 +1,5 @@
 import {
+  address,
   type Blockhash,
   createSolanaRpc,
   getBase64EncodedWireTransaction,
@@ -9,11 +10,19 @@ import {
 
 export type SignatureStatus = 'confirmed' | 'failed' | 'unknown';
 
+export type AccountSignature = { signature: string; failed: boolean };
+
+export type SignaturePage = { limit: number; until?: string; before?: string };
+
 export type SolanaChain = {
   latestBlockhash: () => Promise<{ blockhash: Blockhash; lastValidBlockHeight: bigint }>;
   send: (transaction: Transaction) => Promise<void>;
   signatureStatus: (signature: string) => Promise<SignatureStatus>;
   blockHeight: () => Promise<bigint>;
+  /** Finalized signatures touching the account, newest first. */
+  signaturesForAddress: (account: string, page: SignaturePage) => Promise<AccountSignature[]>;
+  /** Finalized transaction in `jsonParsed` encoding, or null when the node does not have it. */
+  transaction: (signature: string) => Promise<unknown>;
 };
 
 const COMMITMENT = 'confirmed';
@@ -50,5 +59,25 @@ export const createSolanaChain = (rpcUrl: string, timeoutMs = RPC_TIMEOUT_MS): S
       return status.err ? 'failed' : 'confirmed';
     },
     blockHeight: () => rpc.getBlockHeight({ commitment: COMMITMENT }).send(deadline()),
+    signaturesForAddress: async (account, { limit, until, before }) => {
+      const signatures = await rpc
+        .getSignaturesForAddress(address(account), {
+          commitment: 'finalized',
+          limit,
+          ...(until === undefined ? {} : { until: toSignature(until) }),
+          ...(before === undefined ? {} : { before: toSignature(before) }),
+        })
+        .send(deadline());
+
+      return signatures.map(({ signature, err }) => ({ signature, failed: err !== null }));
+    },
+    transaction: (signature) =>
+      rpc
+        .getTransaction(toSignature(signature), {
+          commitment: 'finalized',
+          encoding: 'jsonParsed',
+          maxSupportedTransactionVersion: 0,
+        })
+        .send(deadline()),
   };
 };
