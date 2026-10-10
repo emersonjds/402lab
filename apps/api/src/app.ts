@@ -14,7 +14,12 @@ import {
 import { allowanceRoutes } from './features/allowances/routes.js';
 import { authRoutes } from './features/auth/routes.js';
 import { catalogRoutes } from './features/catalog/routes.js';
-import { isDevnetRpc, type OnrampChain, onrampRoutes } from './features/demo-onramp/routes.js';
+import {
+  isDevnetGenesis,
+  isDevnetRpc,
+  type OnrampChain,
+  onrampRoutes,
+} from './features/demo-onramp/routes.js';
 import { eventRoutes } from './features/events/routes.js';
 import { resolveAdapters, resolveModes } from './features/paid-services/adapters/index.js';
 import type { ServiceAdapters } from './features/paid-services/adapters/types.js';
@@ -59,6 +64,7 @@ export const buildApp = async ({
   solanaChain,
 }: AppDependencies): Promise<FastifyInstance> => {
   const app = Fastify({
+    trustProxy: (_address, hop) => hop < config.TRUST_PROXY_HOPS,
     logger: {
       level: config.LOG_LEVEL,
       redact: { paths: ['req.headers.authorization', 'req.headers.cookie'], censor: '[redacted]' },
@@ -91,7 +97,7 @@ export const buildApp = async ({
   });
   await app.register(swaggerUi, { routePrefix: '/docs' });
 
-  protectRoutesByDefault(app, config.JWT_SECRET);
+  protectRoutesByDefault(app, config.JWT_SECRET, database);
 
   await app.register(catalogRoutes, { catalog, modes: resolveModes(config) });
   await app.register(paidServiceRoutes, {
@@ -113,11 +119,15 @@ export const buildApp = async ({
   await app.register(waitlistRoutes, { db: database });
 
   if (isDevnetRpc(config.SOLANA_RPC_URL) && config.TREASURY_SECRET_KEY) {
-    await app.register(onrampRoutes, {
-      db: database,
-      chain: solanaChain ?? createSolanaChain(config.SOLANA_RPC_URL),
-      treasury: await loadTreasurySigner(config.TREASURY_SECRET_KEY, config.TREASURY_ADDRESS),
-    });
+    const treasury = await loadTreasurySigner(config.TREASURY_SECRET_KEY, config.TREASURY_ADDRESS);
+    const chain = solanaChain ?? createSolanaChain(config.SOLANA_RPC_URL);
+    const genesisHash = await chain.genesisHash().catch(() => undefined);
+
+    if (genesisHash !== undefined && isDevnetGenesis(genesisHash)) {
+      await app.register(onrampRoutes, { db: database, chain, treasury, catalog, now });
+    } else {
+      app.log.warn('demo on-ramp off: SOLANA_RPC_URL did not answer with the devnet genesis hash');
+    }
   }
 
   return app;
