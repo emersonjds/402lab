@@ -1,0 +1,29 @@
+{
+  "name": "@402lab/mcp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "402lab-mcp": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc --noEmit && esbuild src/cli.ts --bundle --platform=node --format=esm --outfile=dist/cli.js --external:@modelcontextprotocol/sdk --external:@solana/kit --external:@x402/* --external:zod && chmod +x dist/cli.js",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^5.0.3",
+    "esbuild": "^0.28.2",
+    "vitest": "^5.0.3"
+  },
+  "dependencies": {
+    "@402lab/shared": "workspace:*",
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "@solana/kit": "8.4.0",
+    "@x402/core": "2.28.0",
+    "@x402/fetch": "2.28.0",
+    "@x402/svm": "2.28.0",
+    "zod": "^4.6.5"
+  }
+}
