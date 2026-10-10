@@ -1,0 +1,16 @@
+{
+  "sidebar": {
+    "groups": { "menu": "Menu" },
+    "items": {
+      "allowances": "Allowances",
+      "payments": "Payments",
+      "splits": "Splits",
+      "statement": "Statement",
+      "playground": "Playground"
+    }
+  },
+  "header": {
+    "toggleSidebar": "Toggle sidebar",
+    "logout": "Log out"
+  }
+}
