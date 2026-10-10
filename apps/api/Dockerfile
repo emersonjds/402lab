@@ -5,11 +5,10 @@ FROM node:24-bookworm-slim AS base
 WORKDIR /app
 
 FROM base AS dependencies
-RUN corepack enable
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
+COPY package.json package-lock.json ./
 COPY apps/api/package.json apps/api/
 COPY packages/shared/package.json packages/shared/
-RUN pnpm install --prod --frozen-lockfile --filter @402lab/api...
+RUN npm ci --omit=dev --workspace @402lab/api --include-workspace-root=false
 
 FROM base AS runtime
 ENV NODE_ENV=production

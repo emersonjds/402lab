@@ -60,7 +60,7 @@ When given a task:
 3. **State the diagnosis in 2–4 bullets** before implementing. What's broken, why, what you'll change.
 4. **Pick the smallest change that fixes the root cause.** Don't refactor architecture to fix a spacing issue.
 5. **Ship code, not docs.** No README updates, no decision logs, unless the user asked.
-6. **Verify**: run `pnpm build` (or the project's build command) at the end. Manually walk through the changed screens in your head at 360x780 and 1280x800.
+6. **Verify**: run `npm run build` (or the project's build command) at the end. Manually walk through the changed screens in your head at 360x780 and 1280x800.
 
 ## Code conventions
 

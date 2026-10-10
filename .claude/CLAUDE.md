@@ -6,18 +6,18 @@ Conta de consumo para agentes de IA: o humano dá uma allowance (tetos por chama
 
 ## Stack
 
-Monorepo pnpm, Node 24, TypeScript. `apps/api` Fastify 5.12 + `@x402/fastify` 2.28 + Drizzle + Postgres 16 · `apps/web` Next.js 16.4 + `@solana/react` · `apps/mobile` Expo SDK 57 · `packages/mcp` MCP server pagador · `packages/shared` domínio puro (dinheiro, split, política, catálogo, eventos). Solana devnet, `@solana/kit` 8.4.
+Monorepo npm workspaces, Node 24, TypeScript. `apps/api` Fastify 5.12 + `@x402/fastify` 2.28 + Drizzle + Postgres 16 · `apps/web` Next.js 16.4 + `@solana/react` · `apps/mobile` Expo SDK 57 · `packages/mcp` MCP server pagador · `packages/shared` domínio puro (dinheiro, split, política, catálogo, eventos). Solana devnet, `@solana/kit` 8.4.
 
 ## Comandos (criados no card LAB-1)
 
 ```bash
 docker compose up -d        # Postgres local
-pnpm --filter @402lab/api dev
-pnpm --filter @402lab/web dev
-pnpm --filter @402lab/mobile start
+npm run dev -w @402lab/api
+npm run dev -w @402lab/web
+npm run start -w @402lab/mobile
 # hackathon: sem testes unitários — verificar com typecheck + lint + build + smoke
-pnpm lint && pnpm typecheck
-pnpm e2e:devnet             # paga os 3 serviços de verdade na devnet (manual)
+npm run lint && npm run typecheck
+npm run e2e:devnet             # paga os 3 serviços de verdade na devnet (manual)
 ```
 
 ## Convenções locais

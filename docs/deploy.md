@@ -71,10 +71,10 @@ on-ramp.
 curl -s "$API_URL/services"                 # 200, three services
 API_URL=https://<api-domain> \
 OWNER_KEYPAIR_PATH=scripts/.wallets/owner.keypair.json \
-  pnpm e2e:devnet                           # pays ocr/translate/summarize, waits for split.confirmed
+  npm run e2e:devnet                           # pays ocr/translate/summarize, waits for split.confirmed
 ```
 
-`pnpm e2e:devnet` reads `PAYER_KEYPAIR_PATH` (default `scripts/.wallets/payer.keypair.json`, a
+`npm run e2e:devnet` reads `PAYER_KEYPAIR_PATH` (default `scripts/.wallets/payer.keypair.json`, a
 devnet wallet holding a few cents of devnet USDC) and, when `GET /splits` asks for a session,
 signs in with `OWNER_KEYPAIR_PATH` (Sign-In With Solana). It prints every payment signature
 with its Solscan link, waits up to 120 s for a new confirmed split batch and exits non-zero if
@@ -91,7 +91,7 @@ docker run --rm -p 8080:8080 --env-file apps/api/.env \
 ## 2. Web on Vercel
 
 1. **Add New → Project**, import the repository, **Root Directory** `apps/web`. Vercel detects
-   pnpm from the lockfile and Next.js from the app; keep "Include files outside the root
+   npm from the lockfile and Next.js from the app; keep "Include files outside the root
    directory" on — the app compiles `@402lab/shared` from `packages/shared`.
 2. Environment variables (Production and Preview):
 
@@ -113,7 +113,7 @@ The app has no build-time API setting: the pairing QR on the dashboard carries t
 30-day mobile token, so the deployed API must be reachable from the phone (the Railway URL, not
 `localhost`).
 
-- **Expo Go** (stage demo): `pnpm --filter @402lab/mobile start`, scan the Metro QR with Expo Go,
+- **Expo Go** (stage demo): `npm run start -w @402lab/mobile`, scan the Metro QR with Expo Go,
   then scan the dashboard's pairing QR inside the app.
 - **EAS Update** (share without Metro running): `npx eas-cli login`, `npx eas-cli init` once in
   `apps/mobile`, then `npx eas-cli update --branch demo --message "demo"` and open the update
@@ -130,4 +130,4 @@ The app has no build-time API setting: the pairing QR on the dashboard carries t
       provider console.
 - [ ] `DATABASE_URL` uses the private reference, the Postgres service has no public TCP proxy.
 - [ ] Vercel holds no secret: `API_URL` and `NEXT_PUBLIC_*` are public by design.
-- [ ] Payer/owner keypairs used by `pnpm e2e:devnet` stay in `scripts/.wallets/` on the laptop.
+- [ ] Payer/owner keypairs used by `npm run e2e:devnet` stay in `scripts/.wallets/` on the laptop.

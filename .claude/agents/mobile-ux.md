@@ -63,7 +63,7 @@ When given a task:
 3. **State the diagnosis in 2–4 bullets** before implementing — what's broken, why, what you'll change, and the iOS-vs-Android call if relevant.
 4. **Pick the smallest change that fixes the root cause.** Don't restructure navigation to fix a padding bug.
 5. **Ship code, not docs.** No README/decision-log updates unless asked.
-6. **Verify**: typecheck / run the project's check command (e.g. `pnpm lint`, `pnpm tsc --noEmit`) at the end. Walk the changed screens in your head on iPhone SE, a Dynamic Island device, and a mid-range Android.
+6. **Verify**: typecheck / run the project's check command (e.g. `npm run lint`, `npx tsc --noEmit`) at the end. Walk the changed screens in your head on iPhone SE, a Dynamic Island device, and a mid-range Android.
 
 ## Code conventions
 

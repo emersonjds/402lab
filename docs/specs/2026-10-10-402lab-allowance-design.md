@@ -42,7 +42,7 @@ Infra x402 genérica e gateway 402 genérico já existem e já foram premiados (
 
 ## 4. Arquitetura
 
-Monorepo pnpm:
+Monorepo npm workspaces:
 
 ```
 402lab/
@@ -193,7 +193,7 @@ OpenAPI gerado do schema Zod de cada rota (`@fastify/swagger`), sempre em dia. E
 
 - TDD por fatia (skill `tdd`), vermelho e verde reportados.
 - Vitest em api, mcp, shared e web; `jest-expo` + Testing Library no mobile. Cobertura > 90% nas 4 métricas, limiar travado por pacote.
-- Facilitator, RPC e upstreams substituídos por fakes nos testes unitários. Um script `pnpm e2e:devnet` paga um serviço real na devnet e confere o ledger (manual, fora do CI).
+- Facilitator, RPC e upstreams substituídos por fakes nos testes unitários. Um script `npm run e2e:devnet` paga um serviço real na devnet e confere o ledger (manual, fora do CI).
 - Revisão adversarial obrigatória: política da allowance, worker de split, auth/pareamento.
 - Gitflow: `main` + `developer`; uma branch por card.
 

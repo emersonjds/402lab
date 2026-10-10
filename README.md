@@ -73,20 +73,20 @@ split worker (every 30 s) ── unbatched payments ── sum per recipient ─
 
 ## Stack
 
-Node 24, TypeScript, pnpm workspaces · Fastify 5, Zod 4, Drizzle ORM, Postgres 16 · x402 2.28
+Node 24, TypeScript, npm workspaces · Fastify 5, Zod 4, Drizzle ORM, Postgres 16 · x402 2.28
 (`exact` scheme on Solana) · `@solana/kit` 8.4 · Next.js 16 · Expo SDK 57 · MCP SDK 1.32 ·
 Vitest · Docker, Railway, Vercel.
 
 ## Run locally
 
-Requirements: Node 24, pnpm 11, Docker.
+Requirements: Node 24, npm 11, Docker.
 
 ```sh
-pnpm install
-pnpm db:up                                    # Postgres 16 on localhost:5432
+npm install
+npm run db:up                                    # Postgres 16 on localhost:5432
 cp .env.example apps/api/.env                 # fill the wallet addresses (devnet)
-pnpm dev                                      # api on :8080 (migrations at boot) + web on :3000
-pnpm dev:mobile                               # scan with Expo Go
+npm run dev                                     # api on :8080 (migrations at boot) + web on :3000
+npm run dev:mobile                               # scan with Expo Go
 ```
 
 Android APK for the pitch QR code:
@@ -104,7 +104,7 @@ variable is documented in [`.env.example`](.env.example).
 ### Let Claude pay
 
 ```sh
-pnpm --filter @402lab/mcp build
+npm run build -w @402lab/mcp
 node packages/mcp/dist/cli.js init            # creates ~/.402lab/session.json, prints the allowance link
 claude mcp add 402lab -e API_URL=http://localhost:8080 -- node "$PWD/packages/mcp/dist/cli.js"
 ```
@@ -116,8 +116,8 @@ tools.
 ### Checks
 
 ```sh
-pnpm typecheck && pnpm lint
-pnpm e2e:devnet          # pays ocr, translate and summarize on devnet and waits for the split (manual)
+npm run typecheck && npm run lint
+npm run e2e:devnet          # pays ocr, translate and summarize on devnet and waits for the split (manual)
 ```
 
 ## Deploy

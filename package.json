@@ -3,22 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "packageManager": "pnpm@11.22.0",
   "engines": {
     "node": ">=24"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit -p . && pnpm -r typecheck",
+    "typecheck": "tsc --noEmit -p . && npm run typecheck --workspaces --if-present",
     "lint": "eslint .",
     "format": "prettier --write .",
     "spike:pay": "tsx --env-file-if-exists=apps/api/.env scripts/devnet-pay.ts",
     "e2e:devnet": "tsx --env-file-if-exists=apps/api/.env scripts/e2e-devnet.ts",
     "db:up": "docker compose up -d postgres",
-    "dev": "pnpm --parallel --filter @402lab/api --filter @402lab/web dev",
-    "dev:mobile": "pnpm --filter @402lab/mobile start"
+    "dev": "concurrently -n api,web -c green,cyan \"npm run dev -w @402lab/api\" \"npm run dev -w @402lab/web\"",
+    "dev:mobile": "npm run start -w @402lab/mobile"
   },
   "devDependencies": {
-    "@402lab/shared": "workspace:*",
+    "@402lab/shared": "*",
     "@eslint/js": "^10.0.1",
     "@solana/kit": "8.4.0",
     "@types/node": "^26.4.1",
@@ -30,6 +29,11 @@
     "tsx": "^4.23.15",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.69.0",
-    "zod": "^4.6.5"
-  }
+    "zod": "^4.6.5",
+    "concurrently": "^10.0.6"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
 }
