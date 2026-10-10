@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_blank" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-background": "#e1e2e9", "inverse-surface": "#e1e2e9", "on-tertiary": "#422d00", "primary-fixed-dim": "#9ed81b", "secondary": "#45e1fd", "on-secondary": "#00363f", "on-tertiary-fixed": "#271900", "on-primary-fixed": "#131f00", "on-surface": "#e1e2e9", "tertiary": "#fffaff", "surface-tint": "#9ed81b", "on-surface-variant": "#c3caaf", "surface-dim": "#101418", "tertiary-fixed": "#ffdea8", "error": "#ffb4ab", "surface": "#101418", "inverse-primary": "#496800", "surface-container-highest": "#32353a", "surface-container-low": "#191c21", "on-secondary-fixed-variant": "#004e5a", "outline-variant": "#434935", "surface-container": "#1d2025", "primary-fixed": "#b9f63e", "background": "#101418", "on-secondary-container": "#004d59", "tertiary-container": "#ffda9c", "surface-container-lowest": "#0b0e13", "surface-bright": "#36393f", "primary": "#f8ffe2", "surface-container-high": "#272a2f", "surface-variant": "#32353a", "on-primary": "#243600", "secondary-fixed": "#a4eeff", "secondary-fixed-dim": "#37d8f4", "on-tertiary-container": "#815b00", "secondary-container": "#00c5e0", "error-container": "#93000a", "on-error-container": "#ffdad6", "on-primary-container": "#4c6c00", "tertiary-fixed-dim": "#fabc41", "on-error": "#690005", "primary-container": "#b6f23a", "on-tertiary-fixed-variant": "#5e4200", "on-primary-fixed-variant": "#364e00", "on-secondary-fixed": "#001f25", "inverse-on-surface": "#2e3036", "outline": "#8d947c" }, borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" }, spacing: { "space-xl": "2.5rem", "gutter": "1.25rem", "space-md": "1rem", "space-xs": "0.25rem", "margin-mobile": "1rem", "gutter-mobile": "0.75rem", "space-sm": "0.5rem", "space-lg": "1.5rem", "margin": "2rem" }, fontFamily: { "headline-md": ["Space Grotesk"], "headline-xl-mobile": ["Space Grotesk"], "headline-sm": ["Space Grotesk"], "label-sm": ["JetBrains Mono"], "body-md": ["Inter"], "body-lg": ["Inter"], "headline-xl": ["Space Grotesk"], "headline-lg": ["Space Grotesk"], "body-sm": ["Inter"], "label-md": ["JetBrains Mono"], "label-lg": ["JetBrains Mono"] }, fontSize: { "headline-md": ["22px", { lineHeight: "30px", letterSpacing: "-0.01em", fontWeight: "600" }], "headline-xl-mobile": ["30px", { lineHeight: "38px", letterSpacing: "-0.02em", fontWeight: "700" }], "headline-sm": ["18px", { lineHeight: "24px", letterSpacing: "-0.01em", fontWeight: "600" }], "label-sm": ["10px", { lineHeight: "14px", letterSpacing: "0.04em", fontWeight: "600" }], "body-md": ["14px", { lineHeight: "20px", fontWeight: "400" }], "body-lg": ["16px", { lineHeight: "24px", fontWeight: "400" }], "headline-xl": ["40px", { lineHeight: "48px", letterSpacing: "-0.03em", fontWeight: "700" }], "headline-lg": ["28px", { lineHeight: "36px", letterSpacing: "-0.02em", fontWeight: "600" }], "body-sm": ["12px", { lineHeight: "16px", fontWeight: "400" }], "label-md": ["12px", { lineHeight: "16px", letterSpacing: "0.02em", fontWeight: "500" }], "label-lg": ["14px", { lineHeight: "20px", letterSpacing: "-0.01em", fontWeight: "500" }] } } } };</script><style>@layer base { html, body { width: 100vw; margin: 0; padding: 0; min-height: 100%; } body { overscroll-behavior: none; } .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); } .pt-safe { padding-top: env(safe-area-inset-top, 0px); } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface text-on-surface flex flex-col min-h-screen selection:bg-primary-container selection:text-on-primary-fixed"><main class="flex-1 flex flex-col relative w-full pt-safe pb-safe bg-surface px-margin-mobile"><div class="flex flex-col w-full pb-6 space-y-4">
+<!-- Status & Nav Bar -->
+<header class="flex items-center justify-between py-2">
+<div class="flex items-center space-x-2">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary-fixed">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">terminal</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm tracking-tight text-on-surface leading-none">402Lab</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">OBSERVER NODE</span>
+</div>
+</div>
+<!-- DEVNET Ribbon Badge -->
+<div class="flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-tertiary-fixed-dim/15 text-tertiary-fixed-dim">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed-dim animate-pulse"></span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider font-semibold">DEVNET</span>
+</div>
+</header>
+<!-- Central Technical Terminal Hero Card -->
+<section class="bg-surface-container rounded-xl p-space-md flex flex-col items-center shadow-lg relative overflow-hidden">
+<!-- Subdued Ambient Grid Pattern -->
+<div class="absolute inset-0 bg-gradient-to-b from-primary-fixed/5 via-transparent to-transparent pointer-events-none"></div>
+<!-- Technical Vector Illustration: Phone Scanning Terminal -->
+<div class="w-full max-w-[280px] h-44 my-1 relative flex items-center justify-center">
+<svg class="w-full h-full" fill="none" viewbox="0 0 280 176" xmlns="http://www.w3.org/2000/svg">
+<!-- Background Monitor Silhouette -->
+<rect fill="#101418" height="110" rx="8" width="168" x="78" y="14"></rect>
+<rect fill="#191c21" height="74" rx="4" width="148" x="88" y="24"></rect>
+<!-- Monitor Stand -->
+<path d="M148 124V140H176V124" stroke="#32353a" stroke-linecap="round" stroke-width="3"></path>
+<path d="M136 140H188" stroke="#32353a" stroke-linecap="round" stroke-width="3"></path>
+<!-- Mini Dashboard Charts on Monitor -->
+<path d="M96 64L114 46L130 58L152 38L174 50L200 32" stroke="#45e1fd" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<rect fill="#272a2f" height="16" rx="2" width="28" x="96" y="74"></rect>
+<rect fill="#272a2f" height="16" rx="2" width="28" x="130" y="74"></rect>
+<rect fill="#272a2f" height="16" rx="2" width="56" x="164" y="74"></rect>
+<!-- Pairing QR Code on Desktop Screen -->
+<g transform="translate(192, 42)">
+<rect fill="#101418" height="28" rx="2" width="28"></rect>
+<!-- QR matrix elements -->
+<rect fill="#f8ffe2" height="7" width="7" x="3" y="3"></rect>
+<rect fill="#101418" height="3" width="3" x="5" y="5"></rect>
+<rect fill="#f8ffe2" height="7" width="7" x="18" y="3"></rect>
+<rect fill="#101418" height="3" width="3" x="20" y="5"></rect>
+<rect fill="#f8ffe2" height="7" width="7" x="3" y="18"></rect>
+<rect fill="#101418" height="3" width="3" x="5" y="20"></rect>
+<rect fill="#b9f63e" height="4" width="4" x="12" y="12"></rect>
+<rect fill="#f8ffe2" height="3" width="3" x="18" y="16"></rect>
+<rect fill="#f8ffe2" height="5" width="3" x="22" y="20"></rect>
+</g>
+<!-- Scanning Beam Cone -->
+<polygon fill="url(#beam-gradient)" opacity="0.35" points="62,70 190,42 190,70"></polygon>
+<!-- Foreground Mobile Device -->
+<g transform="translate(24, 38)">
+<!-- Handset Frame -->
+<rect fill="#191c21" height="114" rx="10" width="62" x="0" y="0"></rect>
+<rect fill="#101418" height="106" rx="7" width="56" x="3" y="4"></rect>
+<line stroke="#32353a" stroke-linecap="round" stroke-width="2" x1="24" x2="38" y1="7" y2="7"></line>
+<!-- Viewfinder Frame -->
+<rect fill="#1d2025" height="44" rx="4" width="44" x="9" y="22"></rect>
+<!-- Signal Lime Reticles with Glow -->
+<path d="M12 29V24H17" stroke="#b9f63e" stroke-linecap="round" stroke-width="2"></path>
+<path d="M50 29V24H45" stroke="#b9f63e" stroke-linecap="round" stroke-width="2"></path>
+<path d="M12 59V64H17" stroke="#b9f63e" stroke-linecap="round" stroke-width="2"></path>
+<path d="M50 59V64H45" stroke="#b9f63e" stroke-linecap="round" stroke-width="2"></path>
+<!-- Reticle Center Crosshair -->
+<circle cx="31" cy="44" fill="#b9f63e" r="2"></circle>
+<line stroke="#b9f63e" stroke-dasharray="2 2" stroke-width="1" x1="20" x2="42" y1="44" y2="44"></line>
+</g>
+<!-- Definitions for Glow & Gradients -->
+<defs>
+<lineargradient gradientunits="userSpaceOnUse" id="beam-gradient" x1="62" x2="190" y1="70" y2="56">
+<stop stop-color="#b9f63e" stop-opacity="0.9"></stop>
+<stop offset="1" stop-color="#45e1fd" stop-opacity="0.1"></stop>
+</lineargradient>
+</defs>
+</svg>
+</div>
+<!-- Title & Navigation Directive -->
+<div class="text-center mt-2 mb-1 px-1">
+<h1 class="font-headline-md text-headline-md tracking-tight text-on-surface">
+        Pair with your dashboard
+      </h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1.5 leading-relaxed">
+        Open <span class="font-label-md text-label-md text-on-surface font-semibold bg-surface-container-high px-1.5 py-0.5 rounded">402Lab</span> on your computer → <span class="text-on-surface">Allowance</span> → <span class="text-secondary-fixed">Pair your phone</span>.
+      </p>
+</div>
+<!-- Protocol Security Trust Pill -->
+<div class="w-full mt-4 bg-surface-container-low rounded-lg p-3 flex flex-col space-y-1.5">
+<div class="flex items-center space-x-2">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-fixed"></span>
+<span class="font-label-sm text-label-sm text-on-surface">Read-only observer mode</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-fixed"></span>
+<span class="font-label-sm text-label-sm text-on-surface">Zero private keys stored locally</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed-dim"></span>
+<span class="font-label-sm text-label-sm text-on-surface">One-touch emergency pause control</span>
+</div>
+</div>
+<!-- Trigger Button -->
+<div class="w-full mt-4">
+<button class="w-full min-h-[52px] h-[52px] rounded-lg bg-primary-container text-on-primary-fixed font-headline-sm text-headline-sm font-bold flex items-center justify-center space-x-2.5 active:translate-y-0.5 transition-transform" id="open-permission-modal" type="button">
+<span class="material-symbols-outlined text-[22px]">qr_code_scanner</span>
+<span>Scan QR code</span>
+</button>
+</div>
+</section>
+<!-- Telemetry Meta Footnote -->
+<div class="flex items-center justify-between px-2 pt-1">
+<div class="flex items-center space-x-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">verified_user</span>
+<span class="font-label-sm text-label-sm">Solana Devnet · HTTP 402</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">v0.9.4-dev</span>
+</div>
+<!-- Interactive Camera Permission Priming Bottom Sheet -->
+<div aria-describedby="perm-desc" aria-labelledby="perm-title" class="bg-surface-container-high rounded-xl p-space-md shadow-2xl flex flex-col space-y-4 transition-all duration-300" id="permission-sheet" role="dialog">
+<!-- Sheet Drag Notch Handle -->
+<div class="w-full flex justify-center -mt-1">
+<div class="w-9 h-1 rounded-full bg-surface-variant"></div>
+</div>
+<!-- Sheet Header with Camera Icon -->
+<div class="flex items-start space-x-3">
+<div class="w-11 h-11 rounded-lg bg-surface-container flex-shrink-0 flex items-center justify-center text-primary-fixed">
+<span class="material-symbols-outlined text-[24px]">photo_camera</span>
+</div>
+<div class="flex-1">
+<h2 class="font-headline-sm text-headline-sm text-on-surface" id="perm-title">Camera access required</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-0.5 leading-snug" id="perm-desc">
+          We use the camera only to scan the pairing code.
+        </p>
+</div>
+</div>
+<!-- Privacy Affirmation Box -->
+<div class="bg-surface-container-lowest rounded-lg p-3 flex items-start space-x-2.5">
+<span class="material-symbols-outlined text-secondary-fixed text-[18px] mt-0.5 flex-shrink-0">shield</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+        No photos, videos, or face data are captured or sent to any server. Optical data is decoded entirely inside your device sandbox.
+      </p>
+</div>
+<!-- Sheet Actions -->
+<div class="flex flex-col space-y-2 pt-1">
+<button class="w-full min-h-[48px] h-[48px] rounded-lg bg-primary-container text-on-primary-fixed font-headline-sm text-headline-sm font-bold flex items-center justify-center space-x-2 active:translate-y-0.5 transition-transform" id="continue-camera-btn" type="button">
+<span class="material-symbols-outlined text-[20px]">videocam</span>
+<span>Continue to Camera</span>
+</button>
+<button class="w-full min-h-[44px] h-[44px] rounded-lg bg-surface-container text-on-surface-variant hover:text-on-surface font-body-md text-body-md font-medium flex items-center justify-center transition-colors" id="dismiss-sheet-btn" type="button">
+        Later
+      </button>
+</div>
+</div>
+</div>
+<script>
+  (function() {
+    const sheet = document.getElementById('permission-sheet');
+    const dismissBtn = document.getElementById('dismiss-sheet-btn');
+    const openBtn = document.getElementById('open-permission-modal');
+    const continueBtn = document.getElementById('continue-camera-btn');
+
+    if (dismissBtn && sheet && openBtn) {
+      dismissBtn.addEventListener('click', function() {
+        sheet.classList.add('opacity-40');
+        setTimeout(() => {
+          sheet.classList.add('hidden');
+        }, 150);
+      });
+
+      openBtn.addEventListener('click', function() {
+        sheet.classList.remove('hidden');
+        requestAnimationFrame(() => {
+          sheet.classList.remove('opacity-40');
+        });
+      });
+    }
+
+    if (continueBtn) {
+      continueBtn.addEventListener('click', function() {
+        continueBtn.innerHTML = `
+          <span class="material-symbols-outlined text-[20px] animate-spin">refresh</span>
+          <span>Initializing Sensor...</span>
+        `;
+        setTimeout(() => {
+          continueBtn.innerHTML = `
+            <span class="material-symbols-outlined text-[20px]">check_circle</span>
+            <span>Lens Active</span>
+          `;
+        }, 800);
+      });
+    }
+  })();
+</script></main></body></html>
