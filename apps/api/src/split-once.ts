@@ -25,13 +25,14 @@ try {
     treasury: await loadTreasurySigner(config.TREASURY_SECRET_KEY, config.TREASURY_ADDRESS),
     catalog: catalogFromConfig(config),
     bus: createEventsBus(),
+    logger: console,
   });
 
   const [latest] = await listRecentBatches(database);
   if (!latest) {
     console.log('no split batch yet: no settled payment to distribute');
   } else {
-    console.log(latest.status, latest.txSignature && explorerTxUrl(latest.txSignature));
+    console.log(latest.status, explorerTxUrl(latest.txSignature));
   }
 } finally {
   await pool.end();

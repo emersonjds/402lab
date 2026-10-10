@@ -16,7 +16,7 @@ export const splitRoutes: FastifyPluginCallback<SplitRoutesOptions> = (app, { db
       id: batch.id,
       status: batch.status,
       txSignature: batch.txSignature,
-      explorerUrl: batch.txSignature === null ? null : explorerTxUrl(batch.txSignature),
+      explorerUrl: explorerTxUrl(batch.txSignature),
       createdAt: batch.createdAt.toISOString(),
       payouts: batch.payouts.map(({ recipient, role, amount }) => ({
         recipient,
