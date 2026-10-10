@@ -11,9 +11,11 @@
     "typecheck": "tsc --noEmit -p . && pnpm -r typecheck",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "spike:pay": "tsx --env-file-if-exists=apps/api/.env scripts/devnet-pay.ts"
+    "spike:pay": "tsx --env-file-if-exists=apps/api/.env scripts/devnet-pay.ts",
+    "e2e:devnet": "tsx --env-file-if-exists=apps/api/.env scripts/e2e-devnet.ts"
   },
   "devDependencies": {
+    "@402lab/shared": "workspace:*",
     "@eslint/js": "^10.0.1",
     "@solana/kit": "8.4.0",
     "@types/node": "^26.4.1",
