@@ -2,8 +2,10 @@ import { randomBytes } from 'node:crypto';
 
 import { address } from '@solana/kit';
 import type { FastifyPluginCallbackZod } from 'fastify-type-provider-zod';
+import { z } from 'zod';
 
 import { callerOf, SESSION_COOKIE } from '../../shared/auth/authenticate.js';
+import { revokeSessionsIssuedBefore } from '../../shared/auth/revocation.js';
 import { SESSION_LIFETIME_SECONDS, signSession } from '../../shared/auth/tokens.js';
 import type { Database } from '../../shared/db/pool.js';
 import { AppError, errorSchema } from '../../shared/errors.js';
@@ -20,6 +22,7 @@ import { isSignedBy, nonceOf, siwsMessage } from './siws.js';
 const NONCE_LIFETIME_MS = 5 * 60 * 1000;
 const NONCE_BYTES = 16;
 const NONCES_PER_MINUTE = 30;
+const VERIFIES_PER_MINUTE = 10;
 
 export interface AuthOptions {
   db: Database;
@@ -62,12 +65,12 @@ export const authRoutes: FastifyPluginCallbackZod<AuthOptions> = (
   app.post(
     '/auth/verify',
     {
-      config: { public: true },
+      config: { public: true, rateLimit: { max: VERIFIES_PER_MINUTE, timeWindow: '1 minute' } },
       schema: {
         tags: ['auth'],
         summary: 'Finish a Sign-In With Solana; sets the httpOnly `session` cookie',
         body: verifyBodySchema,
-        response: { 200: signedInSchema, 400: errorSchema, 401: errorSchema },
+        response: { 200: signedInSchema, 400: errorSchema, 401: errorSchema, 429: errorSchema },
       },
     },
     async (request, reply) => {
@@ -106,14 +109,43 @@ export const authRoutes: FastifyPluginCallbackZod<AuthOptions> = (
     },
     (request) => {
       const caller = callerOf(request);
-      if (caller.scope !== 'web') throw new AppError(403, 'web_session_required');
-
       const expiresAt = new Date(now().getTime() + SESSION_LIFETIME_SECONDS.mobile * 1000);
 
       return {
         token: signSession(caller.address, 'mobile', jwtSecret),
         expiresAt: expiresAt.toISOString(),
       };
+    },
+  );
+
+  app.post(
+    '/auth/logout',
+    {
+      schema: {
+        tags: ['auth'],
+        summary: 'Clear the session cookie of this browser',
+        response: { 204: z.null(), 401: errorSchema, 403: errorSchema },
+      },
+    },
+    (_request, reply) => {
+      void reply.clearCookie(SESSION_COOKIE, { path: '/' }).code(204).send(null);
+    },
+  );
+
+  app.post(
+    '/auth/revoke-devices',
+    {
+      schema: {
+        tags: ['auth'],
+        summary: 'Sign out every browser and paired phone of the owner, this one included',
+        response: { 204: z.null(), 401: errorSchema, 403: errorSchema },
+      },
+    },
+    async (request, reply) => {
+      // jsonwebtoken stamps `iat` with the wall clock, not the injected one.
+      await revokeSessionsIssuedBefore(db, callerOf(request).address, new Date());
+
+      return reply.clearCookie(SESSION_COOKIE, { path: '/' }).code(204).send(null);
     },
   );
 
