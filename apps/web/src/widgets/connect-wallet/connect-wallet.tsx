@@ -9,9 +9,9 @@ import { Alert } from '@/components/ui/alert';
 import { Wordmark } from '@/components/ui/wordmark';
 import { useSession } from '@/shared/auth/session-context';
 import { useSolanaWallets } from '@/shared/wallet/solana-wallets';
+import { WalletOption } from '@/shared/wallet/wallet-option';
 
 import { SignInStep } from './sign-in-step';
-import { WalletOption } from './wallet-option';
 
 const NoWalletsFound = () => (
   <Alert variant="info" title="No Solana wallet detected">

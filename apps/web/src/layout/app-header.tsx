@@ -9,8 +9,7 @@ import { DevnetBadge } from '@/components/ui/devnet-badge';
 import { Wordmark } from '@/components/ui/wordmark';
 import { useSidebar } from '@/context/sidebar-context';
 import { useSession } from '@/shared/auth/session-context';
-
-const shortAddress = (address: string): string => `${address.slice(0, 4)}…${address.slice(-4)}`;
+import { shortAddress } from '@/shared/format/address';
 
 export const AppHeader = () => {
   const t = useTranslations('header');
@@ -46,7 +45,7 @@ export const AppHeader = () => {
       </div>
       <div className="flex items-center gap-3">
         {address && (
-          <span className="inline-flex min-h-11 items-center gap-1.5 rounded-[6px] border border-line bg-raised px-3 font-mono text-sm text-text">
+          <span className="hidden min-h-11 items-center gap-1.5 rounded-[6px] border border-line bg-raised px-3 font-mono text-sm text-text sm:inline-flex">
             <Wallet aria-hidden="true" className="size-4 text-brand-500" />
             {shortAddress(address)}
           </span>

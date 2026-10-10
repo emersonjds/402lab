@@ -233,6 +233,19 @@
   background-size: 48px 48px;
 }
 
+/* Statement print view: white page, no app chrome (DESIGN.md "fundo branco no print"). */
+@media print {
+  body {
+    background-color: white;
+    color: black;
+  }
+
+  aside,
+  header {
+    display: none !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

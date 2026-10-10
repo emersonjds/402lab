@@ -4,6 +4,7 @@ import { Inter, JetBrains_Mono, Space_Grotesk } from 'next/font/google';
 import type { ReactNode } from 'react';
 
 import { SessionProvider } from '@/shared/auth/session-context';
+import { MockBoundary } from '@/shared/mocks/mock-boundary';
 
 import messages from '../messages/en.json';
 import './globals.css';
@@ -58,7 +59,9 @@ const RootLayout = ({ children }: RootLayoutProps) => (
         Skip to content
       </a>
       <NextIntlClientProvider locale="en" messages={messages}>
-        <SessionProvider>{children}</SessionProvider>
+        <SessionProvider>
+          <MockBoundary>{children}</MockBoundary>
+        </SessionProvider>
       </NextIntlClientProvider>
     </body>
   </html>
