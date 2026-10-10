@@ -1,0 +1,31 @@
+{
+  "name": "402lab",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.22.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "typecheck": "pnpm -r typecheck",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "test": "pnpm -r test",
+    "test:coverage": "pnpm -r test:coverage",
+    "spike:pay": "tsx --env-file-if-exists=apps/api/.env scripts/devnet-pay.ts"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@solana/kit": "8.4.0",
+    "@types/node": "^26.4.1",
+    "@x402/core": "2.28.0",
+    "@x402/fetch": "2.28.0",
+    "@x402/svm": "2.28.0",
+    "eslint": "^10.10.0",
+    "prettier": "^3.9.6",
+    "tsx": "^4.23.15",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.69.0"
+  }
+}

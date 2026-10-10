@@ -6,3 +6,5 @@ dist
 coverage
 .expo
 .DS_Store
+.wallets
+*.keypair.json
