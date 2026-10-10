@@ -103,7 +103,7 @@ Cada upstream tem adaptador real (ativado quando a credencial existe no ambiente
 
 ## 6. Regras de negócio
 
-### Política da allowance (servidor, antes do verify)
+### Política da allowance (servidor, hook `onAfterVerify` — antes do settle)
 
 O pagador é a authority do `TransferChecked` (a carteira de sessão). Se ela pertence a uma allowance:
 
@@ -111,7 +111,7 @@ O pagador é a authority do `TransferChecked` (a carteira de sessão). Se ela pe
 2. `price > perCallCap` → recusa.
 3. soma de `Payment.amount` do dia (UTC) + `price` > `dailyCap` → recusa e emite evento `allowance.cap_reached`.
 
-Recusa responde 402 com motivo legível (`allowance_paused`, `per_call_cap_exceeded`, `daily_cap_exceeded`) e não chama o facilitator. Pagador sem allowance segue o fluxo normal.
+Recusa responde 402 com motivo legível (`allowance_paused`, `per_call_cap_exceeded`, `daily_cap_exceeded`) e não chama o `/settle` do facilitator (o `/verify` roda, porque o pagador só é conhecido depois dele — decisão do spike, `docs/research/04`). Gasto reservado em memória entre verify e settle por allowance, para chamadas concorrentes não estourarem o teto diário. Pagador sem allowance segue o fluxo normal.
 
 O teto por chamada também é aplicado no cliente (`registerPolicy` no MCP). O saldo da carteira de sessão é o teto absoluto.
 
