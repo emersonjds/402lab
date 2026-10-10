@@ -5,13 +5,15 @@ import { ProblemStats } from './problem-stats';
 import { ProofPanel } from './proof-panel';
 import { SiteFooter } from './site-footer';
 import { SiteHeader } from './site-header';
+import { StatusStreamer } from './status-streamer';
 import { WaitlistSection } from './waitlist-section';
 
-export const LandingPage = ({ demoUrl }: { demoUrl?: string | undefined }) => (
+export const LandingPage = () => (
   <>
     <SiteHeader />
+    <StatusStreamer />
     <main id="main">
-      <Hero demoUrl={demoUrl} />
+      <Hero />
       <ProblemStats />
       <HowItWorks />
       <ProofPanel />

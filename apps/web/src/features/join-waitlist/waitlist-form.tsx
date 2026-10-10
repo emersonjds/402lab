@@ -3,8 +3,8 @@
 import { useId, useState, type SubmitEvent } from 'react';
 import { z } from 'zod';
 
+import { Button } from '@/components/ui/button';
 import { apiRequest } from '@/shared/api/client';
-import { Button } from '@/shared/ui/button';
 
 export const WAITLIST_COPY = {
   invalid: 'Enter a valid email address, like you@company.com.',

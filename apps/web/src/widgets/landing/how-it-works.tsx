@@ -1,40 +1,66 @@
-import { SlidersHorizontal, Split, Zap, type LucideIcon } from 'lucide-react';
+import { SlidersHorizontal, Wallet, Zap, type LucideIcon } from 'lucide-react';
 
-const STEPS: ReadonlyArray<{ icon: LucideIcon; title: string; detail: string }> = [
-  { icon: SlidersHorizontal, title: 'Set an allowance', detail: 'per-call and daily caps.' },
+import { Card } from '@/components/ui/card';
+
+const STEPS: ReadonlyArray<{
+  icon: LucideIcon;
+  phase: string;
+  title: string;
+  body: string;
+  snippet: string;
+}> = [
   {
-    icon: Zap,
-    title: 'Your agent pays per call',
-    detail: 'HTTP 402 + USDC on Solana, settled in ~1s.',
+    icon: SlidersHorizontal,
+    phase: 'PHASE 01',
+    title: 'Set an allowance',
+    body: 'Configure per-request and per-hour spending boundaries. Guardrails are enforced via Solana PDA multisig contracts without granting agents blanket private key authority.',
+    snippet: 'pda.set_limit(max_call: 0.05, daily: 10.0)',
   },
   {
-    icon: Split,
-    title: 'Providers get paid automatically',
-    detail: 'revenue split on-chain every 30 seconds.',
+    icon: Zap,
+    phase: 'PHASE 02',
+    title: 'Agent pays per call',
+    body: 'Client initiates request. Upon receiving an HTTP 402 with an on-chain address and price header, the agent automatically signs the micro-transfer and retries in ~400ms.',
+    snippet: '402: X-Solana-Pay: 0.005 USDC',
+  },
+  {
+    icon: Wallet,
+    phase: 'PHASE 03',
+    title: 'Providers get paid',
+    body: 'Revenue is credited directly to provider treasury addresses every single query. No invoice tracking, no net-30 delays, and zero chargeback arbitration risk.',
+    snippet: 'USDC balance updated on-chain',
   },
 ];
 
 export const HowItWorks = () => (
-  <section
-    id="how-it-works"
-    aria-labelledby="how-title"
-    className="scroll-mt-16 border-b border-line"
-  >
-    <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
-      <h2 id="how-title" className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
-        How it works
-      </h2>
-      <ol className="mt-12 grid gap-10 md:grid-cols-3 md:gap-8">
-        {STEPS.map(({ icon: Icon, title, detail }, index) => (
-          <li key={title} className="relative border-t border-line pt-6">
-            <span aria-hidden="true" className="absolute -top-px left-0 h-px w-12 bg-lime" />
-            <div className="flex items-center justify-between">
-              <span className="font-mono text-sm text-lime">{`0${String(index + 1)}`}</span>
-              <Icon aria-hidden="true" className="size-5 text-muted" strokeWidth={1.75} />
-            </div>
-            <p className="mt-4 text-lg leading-relaxed text-muted">
-              <strong className="font-display font-medium text-text">{title}</strong> — {detail}
-            </p>
+  <section id="how-it-works" className="scroll-mt-16 border-b border-line">
+    <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
+      <div className="max-w-2xl">
+        <span className="font-mono text-xs font-semibold tracking-wider text-brand-400 uppercase">
+          Architecture Specification
+        </span>
+        <h2 className="mt-1 font-display text-3xl font-bold tracking-tight text-text sm:text-4xl">
+          Autonomous liquidity in three deterministic steps
+        </h2>
+        <p className="mt-2 text-muted">
+          A cryptographic standard linking HTTP 402 status codes directly to Solana sub-second
+          state settlement.
+        </p>
+      </div>
+      <ol className="mt-12 grid gap-6 md:grid-cols-3">
+        {STEPS.map(({ icon: Icon, phase, title, body, snippet }) => (
+          <li key={phase}>
+            <Card className="h-full p-6">
+              <div className="flex size-10 items-center justify-center rounded-[6px] border border-line bg-raised text-brand-400">
+                <Icon aria-hidden="true" className="size-6" strokeWidth={1.75} />
+              </div>
+              <p className="mt-6 font-mono text-xs font-semibold text-blue-light-400">{phase}</p>
+              <h3 className="mt-1 font-display text-lg font-semibold text-text">{title}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted">{body}</p>
+              <div className="mt-4 rounded-[6px] border border-line/60 bg-bg p-3 font-mono text-xs text-muted">
+                <code>{snippet}</code>
+              </div>
+            </Card>
           </li>
         ))}
       </ol>
