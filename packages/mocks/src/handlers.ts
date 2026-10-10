@@ -14,9 +14,9 @@ import {
   allowances,
   authState,
   explorerTxUrl,
+  maybeAdvanceLiveFeed,
   MOCK_SERVICES,
   payments,
-  recordPayment,
   serviceOf,
   spentToday,
   splitBatches,
@@ -30,6 +30,11 @@ const atomicToApi = (amount: AtomicAmount): string => amount.toString();
 const errorResponse = (status: number, error: string) => HttpResponse.json({ error }, { status });
 
 const unauthorized = () => errorResponse(401, 'unauthorized');
+
+// The web mock session is cookie-based (authState); the mobile app authenticates with a
+// pairing Bearer token instead, so any token on the request is accepted in mock mode too.
+const isAuthorized = (request: Request): boolean =>
+  authState.isSignedIn() || request.headers.get('authorization') !== null;
 
 const toApiAllowance = (allowance: MockAllowance) => ({
   id: allowance.id,
@@ -90,7 +95,7 @@ const serviceOutput = (id: ServiceId): string => {
 };
 
 const paidServiceHandler = (id: ServiceId) =>
-  http.post(`/api/svc/${id}`, () => {
+  http.post(`*/api/svc/${id}`, () => {
     const service = serviceOf(id);
     const payer = allowances[0]?.sessionAddress ?? 'mock-session';
 
@@ -102,7 +107,7 @@ const paidServiceHandler = (id: ServiceId) =>
 
 export const handlers = [
   // --- auth ---
-  http.get('/api/auth/nonce', () => {
+  http.get('*/api/auth/nonce', () => {
     const nonce = Math.random().toString(36).slice(2);
 
     return HttpResponse.json({
@@ -113,7 +118,7 @@ export const handlers = [
   }),
 
   // Mock mode trusts any signature (DESIGN.md "em mock o login SIWS aceita qualquer assinatura").
-  http.post('/api/auth/verify', async ({ request }) => {
+  http.post('*/api/auth/verify', async ({ request }) => {
     const body = (await request.json()) as { address?: unknown };
     if (typeof body.address !== 'string' || body.address === '') {
       return errorResponse(400, 'invalid_input');
@@ -124,13 +129,13 @@ export const handlers = [
     return HttpResponse.json({ address: body.address });
   }),
 
-  http.post('/api/auth/logout', () => {
+  http.post('*/api/auth/logout', () => {
     authState.signOut();
 
     return new HttpResponse(null, { status: 204 });
   }),
 
-  http.post('/api/auth/pair', () => {
+  http.post('*/api/auth/pair', () => {
     if (!authState.isSignedIn()) return unauthorized();
 
     const token = `mock-pair-${Math.random().toString(36).slice(2)}`;
@@ -142,7 +147,7 @@ export const handlers = [
     });
   }),
 
-  http.post('/api/auth/revoke-devices', () => {
+  http.post('*/api/auth/revoke-devices', () => {
     if (!authState.isSignedIn()) return unauthorized();
 
     authState.signOut();
@@ -151,18 +156,20 @@ export const handlers = [
   }),
 
   // --- catalog ---
-  http.get('/api/services', () =>
+  http.get('*/api/services', () =>
     HttpResponse.json({ services: MOCK_SERVICES.map(toApiService) }),
   ),
 
   // --- allowances ---
-  http.get('/api/allowances', () => {
-    if (!authState.isSignedIn()) return unauthorized();
+  http.get('*/api/allowances', ({ request }) => {
+    if (!isAuthorized(request)) return unauthorized();
+
+    maybeAdvanceLiveFeed();
 
     return HttpResponse.json({ allowances: allowances.map(toApiAllowance) });
   }),
 
-  http.post('/api/allowances', async ({ request }) => {
+  http.post('*/api/allowances', async ({ request }) => {
     if (!authState.isSignedIn()) return unauthorized();
 
     const body = (await request.json()) as {
@@ -201,7 +208,7 @@ export const handlers = [
     return HttpResponse.json(toApiAllowance(created), { status: 201 });
   }),
 
-  http.get('/api/allowances/by-session/:address', ({ params }) => {
+  http.get('*/api/allowances/by-session/:address', ({ params }) => {
     const found = allowances.find((allowance) => allowance.sessionAddress === params.address);
     if (!found) return errorResponse(404, 'not_found');
 
@@ -213,11 +220,13 @@ export const handlers = [
     });
   }),
 
-  http.get('/api/allowances/:id/payments', ({ params, request }) => {
-    if (!authState.isSignedIn()) return unauthorized();
+  http.get('*/api/allowances/:id/payments', ({ params, request }) => {
+    if (!isAuthorized(request)) return unauthorized();
 
     const allowance = allowanceOf(String(params.id));
     if (!allowance) return errorResponse(404, 'not_found');
+
+    maybeAdvanceLiveFeed();
 
     const after = new URL(request.url).searchParams.get('after');
     const scoped = payments
@@ -229,7 +238,7 @@ export const handlers = [
     return HttpResponse.json({ payments: page.map(toApiPayment) });
   }),
 
-  http.get('/api/allowances/:id/statement', ({ params, request }) => {
+  http.get('*/api/allowances/:id/statement', ({ params, request }) => {
     if (!authState.isSignedIn()) return unauthorized();
 
     const allowance = allowanceOf(String(params.id));
@@ -276,7 +285,7 @@ export const handlers = [
     });
   }),
 
-  http.get('/api/allowances/:id', ({ params }) => {
+  http.get('*/api/allowances/:id', ({ params }) => {
     if (!authState.isSignedIn()) return unauthorized();
 
     const allowance = allowanceOf(String(params.id));
@@ -285,8 +294,8 @@ export const handlers = [
     return HttpResponse.json(toApiAllowance(allowance));
   }),
 
-  http.patch('/api/allowances/:id', async ({ params, request }) => {
-    if (!authState.isSignedIn()) return unauthorized();
+  http.patch('*/api/allowances/:id', async ({ params, request }) => {
+    if (!isAuthorized(request)) return unauthorized();
 
     const allowance = allowanceOf(String(params.id));
     if (!allowance) return errorResponse(404, 'not_found');
@@ -319,7 +328,7 @@ export const handlers = [
   }),
 
   // --- splits ---
-  http.get('/api/splits', () => {
+  http.get('*/api/splits', () => {
     if (!authState.isSignedIn()) return unauthorized();
 
     return HttpResponse.json({
@@ -335,7 +344,7 @@ export const handlers = [
   }),
 
   // --- onramp ---
-  http.post('/api/onramp/simulate', async ({ request }) => {
+  http.post('*/api/onramp/simulate', async ({ request }) => {
     if (!authState.isSignedIn()) return unauthorized();
 
     const body = (await request.json()) as { sessionAddress?: unknown; amount?: unknown };
@@ -349,7 +358,7 @@ export const handlers = [
   }),
 
   // --- waitlist ---
-  http.post('/api/waitlist', async ({ request }) => {
+  http.post('*/api/waitlist', async ({ request }) => {
     const body = (await request.json()) as { email?: unknown };
     if (typeof body.email !== 'string' || !body.email.includes('@')) {
       return errorResponse(400, 'invalid_input');
@@ -364,22 +373,10 @@ export const handlers = [
   paidServiceHandler('summarize'),
 
   // --- live feed ---
-  sse('/api/events', ({ client, finalize }) => {
+  sse('*/api/events', ({ client, finalize }) => {
     const tick = () => {
-      const allowance = allowances[Math.floor(Math.random() * allowances.length)];
-      if (!allowance || allowance.status !== 'active') return;
-
-      const serviceIds: ServiceId[] = ['ocr', 'translate', 'summarize'];
-      const serviceId = serviceIds[Math.floor(Math.random() * serviceIds.length)] ?? 'ocr';
-      const service = serviceOf(serviceId);
-      const payment = recordPayment({
-        allowanceId: allowance.id,
-        serviceId,
-        amount: service.price,
-        txSignature: `MockLive${Math.random().toString(36).slice(2)}`,
-        settledAt: new Date().toISOString(),
-        upstreamStatus: '200',
-      });
+      const payment = maybeAdvanceLiveFeed();
+      if (!payment) return;
 
       client.send({
         data: JSON.stringify({
