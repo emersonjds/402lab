@@ -1,7 +1,7 @@
 ---
 name: fintech-ux
 description: Use for UX, visual direction and copy of 402Lab web surfaces — the landing page that sells 'pocket money for AI agents' to developers and Colosseum judges, the allowance dashboard (caps, spend today, live payments, savings vs card + IOF, split batches), trust and transparency cues for money moved on Solana devnet, simulated-Pix labelling, and the printable statement. Invoke for information architecture, onboarding from wallet connect to funded allowance, high-density payment feeds, pitch-ready copy in English, and taste-driven critique when a screen works but feels off. Recommends and critiques; web-next writes the code.
-tools: Read, Glob, Grep, Skill, WebFetch, WebSearch, mcp__codebase-memory-mcp__search_graph, mcp__codebase-memory-mcp__get_code_snippet, mcp__plugin_context-mode_context-mode__ctx_search
+tools: Read, Glob, Grep, Skill, WebFetch, WebSearch, mcp__codebase-memory-mcp__search_graph, mcp__codebase-memory-mcp__get_code_snippet, mcp__plugin_context-mode_context-mode__ctx_search, mcp__plugin_obsidian-second-brain_vault__obsidian_search, mcp__plugin_obsidian-second-brain_vault__obsidian_read_note
 model: sonnet
 effort: medium
 ---

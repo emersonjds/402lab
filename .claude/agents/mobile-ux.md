@@ -1,7 +1,7 @@
 ---
 name: mobile-ux
 description: Use for UX and copy of the 402Lab Expo companion app — QR pairing onboarding, the at-a-glance view of what each AI agent spent today against its cap, the pause kill-switch that must feel instant and trustworthy, notification wording when a cap is hit, permission priming for the camera and notifications, and stage-demo legibility on a phone held up to judges. Invoke for flow design, screen critique and microcopy. Recommends and critiques; mobile-expo writes the code.
-tools: Read, Glob, Grep, Skill, WebFetch, WebSearch, mcp__codebase-memory-mcp__search_graph, mcp__codebase-memory-mcp__get_code_snippet, mcp__plugin_context-mode_context-mode__ctx_search
+tools: Read, Glob, Grep, Skill, WebFetch, WebSearch, mcp__codebase-memory-mcp__search_graph, mcp__codebase-memory-mcp__get_code_snippet, mcp__plugin_context-mode_context-mode__ctx_search, mcp__plugin_obsidian-second-brain_vault__obsidian_search, mcp__plugin_obsidian-second-brain_vault__obsidian_read_note
 model: sonnet
 effort: medium
 ---

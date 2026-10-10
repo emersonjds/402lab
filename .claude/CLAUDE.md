@@ -15,7 +15,7 @@ docker compose up -d        # Postgres local
 pnpm --filter @402lab/api dev
 pnpm --filter @402lab/web dev
 pnpm --filter @402lab/mobile start
-pnpm test:coverage          # todos os pacotes, limiar 90% travado
+# hackathon: sem testes unitários — verificar com typecheck + lint + build + smoke
 pnpm lint && pnpm typecheck
 pnpm e2e:devnet             # paga os 3 serviços de verdade na devnet (manual)
 ```
@@ -32,7 +32,7 @@ pnpm e2e:devnet             # paga os 3 serviços de verdade na devnet (manual)
 
 ## Agents
 
-`api-fastify`, `db-drizzle`, `web-next`, `mobile-expo` (implementação, opus) · `x402-micropayments`, `split-settlement`, `solana-payments` (especialistas de pagamento, opus) · `adversarial-reviewer` (opus) · `fintech-ux`, `mobile-ux` (UX e copy, sonnet).
+Custo-benefício: **opus** onde erro custa dinheiro ou dados — `x402-micropayments`, `split-settlement`, `solana-payments`, `db-drizzle`, `adversarial-reviewer` · **sonnet** para implementação de UI e rotas CRUD — `api-fastify`, `web-next`, `mobile-expo`, e UX/copy `fintech-ux`, `mobile-ux` · **haiku** só para tarefa mecânica (mover, renomear, Jira, docs), passado na chamada. Todos: grafo antes de abrir arquivo, vault `Projects/402lab` para decisão, caveman lite, ponytail.
 
 ## Contexto operacional
 
