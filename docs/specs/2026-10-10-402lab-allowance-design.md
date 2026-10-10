@@ -83,7 +83,7 @@ Valores monetários sempre em unidades atômicas de USDC (`bigint`, 6 decimais).
 
 | Entidade | Campos | Regras |
 |---|---|---|
-| `Service` | `id`, `name`, `description`, `upstream` (`aws-translate`, `azure-ocr`, `anthropic-summary`), `price`, `splits[]` | Semeado em código. `splits` = `{recipient, role: provider\|integrator\|platform, bps}`; soma de bps = 10000 (validado no boot). |
+| `Service` | `id`, `name`, `description`, `upstream` (`aws-translate`, `azure-ocr`, `anthropic-summary`), `price`, `splits[]` | Semeado em código. `splits` = `{recipient, role: provider\|integrator\|platform, bps}`; soma de bps = 10000 (validado no boot). `bps` é imutável por serviço: mudar o split = novo `serviceId` (o extrato recalcula o split com o `bps` atual do catálogo). |
 | `Owner` | `address` | Humano, identificado pela carteira. |
 | `Allowance` | `id`, `ownerAddress`, `agentName`, `sessionAddress` (único), `perCallCap`, `dailyCap`, `status` (`active`\|`paused`), `createdAt` | Pertence a um owner. |
 | `Payment` | `id`, `serviceId`, `payerAddress`, `allowanceId?`, `amount`, `txSignature` (único), `upstreamStatus` (`ok`\|`failed`), `settledAt`, `splitBatchId?` | Gravado só após settle com sucesso. `allowanceId` nulo = pagador avulso (gateway aceita qualquer cliente x402). |
@@ -130,12 +130,15 @@ O teto por chamada também é aplicado no cliente (`registerPolicy` no MCP). O s
 
 - Web: Sign-In With Solana. `GET /auth/nonce` → owner assina a mensagem → `POST /auth/verify` → JWT em cookie httpOnly.
 - Mobile: o dashboard gera um token de pareamento (JWT com escopo `mobile`, mesmo owner) exibido em QR; o app guarda em `expo-secure-store`.
+- Token `mobile` só lê e pausa: `GET /allowances`, `GET /allowances/:id`, `GET /allowances/:id/payments` e `PATCH /allowances/:id` com body só `status`. Qualquer outra rota ou campo → 403 `web_session_required` (sem SSE: o mobile usa polling).
+- `POST /auth/logout` limpa o cookie. `POST /auth/revoke-devices` grava `owner_sessions.valid_after = now()`: todo token do owner (web e mobile) com `iat` anterior passa a 401.
+- Rate limit por IP: 30 nonces/min, 10 verify/min. Atrás de proxy, `TRUST_PROXY_HOPS` diz quantos hops do `X-Forwarded-For` são confiáveis (padrão 0).
 - Allowance de outro owner responde **404**, nunca 403.
 - MCP server não autentica: ele só paga (x402) e lê o catálogo, que é público.
 
 ### Extrato
 
-`GET /allowances/:id/statement?month=YYYY-MM` → totais por serviço e por provedor, lista de pagamentos com assinatura, total de fees de rede, comparativo com cartão + IOF. Web renderiza versão imprimível (CSS de impressão → PDF do navegador).
+`GET /allowances/:id/statement?month=YYYY-MM` → totais por serviço e por provedor, lista de pagamentos com assinatura e `upstreamStatus`, comparativo com cartão + IOF. Fees de rede ficam de fora: as dos pagamentos são pagas pelo facilitator e não são registradas. Web renderiza versão imprimível (CSS de impressão → PDF do navegador).
 
 ### Comparativo de economia
 
@@ -150,11 +153,11 @@ Por pagamento: `cartão = amount × 1,029 + US$0,30`, `+ IOF 3,5%`. Custo real d
 | `catalog` | `GET /services` |
 | `paid-services` | `GET\|POST /svc/:id` atrás do `paymentMiddleware` |
 | `allowances` | `POST /allowances`, `GET /allowances`, `GET /allowances/:id`, `PATCH /allowances/:id` (pausar/retomar, tetos), `GET /allowances/:id/statement`, `GET /allowances/by-session/:address` (público: só tetos, status e gasto do dia — usado pelo MCP) |
-| `auth` | `GET /auth/nonce`, `POST /auth/verify`, `POST /auth/pair` |
-| `events` | `GET /events` (SSE, filtrado pelo owner) e `GET /allowances/:id/payments?after=` (polling do mobile) |
+| `auth` | `GET /auth/nonce`, `POST /auth/verify`, `POST /auth/pair`, `POST /auth/logout`, `POST /auth/revoke-devices` |
+| `events` | `GET /events` (SSE, filtrado pelo owner; até 3 por owner, fecha quando o token expira) e `GET /allowances/:id/payments?after=` (polling do mobile) |
 | `splits` | worker + `GET /splits` |
 | `waitlist` | `POST /waitlist` |
-| `demo-onramp` | `POST /onramp/simulate` — tesouraria envia USDC devnet à carteira de sessão; desligado fora da devnet |
+| `demo-onramp` | `POST /onramp/simulate` — tesouraria envia USDC devnet à carteira de sessão; desligado fora da devnet (host do RPC e genesis hash conferidos no boot). Limites: 3/min por owner, 1 recarga por carteira por dia UTC, US$10 por owner por dia UTC (tabela `onramps`, gravada só depois do RPC aceitar). Saldo USDC da tesouraria − recarga < payouts pendentes (provedor + integrador dos pagamentos sem lote) → 409 `onramp_unavailable` |
 
 OpenAPI gerado do schema Zod de cada rota (`@fastify/swagger`), sempre em dia. Eventos em memória (EventEmitter). `ponytail:` instância única; Redis pub/sub quando houver mais de uma.
 
