@@ -1,4 +1,5 @@
 import { buildApp, catalogFromConfig } from './app.js';
+import { startReconciliationJob } from './features/reconciliation/job.js';
 import { startSplitWorker } from './features/splits/worker.js';
 import { loadConfig } from './shared/config/index.js';
 import { applyMigrations } from './shared/db/migrate.js';
@@ -14,7 +15,9 @@ const bus = createEventsBus();
 
 await applyMigrations(database);
 
-const app = await buildApp({ config, database, bus, now: () => new Date() });
+const now = () => new Date();
+const app = await buildApp({ config, database, bus, now });
+const chain = createSolanaChain(config.SOLANA_RPC_URL);
 
 const startWorker = async (): Promise<() => Promise<void>> => {
   if (!config.SPLIT_WORKER_ENABLED) return async () => {};
@@ -25,7 +28,7 @@ const startWorker = async (): Promise<() => Promise<void>> => {
 
   return startSplitWorker({
     db: database,
-    chain: createSolanaChain(config.SOLANA_RPC_URL),
+    chain,
     treasury: await loadTreasurySigner(config.TREASURY_SECRET_KEY, config.TREASURY_ADDRESS),
     catalog: catalogFromConfig(config),
     bus,
@@ -34,10 +37,21 @@ const startWorker = async (): Promise<() => Promise<void>> => {
 };
 
 const stopSplitWorker = await startWorker();
+const stopReconciliation = config.RECONCILIATION_ENABLED
+  ? startReconciliationJob({
+      db: database,
+      chain,
+      treasuryAddress: config.TREASURY_ADDRESS,
+      catalog: catalogFromConfig(config),
+      bus,
+      now,
+      logger: app.log,
+    })
+  : async () => {};
 
 for (const signal of ['SIGTERM', 'SIGINT'] as const) {
   process.once(signal, () => {
-    void stopSplitWorker()
+    void Promise.all([stopSplitWorker(), stopReconciliation()])
       .then(() => app.close())
       .then(() => pool.end());
   });

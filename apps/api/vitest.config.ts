@@ -15,6 +15,7 @@ export default defineConfig({
         'src/split-once.ts',
         'src/shared/db/schema.ts',
         'src/shared/db/migrate.ts',
+        'src/features/reconciliation/**',
       ],
       reporter: ['text'],
       thresholds: {
