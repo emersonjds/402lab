@@ -103,5 +103,12 @@ export const authNonces = pgTable('auth_nonces', {
   expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
 });
 
+/** Newest treasury signature already reconciled, per token account. */
+export const reconciliationCursor = pgTable('reconciliation_cursor', {
+  account: text('account').primaryKey(),
+  lastSignature: text('last_signature').notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
 export type AllowanceRow = typeof allowances.$inferSelect;
 export type PaymentRow = typeof payments.$inferSelect;
