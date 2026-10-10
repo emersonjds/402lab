@@ -1,0 +1,42 @@
+# 402Lab
+
+## O que é
+
+Conta de consumo para agentes de IA: o humano dá uma allowance (tetos por chamada e por dia) e o agente paga cada chamada de API em USDC na Solana via HTTP 402 (x402), com split automático para provedores e extrato mensal. Hackathon Colosseum Crypto World's Fair, submissão até 12/out/2026 23:59 PDT — hackathons.
+
+## Stack
+
+Monorepo pnpm, Node 24, TypeScript. `apps/api` Fastify 5.12 + `@x402/fastify` 2.28 + Drizzle + Postgres 16 · `apps/web` Next.js 16.4 + `@solana/react` · `apps/mobile` Expo SDK 57 · `packages/mcp` MCP server pagador · `packages/shared` domínio puro (dinheiro, split, política, catálogo, eventos). Solana devnet, `@solana/kit` 8.4.
+
+## Comandos (criados no card LAB-1)
+
+```bash
+docker compose up -d        # Postgres local
+pnpm --filter @402lab/api dev
+pnpm --filter @402lab/web dev
+pnpm --filter @402lab/mobile start
+pnpm test:coverage          # todos os pacotes, limiar 90% travado
+pnpm lint && pnpm typecheck
+pnpm e2e:devnet             # paga os 3 serviços de verdade na devnet (manual)
+```
+
+## Convenções locais
+
+- Dinheiro é `bigint` em unidades atômicas de USDC (6 decimais); no JSON vira string de inteiro. Helpers só em `@402lab/shared/money`.
+- Split: provedor e integrador com `floor`, resto para a plataforma; máximo 8 transfers por tx; assinatura gravada antes do envio.
+- Política da allowance roda no hook `onAfterVerify` do x402 — recusa nunca chega ao facilitator.
+- Slice da API igual a `radarge-api/src/features/events/` (`routes.ts`, `schemas.ts`, `repository.ts`).
+- Copy da UI em inglês. Pix e NFS-e são simulados e rotulados "simulated — devnet".
+- Chaves (tesouraria, JWT, upstreams) só por env; `.env.example` documenta.
+- Revisão adversarial (`adversarial-reviewer`) obrigatória em política, ledger, split, auth e on-ramp.
+
+## Agents
+
+`api-fastify`, `db-drizzle`, `web-next`, `mobile-expo` (implementação, opus) · `x402-micropayments`, `split-settlement`, `solana-payments` (especialistas de pagamento, opus) · `adversarial-reviewer` (opus) · `fintech-ux`, `mobile-ux` (UX e copy, sonnet).
+
+## Contexto operacional
+
+- Spec: `docs/specs/2026-10-10-402lab-allowance-design.md` · Plano: `docs/superpowers/plans/2026-10-10-402lab-mvp.md` · Pesquisa: `docs/research/`
+- Jira: projeto `LAB` em emersonsilvan.atlassian.net (cards = cards do plano)
+- Nota do vault: `second-brain/Projects/402lab.md`
+- Grafo indexado no codebase-memory: sim (2026-10-10)
