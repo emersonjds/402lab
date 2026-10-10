@@ -14,7 +14,11 @@ import { buildApp } from '../src/app.js';
 import { resolveAdapters } from '../src/features/paid-services/adapters/index.js';
 import { UpstreamError } from '../src/features/paid-services/adapters/types.js';
 import { type Config, loadConfig } from '../src/shared/config/index.js';
+import { createEventsBus } from '../src/shared/events-bus.js';
+import { ADMIN_DATABASE_URL, createTestDatabase, type TestDatabase } from './support/database.js';
 import { RECIPIENT_ENVIRONMENT, TREASURY_ADDRESS } from './support/environment.js';
+
+const ENVIRONMENT = { ...RECIPIENT_ENVIRONMENT, DATABASE_URL: ADMIN_DATABASE_URL };
 
 const PAYER_ADDRESS = '3Vp5E3DjqXhDJT3QuUGDhE4e6bnHxLgpnQY33oKtyUKQ';
 const SETTLED_SIGNATURE = '5fakeSettledSignature';
@@ -52,6 +56,13 @@ const answerAsFacilitator = (request: IncomingMessage): unknown => {
 let facilitator: Server;
 let config: Config;
 let app: FastifyInstance;
+let testDatabase: TestDatabase;
+
+const ledgerDependencies = () => ({
+  database: testDatabase.database,
+  bus: createEventsBus(),
+  now: () => new Date('2026-10-10T15:00:00.000Z'),
+});
 
 beforeAll(async () => {
   facilitator = createServer((request, response) => {
@@ -63,17 +74,19 @@ beforeAll(async () => {
   });
   await new Promise<void>((resolve) => facilitator.listen(0, '127.0.0.1', resolve));
   const { port } = facilitator.address() as AddressInfo;
+  testDatabase = await createTestDatabase();
 
   config = loadConfig({
-    ...RECIPIENT_ENVIRONMENT,
+    ...ENVIRONMENT,
     FACILITATOR_URL: `http://127.0.0.1:${String(port)}`,
     LOG_LEVEL: 'silent',
   });
-  app = await buildApp({ config });
+  app = await buildApp({ config, ...ledgerDependencies() });
 });
 
 afterAll(async () => {
   await app.close();
+  await testDatabase.drop();
   await new Promise((resolve) => facilitator.close(resolve));
 });
 
@@ -181,7 +194,11 @@ describe('paid services', () => {
 
 describe('paid services with a failing upstream', () => {
   const appWithTranslate = (translate: () => Promise<never>) =>
-    buildApp({ config, adapters: { ...resolveAdapters(config), translate } });
+    buildApp({
+      config,
+      ...ledgerDependencies(),
+      adapters: { ...resolveAdapters(config), translate },
+    });
 
   it('answers 502 upstream_unavailable without upstream text and never settles', async () => {
     const failing = await appWithTranslate(async () => {
@@ -211,26 +228,31 @@ describe('paid services with a failing upstream', () => {
 
 describe('config', () => {
   it('defaults to the public x402.org facilitator', () => {
-    expect(loadConfig(RECIPIENT_ENVIRONMENT).FACILITATOR_URL).toBe('https://x402.org/facilitator');
+    expect(loadConfig(ENVIRONMENT).FACILITATOR_URL).toBe('https://x402.org/facilitator');
   });
 
   it.each(Object.keys(RECIPIENT_ENVIRONMENT))('refuses to boot without a valid %s', (name) => {
-    expect(() => loadConfig({ ...RECIPIENT_ENVIRONMENT, [name]: 'not-a-solana-address' })).toThrow(
-      name,
-    );
-    expect(() => loadConfig({ ...RECIPIENT_ENVIRONMENT, [name]: undefined })).toThrow(name);
+    expect(() => loadConfig({ ...ENVIRONMENT, [name]: 'not-a-solana-address' })).toThrow(name);
+    expect(() => loadConfig({ ...ENVIRONMENT, [name]: undefined })).toThrow(name);
   });
 
   it('treats blank upstream credentials as absent', () => {
-    const loaded = loadConfig({ ...RECIPIENT_ENVIRONMENT, AZURE_VISION_KEY: '', AWS_REGION: '' });
+    const loaded = loadConfig({ ...ENVIRONMENT, AZURE_VISION_KEY: '', AWS_REGION: '' });
 
     expect(loaded.AZURE_VISION_KEY).toBeUndefined();
     expect(loaded.AWS_REGION).toBeUndefined();
   });
 
   it('refuses an Azure endpoint that is not a URL', () => {
-    expect(() => loadConfig({ ...RECIPIENT_ENVIRONMENT, AZURE_VISION_ENDPOINT: 'vision' })).toThrow(
+    expect(() => loadConfig({ ...ENVIRONMENT, AZURE_VISION_ENDPOINT: 'vision' })).toThrow(
       /AZURE_VISION_ENDPOINT/,
     );
+  });
+
+  it('refuses to boot without a postgres connection string', () => {
+    expect(() => loadConfig(RECIPIENT_ENVIRONMENT)).toThrow(/DATABASE_URL/);
+    expect(() =>
+      loadConfig({ ...RECIPIENT_ENVIRONMENT, DATABASE_URL: 'mysql://lab@localhost/lab' }),
+    ).toThrow(/DATABASE_URL/);
   });
 });

@@ -3,6 +3,7 @@ import { paymentMiddleware } from '@x402/fastify';
 import type { FastifyPluginCallback, FastifyReply, FastifyRequest } from 'fastify';
 import { z } from 'zod';
 
+import { registerLedgerHooks, type LedgerDependencies } from '../ledger/hooks.js';
 import { type ServiceAdapters, UpstreamError } from './adapters/types.js';
 import { serviceInputSchemas } from './schemas.js';
 import { createResourceServer } from './x402.js';
@@ -12,22 +13,16 @@ export interface PaidServiceOptions {
   treasuryAddress: string;
   catalog: Service[];
   adapters: ServiceAdapters;
+  ledger: Omit<LedgerDependencies, 'logger'>;
 }
 
 export const paidServiceRoutes: FastifyPluginCallback<PaidServiceOptions> = (
   app,
-  { facilitatorUrl, treasuryAddress, catalog, adapters },
+  { facilitatorUrl, treasuryAddress, catalog, adapters, ledger },
   done,
 ) => {
-  const resourceServer = createResourceServer(facilitatorUrl)
-    .onAfterVerify(({ result, requirements }) => {
-      app.log.info({ result, amount: requirements.amount }, 'x402 payment verified');
-      return Promise.resolve();
-    })
-    .onAfterSettle(({ result, requirements }) => {
-      app.log.info({ result, amount: requirements.amount }, 'x402 payment settled');
-      return Promise.resolve();
-    });
+  const resourceServer = createResourceServer(facilitatorUrl);
+  registerLedgerHooks(resourceServer, { ...ledger, logger: app.log });
 
   paymentMiddleware(
     app,

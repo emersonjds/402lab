@@ -21,6 +21,7 @@ const configSchema = z.object({
   AWS_REGION: optional(z.string()),
   AWS_ACCESS_KEY_ID: optional(z.string()),
   ANTHROPIC_API_KEY: optional(z.string()),
+  DATABASE_URL: z.url({ protocol: /^postgres(ql)?$/ }),
 });
 
 export type Config = z.infer<typeof configSchema>;

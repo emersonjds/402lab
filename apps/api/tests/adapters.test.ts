@@ -10,6 +10,11 @@ import { UpstreamError } from '../src/features/paid-services/adapters/types.js';
 import { loadConfig } from '../src/shared/config/index.js';
 import { RECIPIENT_ENVIRONMENT, UPSTREAM_ENVIRONMENT } from './support/environment.js';
 
+const ENVIRONMENT = {
+  ...RECIPIENT_ENVIRONMENT,
+  DATABASE_URL: 'postgres://lab:lab@localhost:5432/lab402',
+};
+
 const IMAGE_URL = 'https://images.example.com/receipt.png';
 const ANALYZE_URL =
   'https://vision.example.com/computervision/imageanalysis:analyze?features=read&api-version=2024-02-01';
@@ -174,7 +179,7 @@ describe('demo adapters', () => {
 
 describe('resolveAdapters', () => {
   it('stays in demo mode for every service without upstream credentials', async () => {
-    const config = loadConfig(RECIPIENT_ENVIRONMENT);
+    const config = loadConfig(ENVIRONMENT);
     const adapters = resolveAdapters(config);
 
     expect(resolveModes(config)).toEqual({ ocr: 'demo', translate: 'demo', summarize: 'demo' });
@@ -184,7 +189,7 @@ describe('resolveAdapters', () => {
   });
 
   it('goes live for every service once all upstream credentials exist', async () => {
-    const config = loadConfig({ ...RECIPIENT_ENVIRONMENT, ...UPSTREAM_ENVIRONMENT });
+    const config = loadConfig({ ...ENVIRONMENT, ...UPSTREAM_ENVIRONMENT });
     const fetchFake = fakeFetch(() => readResult('live text'));
     const adapters = resolveAdapters(config, fetchFake.implementation);
 
@@ -204,7 +209,7 @@ describe('resolveAdapters', () => {
     ['ANTHROPIC_API_KEY', { ocr: 'live', translate: 'live', summarize: 'demo' }],
   ])('falls back to demo for the service missing %s', (missing, modes) => {
     const environment: Record<string, string> = {
-      ...RECIPIENT_ENVIRONMENT,
+      ...ENVIRONMENT,
       ...UPSTREAM_ENVIRONMENT,
       [missing]: '',
     };

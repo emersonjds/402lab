@@ -6,15 +6,23 @@ import { resolveAdapters, resolveModes } from './features/paid-services/adapters
 import type { ServiceAdapters } from './features/paid-services/adapters/types.js';
 import { paidServiceRoutes } from './features/paid-services/routes.js';
 import type { Config } from './shared/config/index.js';
+import type { Database } from './shared/db/pool.js';
+import type { EventsBus } from './shared/events-bus.js';
 
 export interface AppDependencies {
   config: Config;
   adapters?: ServiceAdapters;
+  database: Database;
+  bus: EventsBus;
+  now: () => Date;
 }
 
 export const buildApp = async ({
   config,
   adapters = resolveAdapters(config),
+  database,
+  bus,
+  now,
 }: AppDependencies): Promise<FastifyInstance> => {
   const app = Fastify({ logger: { level: config.LOG_LEVEL } });
   const catalog = buildCatalog({
@@ -33,6 +41,7 @@ export const buildApp = async ({
     treasuryAddress: config.TREASURY_ADDRESS,
     catalog,
     adapters,
+    ledger: { db: database, bus, now },
   });
 
   return app;
