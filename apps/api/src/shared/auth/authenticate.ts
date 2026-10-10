@@ -80,6 +80,8 @@ export const protectRoutesByDefault = (
   });
 };
 
+/** The session `protectRoutesByDefault` attached to this request; throws 401 on a public route
+ * handler that calls it anyway, since there is no session to return. */
 export const callerOf = (request: FastifyRequest): Session => {
   if (!request.caller) throw AppError.unauthorized();
 

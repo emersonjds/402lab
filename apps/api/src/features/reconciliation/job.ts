@@ -26,6 +26,7 @@ export type ReconciliationDependencies = {
 const RECONCILIATION_INTERVAL_MS = 60_000;
 const SIGNATURES_PER_ROUND = 100;
 
+/** The treasury's USDC associated token account: what reconciliation actually watches on chain. */
 export const treasuryUsdcAccount = async (treasuryAddress: string): Promise<string> => {
   const [account] = await findAssociatedTokenPda({
     owner: address(treasuryAddress),

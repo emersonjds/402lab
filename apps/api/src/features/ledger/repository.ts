@@ -30,6 +30,8 @@ export const recordPayment = async (
 const startOfUtcDay = (now: Date): Date =>
   new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
 
+/** Committed spend on an allowance since UTC midnight; the ledger hook adds its own in-memory
+ * reservations on top before comparing against the daily cap. */
 export const spentToday = async (
   db: Database,
   allowanceId: string,

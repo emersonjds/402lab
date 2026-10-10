@@ -28,6 +28,9 @@ const clientFaultStatusOf = (error: unknown): number | undefined => {
   return typeof status === 'number' && status >= 400 && status < 500 ? status : undefined;
 };
 
+/** The one place a thrown error becomes an HTTP response: an `AppError` keeps its status and
+ * code, a Zod validation failure becomes 400, any other client-fault status becomes a fixed
+ * `bad_request`, and everything else is logged and answered as a bare 500. */
 export const registerErrorHandler = (app: FastifyInstance): void => {
   app.setNotFoundHandler((_request, reply) => reply.status(404).send({ error: 'not_found' }));
 

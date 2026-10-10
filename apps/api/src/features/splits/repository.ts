@@ -12,6 +12,7 @@ export type SplitBatchRow = typeof splitBatches.$inferSelect;
 const MAX_PAYMENTS_PER_BATCH = 1_000;
 const LISTED_BATCHES = 50;
 
+/** Batches the split worker still has to reconcile against the chain. */
 export const findPendingBatches = (db: Database): Promise<SplitBatchRow[]> =>
   db.select().from(splitBatches).where(eq(splitBatches.status, 'pending'));
 
@@ -57,6 +58,8 @@ export const failBatchAndReleasePayments = (db: Database, batchId: string): Prom
     return true;
   });
 
+/** Marks (or clears) when a batch's chain status first read as unknown past its expiry margin,
+ * so the worker only fails it once that state has held across two consecutive rounds. */
 export const setExpiredUnknownSeenAt = async (
   db: Database,
   batchId: string,
@@ -65,6 +68,7 @@ export const setExpiredUnknownSeenAt = async (
   await db.update(splitBatches).set({ expiredUnknownSeenAt: seenAt }).where(isPending(batchId));
 };
 
+/** Settled payments the split worker has not yet grouped into a batch, oldest first. */
 export const findUnbatchedPayments = (db: Database) =>
   db
     .select({ id: payments.id, serviceId: payments.serviceId, amount: payments.amount })
@@ -111,6 +115,7 @@ export const createBatch = async (db: Database, batch: NewSplitBatch): Promise<v
   });
 };
 
+/** The last `LISTED_BATCHES` batches with their payout lines, for `GET /splits`. */
 export const listRecentBatches = async (db: Database) => {
   const batches = await db
     .select()

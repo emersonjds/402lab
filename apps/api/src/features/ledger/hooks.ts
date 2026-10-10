@@ -54,6 +54,9 @@ const recordWithRetry = async (db: Database, input: RecordPaymentInput) => {
   return recordPayment(db, input);
 };
 
+/** Wires the x402 resource server's verify/settle lifecycle to the allowance policy and the
+ * payments ledger: a policy refusal aborts the payment before the facilitator ever settles it,
+ * and a settled payment is recorded and published as a `payment.settled` live event. */
 export const registerLedgerHooks = (
   resourceServer: x402ResourceServer,
   { db, bus, now, logger }: LedgerDependencies,
