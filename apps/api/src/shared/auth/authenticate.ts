@@ -1,11 +1,21 @@
 import type { FastifyInstance, FastifyRequest } from 'fastify';
 
+import type { Database } from '../db/pool.js';
 import { AppError } from '../errors.js';
+import { findSessionsValidAfter } from './revocation.js';
 import { type Session, verifySession } from './tokens.js';
 
 export const SESSION_COOKIE = 'session';
 
 const BEARER_PREFIX = 'Bearer ';
+
+/** What a mobile pairing token may call (`METHOD url`), with the body fields it may send. */
+const MOBILE_ROUTES: Partial<Record<string, readonly string[]>> = {
+  'GET /allowances': [],
+  'GET /allowances/:id': [],
+  'GET /allowances/:id/payments': [],
+  'PATCH /allowances/:id': ['status'],
+};
 
 declare module 'fastify' {
   interface FastifyContextConfig {
@@ -27,13 +37,24 @@ const tokenOf = (request: FastifyRequest): string | undefined => {
     : request.cookies[SESSION_COOKIE];
 };
 
+const bodyFieldsOf = (body: unknown): string[] =>
+  typeof body === 'object' && body !== null ? Object.keys(body) : [];
+
 /** Hooks every route registered after it, so a new route is born authenticated. */
-export const protectRoutesByDefault = (app: FastifyInstance, secret: string): void => {
-  // eslint-disable-next-line @typescript-eslint/require-await -- Fastify only awaits an async hook's rejection
+export const protectRoutesByDefault = (
+  app: FastifyInstance,
+  secret: string,
+  db: Database,
+): void => {
   const authenticate = async (request: FastifyRequest): Promise<void> => {
     const token = tokenOf(request);
     const session = token === undefined ? undefined : verifySession(token, secret);
     if (!session) throw AppError.unauthorized();
+
+    const validAfter = await findSessionsValidAfter(db, session.address);
+    if (validAfter && session.issuedAt * 1000 < validAfter.getTime()) {
+      throw AppError.unauthorized();
+    }
 
     request.caller = session;
   };
@@ -41,7 +62,21 @@ export const protectRoutesByDefault = (app: FastifyInstance, secret: string): vo
   app.addHook('onRoute', (route) => {
     if (route.config?.public === true) return;
 
+    const mobileFields =
+      typeof route.method === 'string' ? MOBILE_ROUTES[`${route.method} ${route.url}`] : undefined;
+
+    // eslint-disable-next-line @typescript-eslint/require-await -- Fastify only awaits an async hook's rejection
+    const enforceScope = async (request: FastifyRequest): Promise<void> => {
+      if (callerOf(request).scope === 'web') return;
+
+      const allowed =
+        mobileFields !== undefined &&
+        bodyFieldsOf(request.body).every((field) => mobileFields.includes(field));
+      if (!allowed) throw new AppError(403, 'web_session_required');
+    };
+
     route.onRequest = [authenticate, ...[route.onRequest ?? []].flat()];
+    route.preValidation = [enforceScope, ...[route.preValidation ?? []].flat()];
   });
 };
 

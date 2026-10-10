@@ -6,10 +6,18 @@ export const SESSION_LIFETIME_SECONDS = { web: 7 * 24 * 60 * 60, mobile: 30 * 24
 const sessionClaimsSchema = z.object({
   sub: z.string(),
   scope: z.enum(['web', 'mobile']),
+  iat: z.number(),
+  exp: z.number(),
 });
 
 export type SessionScope = z.infer<typeof sessionClaimsSchema>['scope'];
-export type Session = { address: string; scope: SessionScope };
+/** `issuedAt` and `expiresAt` in Unix seconds, as the JWT carries them. */
+export type Session = {
+  address: string;
+  scope: SessionScope;
+  issuedAt: number;
+  expiresAt: number;
+};
 
 export const signSession = (address: string, scope: SessionScope, secret: string): string =>
   jwt.sign({ sub: address, scope }, secret, {
@@ -23,7 +31,14 @@ export const verifySession = (token: string, secret: string): Session | undefine
       jwt.verify(token, secret, { algorithms: ['HS256'] }),
     );
 
-    return claims.success ? { address: claims.data.sub, scope: claims.data.scope } : undefined;
+    return claims.success
+      ? {
+          address: claims.data.sub,
+          scope: claims.data.scope,
+          issuedAt: claims.data.iat,
+          expiresAt: claims.data.exp,
+        }
+      : undefined;
   } catch {
     return undefined;
   }
