@@ -8,10 +8,15 @@ import { demoAdapters } from '../src/features/paid-services/adapters/demo.js';
 import { resolveAdapters, resolveModes } from '../src/features/paid-services/adapters/index.js';
 import { UpstreamError } from '../src/features/paid-services/adapters/types.js';
 import { loadConfig } from '../src/shared/config/index.js';
-import { RECIPIENT_ENVIRONMENT, UPSTREAM_ENVIRONMENT } from './support/environment.js';
+import {
+  RECIPIENT_ENVIRONMENT,
+  SESSION_ENVIRONMENT,
+  UPSTREAM_ENVIRONMENT,
+} from './support/environment.js';
 
 const ENVIRONMENT = {
   ...RECIPIENT_ENVIRONMENT,
+  ...SESSION_ENVIRONMENT,
   DATABASE_URL: 'postgres://lab:lab@localhost:5432/lab402',
 };
 

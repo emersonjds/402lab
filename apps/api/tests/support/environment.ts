@@ -8,6 +8,10 @@ export const RECIPIENT_ENVIRONMENT = {
   INTEGRATOR_ADDRESS: '11111111111111111111111111111111',
 };
 
+export const SESSION_ENVIRONMENT = {
+  JWT_SECRET: 'test-only-jwt-secret-with-at-least-32-characters',
+};
+
 export const UPSTREAM_ENVIRONMENT = {
   AZURE_VISION_ENDPOINT: 'https://vision.example.com/',
   AZURE_VISION_KEY: 'azure-key',

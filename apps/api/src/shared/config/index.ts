@@ -26,6 +26,9 @@ const configSchema = z.object({
   /** solana-keygen JSON array of 64 bytes; parsed by `loadTreasurySigner`, never logged. */
   TREASURY_SECRET_KEY: optional(z.string()),
   SPLIT_WORKER_ENABLED: z.stringbool().default(true),
+  /** Anything but `development` marks the session cookie `Secure`. */
+  NODE_ENV: z.enum(['development', 'test', 'production']).default('production'),
+  JWT_SECRET: z.string().min(32),
 });
 
 export type Config = z.infer<typeof configSchema>;

@@ -16,9 +16,17 @@ import { UpstreamError } from '../src/features/paid-services/adapters/types.js';
 import { type Config, loadConfig } from '../src/shared/config/index.js';
 import { createEventsBus } from '../src/shared/events-bus.js';
 import { ADMIN_DATABASE_URL, createTestDatabase, type TestDatabase } from './support/database.js';
-import { RECIPIENT_ENVIRONMENT, TREASURY_ADDRESS } from './support/environment.js';
+import {
+  RECIPIENT_ENVIRONMENT,
+  SESSION_ENVIRONMENT,
+  TREASURY_ADDRESS,
+} from './support/environment.js';
 
-const ENVIRONMENT = { ...RECIPIENT_ENVIRONMENT, DATABASE_URL: ADMIN_DATABASE_URL };
+const ENVIRONMENT = {
+  ...RECIPIENT_ENVIRONMENT,
+  ...SESSION_ENVIRONMENT,
+  DATABASE_URL: ADMIN_DATABASE_URL,
+};
 
 const PAYER_ADDRESS = '3Vp5E3DjqXhDJT3QuUGDhE4e6bnHxLgpnQY33oKtyUKQ';
 const SETTLED_SIGNATURE = '5fakeSettledSignature';

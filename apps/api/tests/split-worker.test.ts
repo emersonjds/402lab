@@ -24,7 +24,11 @@ import { allowances, payments, payouts, splitBatches } from '../src/shared/db/sc
 import { createEventsBus } from '../src/shared/events-bus.js';
 import type { SignatureStatus, SolanaChain } from '../src/shared/solana/rpc.js';
 import { ADMIN_DATABASE_URL, createTestDatabase, type TestDatabase } from './support/database.js';
-import { RECIPIENT_ENVIRONMENT, TREASURY_ADDRESS } from './support/environment.js';
+import {
+  RECIPIENT_ENVIRONMENT,
+  SESSION_ENVIRONMENT,
+  TREASURY_ADDRESS,
+} from './support/environment.js';
 
 const OWNER_ADDRESS = 'owner-address';
 const LAST_VALID_BLOCK_HEIGHT = 150n;
@@ -386,7 +390,11 @@ describe('GET /splits', () => {
 });
 
 describe('split worker config', () => {
-  const environment = { ...RECIPIENT_ENVIRONMENT, DATABASE_URL: ADMIN_DATABASE_URL };
+  const environment = {
+    ...RECIPIENT_ENVIRONMENT,
+    ...SESSION_ENVIRONMENT,
+    DATABASE_URL: ADMIN_DATABASE_URL,
+  };
 
   it('runs the worker against devnet by default, without a treasury key until one is set', () => {
     const config = loadConfig(environment);
