@@ -11,6 +11,7 @@ import {
   validatorCompiler,
 } from 'fastify-type-provider-zod';
 
+import { allowanceRoutes } from './features/allowances/routes.js';
 import { authRoutes } from './features/auth/routes.js';
 import { catalogRoutes } from './features/catalog/routes.js';
 import { resolveAdapters, resolveModes } from './features/paid-services/adapters/index.js';
@@ -99,6 +100,7 @@ export const buildApp = async ({
     jwtSecret: config.JWT_SECRET,
     secureCookie: config.NODE_ENV !== 'development',
   });
+  await app.register(allowanceRoutes, { db: database, bus, now, catalog });
 
 
   return app;
