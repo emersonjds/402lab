@@ -38,5 +38,6 @@ Custo-benefício: **opus** onde erro custa dinheiro ou dados — `x402-micropaym
 
 - Spec: `docs/specs/2026-10-10-402lab-allowance-design.md` · Plano: `docs/superpowers/plans/2026-10-10-402lab-mvp.md` · Pesquisa: `docs/research/`
 - Jira: projeto `LAB` em emersonsilvan.atlassian.net (cards = cards do plano)
+- Repo: github.com/emersonjds/402lab. Gitflow global (branch por card a partir de `developer`, merge `--no-ff` em `developer`, micro commits sem rastro de LLM). **Push liberado em qualquer branch neste projeto, inclusive `main` e `developer`** (decisão do Emerson, 2026-10-10).
 - Nota do vault: `second-brain/Projects/402lab.md`
 - Grafo indexado no codebase-memory: sim (2026-10-10)

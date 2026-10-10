@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git push:*)",
+      "Bash(rtk git push:*)",
+      "Bash(/usr/bin/git push:*)",
+      "Bash(git merge:*)",
+      "Bash(rtk git merge:*)",
+      "Bash(gh pr:*)",
+      "Bash(gh repo view:*)"
+    ]
+  },
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  }
+}
