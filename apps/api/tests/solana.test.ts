@@ -1,4 +1,3 @@
-import { generateKeyPairSync } from 'node:crypto';
 import { createServer, type Server } from 'node:http';
 
 import { USDC_DEVNET_MINT } from '@402lab/shared';
@@ -6,7 +5,6 @@ import {
   address,
   blockhash,
   generateKeyPairSigner,
-  getAddressDecoder,
   getBase58Decoder,
   getBase64EncodedWireTransaction,
 } from '@solana/kit';
@@ -16,19 +14,7 @@ import { z } from 'zod';
 import { buildSplitTransaction } from '../src/features/splits/transaction.js';
 import { createSolanaChain } from '../src/shared/solana/rpc.js';
 import { loadTreasurySigner } from '../src/shared/solana/treasury.js';
-
-const solanaKeypair = () => {
-  const { privateKey, publicKey } = generateKeyPairSync('ed25519');
-  const jwk = z
-    .object({ d: z.string(), x: z.string() })
-    .parse({ ...privateKey.export({ format: 'jwk' }), ...publicKey.export({ format: 'jwk' }) });
-  const publicBytes = Buffer.from(jwk.x, 'base64url');
-
-  return {
-    secretKeyJson: JSON.stringify([...Buffer.from(jwk.d, 'base64url'), ...publicBytes]),
-    address: getAddressDecoder().decode(publicBytes),
-  };
-};
+import { solanaKeypair } from './support/keypair.js';
 
 describe('loadTreasurySigner', () => {
   it('loads the signer of a 64-byte solana-keygen secret key', async () => {

@@ -14,16 +14,20 @@ import {
 import { allowanceRoutes } from './features/allowances/routes.js';
 import { authRoutes } from './features/auth/routes.js';
 import { catalogRoutes } from './features/catalog/routes.js';
+import { isDevnetRpc, type OnrampChain, onrampRoutes } from './features/demo-onramp/routes.js';
 import { eventRoutes } from './features/events/routes.js';
 import { resolveAdapters, resolveModes } from './features/paid-services/adapters/index.js';
 import type { ServiceAdapters } from './features/paid-services/adapters/types.js';
 import { paidServiceRoutes } from './features/paid-services/routes.js';
 import { splitRoutes } from './features/splits/routes.js';
+import { waitlistRoutes } from './features/waitlist/routes.js';
 import { protectRoutesByDefault } from './shared/auth/authenticate.js';
 import type { Config } from './shared/config/index.js';
 import type { Database } from './shared/db/pool.js';
 import { AppError, registerErrorHandler } from './shared/errors.js';
 import type { EventsBus } from './shared/events-bus.js';
+import { createSolanaChain } from './shared/solana/rpc.js';
+import { loadTreasurySigner } from './shared/solana/treasury.js';
 
 export interface AppDependencies {
   config: Config;
@@ -31,6 +35,8 @@ export interface AppDependencies {
   database: Database;
   bus: EventsBus;
   now: () => Date;
+  /** Devnet chain for the demo on-ramp; tests inject a fake. */
+  solanaChain?: OnrampChain;
 }
 
 export const catalogFromConfig = (config: Config): Service[] =>
@@ -50,6 +56,7 @@ export const buildApp = async ({
   database,
   bus,
   now,
+  solanaChain,
 }: AppDependencies): Promise<FastifyInstance> => {
   const app = Fastify({
     logger: {
@@ -103,7 +110,15 @@ export const buildApp = async ({
   });
   await app.register(allowanceRoutes, { db: database, bus, now, catalog });
   await app.register(eventRoutes, { bus });
+  await app.register(waitlistRoutes, { db: database });
 
+  if (isDevnetRpc(config.SOLANA_RPC_URL) && config.TREASURY_SECRET_KEY) {
+    await app.register(onrampRoutes, {
+      db: database,
+      chain: solanaChain ?? createSolanaChain(config.SOLANA_RPC_URL),
+      treasury: await loadTreasurySigner(config.TREASURY_SECRET_KEY, config.TREASURY_ADDRESS),
+    });
+  }
 
   return app;
 };
