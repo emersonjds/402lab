@@ -23,6 +23,9 @@ export const createAllowanceBodySchema = z
     perCallCap: positiveAtomicSchema,
     dailyCap: positiveAtomicSchema,
   })
+  .refine(({ perCallCap, dailyCap }) => perCallCap <= dailyCap, {
+    message: 'perCallCap must not exceed dailyCap',
+  })
   .meta({ id: 'NewAllowance' });
 
 export const updateAllowanceBodySchema = z
@@ -64,6 +67,8 @@ export const paymentSchema = z
     amount: atomicStringSchema,
     txSignature: z.string(),
     settledAt: z.iso.datetime(),
+    /** `failed` when the upstream did not deliver; null while nothing was recorded. */
+    upstreamStatus: z.string().nullable(),
   })
   .meta({ id: 'Payment' });
 
@@ -74,7 +79,7 @@ export const paymentListSchema = z
   .meta({ id: 'PaymentList' });
 
 export const statementQuerySchema = z.object({
-  month: z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/, 'must be YYYY-MM'),
+  month: z.string().regex(/^20\d{2}-(0[1-9]|1[0-2])$/, 'must be YYYY-MM, year 2000-2099'),
 });
 
 export const statementSchema = z

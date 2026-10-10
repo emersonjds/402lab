@@ -24,6 +24,7 @@ export const toPaymentView = (payment: PaymentRow): PaymentView => ({
   amount: payment.amount.toString(),
   txSignature: payment.txSignature,
   settledAt: payment.settledAt.toISOString(),
+  upstreamStatus: payment.upstreamStatus,
 });
 
 const sum = (amounts: bigint[]): bigint => amounts.reduce((total, amount) => total + amount, 0n);

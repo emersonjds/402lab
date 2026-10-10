@@ -70,7 +70,13 @@ export const allowanceRoutes: FastifyPluginCallbackZod<AllowanceOptions> = (
         summary: 'Give an agent session wallet an allowance',
         security: SECURITY,
         body: createAllowanceBodySchema,
-        response: { 201: allowanceSchema, 400: errorSchema, 401: errorSchema, 409: errorSchema },
+        response: {
+          201: allowanceSchema,
+          400: errorSchema,
+          401: errorSchema,
+          403: errorSchema,
+          409: errorSchema,
+        },
       },
     },
     async (request, reply) => {
@@ -109,7 +115,7 @@ export const allowanceRoutes: FastifyPluginCallbackZod<AllowanceOptions> = (
         summary: 'One allowance of the caller',
         security: SECURITY,
         params: allowanceIdParamsSchema,
-        response: { 200: allowanceSchema, 401: errorSchema, 404: errorSchema },
+        response: { 200: allowanceSchema, 401: errorSchema, 403: errorSchema, 404: errorSchema },
       },
     },
     async (request) => toView(await ownedAllowance(callerOf(request).address, request.params.id)),
@@ -124,7 +130,13 @@ export const allowanceRoutes: FastifyPluginCallbackZod<AllowanceOptions> = (
         security: SECURITY,
         params: allowanceIdParamsSchema,
         body: updateAllowanceBodySchema,
-        response: { 200: allowanceSchema, 400: errorSchema, 401: errorSchema, 404: errorSchema },
+        response: {
+          200: allowanceSchema,
+          400: errorSchema,
+          401: errorSchema,
+          403: errorSchema,
+          404: errorSchema,
+        },
       },
     },
     async (request) => {
@@ -135,6 +147,7 @@ export const allowanceRoutes: FastifyPluginCallbackZod<AllowanceOptions> = (
         changes: request.body,
       });
       if (!updated) throw AppError.notFound();
+      if (updated === 'caps_inverted') throw new AppError(400, 'invalid_input');
 
       bus.publish(ownerAddress, {
         type: 'allowance.updated',
@@ -180,7 +193,13 @@ export const allowanceRoutes: FastifyPluginCallbackZod<AllowanceOptions> = (
         security: SECURITY,
         params: allowanceIdParamsSchema,
         querystring: paymentsQuerySchema,
-        response: { 200: paymentListSchema, 400: errorSchema, 401: errorSchema, 404: errorSchema },
+        response: {
+          200: paymentListSchema,
+          400: errorSchema,
+          401: errorSchema,
+          403: errorSchema,
+          404: errorSchema,
+        },
       },
     },
     async (request) => {
@@ -203,7 +222,13 @@ export const allowanceRoutes: FastifyPluginCallbackZod<AllowanceOptions> = (
         security: SECURITY,
         params: allowanceIdParamsSchema,
         querystring: statementQuerySchema,
-        response: { 200: statementSchema, 400: errorSchema, 401: errorSchema, 404: errorSchema },
+        response: {
+          200: statementSchema,
+          400: errorSchema,
+          401: errorSchema,
+          403: errorSchema,
+          404: errorSchema,
+        },
       },
     },
     async (request) => {

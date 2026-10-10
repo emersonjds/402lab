@@ -95,17 +95,25 @@ export type AllowanceChanges = {
   [Field in 'status' | 'perCallCap' | 'dailyCap']?: AllowanceRow[Field] | undefined;
 };
 
+/** The cap rule is checked against the row being written, so a concurrent change cannot slip
+ * a per-call cap above the daily one. Answers `'caps_inverted'` when the change would. */
 export const updateAllowance = async (
   db: Database,
   { ownerAddress, id, changes }: { ownerAddress: string; id: string; changes: AllowanceChanges },
-): Promise<AllowanceRow | undefined> => {
+): Promise<AllowanceRow | 'caps_inverted' | undefined> => {
+  const isOwned = and(eq(allowances.id, id), eq(allowances.ownerAddress, ownerAddress));
+  const perCallCap = changes.perCallCap ?? allowances.perCallCap;
+  const dailyCap = changes.dailyCap ?? allowances.dailyCap;
+
   const [allowance] = await db
     .update(allowances)
     .set(changes)
-    .where(and(eq(allowances.id, id), eq(allowances.ownerAddress, ownerAddress)))
+    .where(and(isOwned, sql`${perCallCap}::bigint <= ${dailyCap}::bigint`))
     .returning();
+  if (allowance) return allowance;
 
-  return allowance;
+  const [existing] = await db.select({ id: allowances.id }).from(allowances).where(isOwned);
+  return existing ? 'caps_inverted' : undefined;
 };
 
 export const POLLING_PAGE_SIZE = 50;
