@@ -1,31 +1,79 @@
-import type { ReactNode } from 'react';
+'use client';
 
-import { Button } from '@/shared/ui/button';
-import { DevnetBadge } from '@/shared/ui/devnet-badge';
-import { Wordmark } from '@/shared/ui/wordmark';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState, type ReactNode } from 'react';
 
-import { AppNav } from './app-nav';
+import { SidebarProvider, useSidebar } from '@/context/sidebar-context';
+import { AppHeader } from '@/layout/app-header';
+import { AppSidebar } from '@/layout/app-sidebar';
+import { Backdrop } from '@/layout/backdrop';
 
-export const AppShell = ({ children }: { children: ReactNode }) => (
-  <div className="flex min-h-dvh flex-col">
-    <header className="sticky top-0 z-40 border-b border-line bg-bg/85 backdrop-blur-md">
-      <div className="flex h-16 items-center justify-between gap-3 px-4 sm:px-6">
-        <div className="flex items-center gap-3">
-          <Wordmark />
-          <DevnetBadge />
-        </div>
-        {/* ponytail: placeholder until the wallet sign-in lands (LAB-7 part B). */}
-        <Button variant="secondary" disabled>
-          Connect wallet
-        </Button>
-      </div>
-    </header>
-    <div className="flex flex-1">
-      <AppNav layout="sidebar" />
-      <main id="main" className="min-w-0 flex-1 px-4 pt-6 pb-24 sm:px-6 lg:pb-10">
+type SessionCheck = 'checking' | 'signed-in';
+
+/**
+ * Every `/app/*` route needs a session. `GET /api/allowances` is the cheapest
+ * authenticated probe already wired for this product — a 401 means the
+ * httpOnly cookie is missing or expired, so we bounce to /connect before any
+ * dashboard content renders.
+ */
+const useRequireSession = (): SessionCheck => {
+  const router = useRouter();
+  const [check, setCheck] = useState<SessionCheck>('checking');
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetch('/api/allowances', { credentials: 'same-origin' })
+      .then((response) => {
+        if (cancelled) return;
+        if (response.status === 401) {
+          router.replace('/connect');
+          return;
+        }
+        setCheck('signed-in');
+      })
+      .catch(() => {
+        // Network hiccup: don't lock the owner out, let the page render and
+        // its own data fetches surface the error with fixed copy.
+        if (!cancelled) setCheck('signed-in');
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [router]);
+
+  return check;
+};
+
+const Content = ({ children }: { children: ReactNode }) => {
+  const { isExpanded, isHovered, isMobileOpen } = useSidebar();
+  const open = isExpanded || isHovered || isMobileOpen;
+
+  return (
+    <div className={`flex min-h-dvh flex-col transition-all duration-300 ${open ? 'lg:pl-64' : 'lg:pl-20'}`}>
+      <AppHeader />
+      <main id="main" className="min-w-0 flex-1 p-4 sm:p-6">
         {children}
       </main>
     </div>
-    <AppNav layout="tabs" />
-  </div>
-);
+  );
+};
+
+export const AppShell = ({ children }: { children: ReactNode }) => {
+  const check = useRequireSession();
+
+  if (check === 'checking') {
+    return <div className="min-h-dvh bg-bg" aria-busy="true" aria-label="Checking session" />;
+  }
+
+  return (
+    <SidebarProvider>
+      <div className="min-h-dvh bg-bg">
+        <AppSidebar />
+        <Backdrop />
+        <Content>{children}</Content>
+      </div>
+    </SidebarProvider>
+  );
+};
