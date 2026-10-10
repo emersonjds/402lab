@@ -8,5 +8,5 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "__mocks__", "jest.setup.ts"]
+  "include": ["src", "__mocks__", "jest.setup.ts", "metro.config.ts"]
 }

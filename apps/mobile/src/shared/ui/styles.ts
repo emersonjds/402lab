@@ -55,10 +55,13 @@ export const styles = StyleSheet.create({
   },
   pillText: { fontFamily: font.mono, fontSize: 11, letterSpacing: 1 },
   errorState: {
-    flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
-    gap: spacing.md,
-    padding: spacing.lg,
+    gap: spacing.sm,
+    padding: spacing.md,
+    marginBottom: spacing.md,
+    borderRadius: radius.card,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
   },
 });
