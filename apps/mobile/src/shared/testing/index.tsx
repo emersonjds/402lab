@@ -20,11 +20,18 @@ export const permission = (granted: boolean, canAskAgain = true): PermissionResp
   status: granted ? PermissionStatus.GRANTED : PermissionStatus.DENIED,
 });
 
-type Route = { method?: string; path: string; status?: number; body?: unknown };
+type Route = {
+  method?: string;
+  path: string;
+  status?: number;
+  body?: unknown;
+  // The response waits for this promise, to observe the UI while the request is in flight.
+  hold?: Promise<void>;
+};
 
 // Fake HTTP boundary: each call answers with the first route matching method + path prefix.
 export const mockFetch = (routes: Route[]) => {
-  const fetchMock = jest.fn((input: RequestInfo | URL, init?: RequestInit) => {
+  const fetchMock = jest.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
     const url = input instanceof Request ? input.url : input.toString();
     const method = init?.method ?? 'GET';
     const route = routes.find(
@@ -33,12 +40,11 @@ export const mockFetch = (routes: Route[]) => {
     );
 
     if (!route) {
-      return Promise.reject(new TypeError('Network request failed'));
+      throw new TypeError('Network request failed');
     }
 
-    return Promise.resolve(
-      new Response(JSON.stringify(route.body ?? {}), { status: route.status ?? 200 }),
-    );
+    await route.hold;
+    return new Response(JSON.stringify(route.body ?? {}), { status: route.status ?? 200 });
   });
   globalThis.fetch = fetchMock;
   return fetchMock;

@@ -6,6 +6,7 @@ import { FlatList, Pressable, RefreshControl, Text, View } from 'react-native';
 import { listAllowances, type Allowance } from '@/entities/allowance';
 import { listPayments, mergeNewestFirst, serviceName, type Payment } from '@/entities/payment';
 import { useConnection } from '@/entities/session';
+import { PauseControl } from '@/features/pause-agent';
 import { theme } from '@/shared/config/theme';
 import { timeAgo } from '@/shared/lib/time-ago';
 import { usePolling } from '@/shared/lib/use-polling';
@@ -113,6 +114,7 @@ export const AgentDetailScreen = () => {
           allowance ? (
             <View style={styles.hero}>
               <SpendRing spent={allowance.spentToday} cap={allowance.dailyCap} />
+              <PauseControl allowance={allowance} onUpdated={setAllowance} />
             </View>
           ) : null
         }
