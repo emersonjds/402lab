@@ -31,11 +31,13 @@ export interface AuthOptions {
   secureCookie: boolean;
 }
 
+/** Sign-In With Solana (web) plus mobile pairing: the only routes a signed-out caller may hit. */
 export const authRoutes: FastifyPluginCallbackZod<AuthOptions> = (
   app,
   { db, now, jwtSecret, secureCookie },
   done,
 ) => {
+  /** Public. One nonce per sign-in attempt; expired nonces are swept lazily on the next call. */
   app.get(
     '/auth/nonce',
     {
@@ -62,6 +64,8 @@ export const authRoutes: FastifyPluginCallbackZod<AuthOptions> = (
     },
   );
 
+  /** Public. Consuming the nonce is the only replay guard; a signature over a stale or
+   * already-used nonce is rejected before the wallet signature is even checked. */
   app.post(
     '/auth/verify',
     {
@@ -98,6 +102,7 @@ export const authRoutes: FastifyPluginCallbackZod<AuthOptions> = (
     },
   );
 
+  /** Web session only: pairs a phone by minting it a long-lived mobile Bearer token. */
   app.post(
     '/auth/pair',
     {
@@ -118,6 +123,7 @@ export const authRoutes: FastifyPluginCallbackZod<AuthOptions> = (
     },
   );
 
+  /** Web or mobile. Clears this browser's cookie only; other sessions are untouched. */
   app.post(
     '/auth/logout',
     {
@@ -132,6 +138,8 @@ export const authRoutes: FastifyPluginCallbackZod<AuthOptions> = (
     },
   );
 
+  /** Web or mobile. Stamps `valid_after` so every token issued before this call, including the
+   * caller's own, fails verification on its next use. */
   app.post(
     '/auth/revoke-devices',
     {

@@ -7,7 +7,8 @@ export type EventsBus = {
   subscribe: (ownerAddress: string, listener: Listener) => () => void;
 };
 
-// ponytail: in-process only; one API instance. Swap for Postgres LISTEN/NOTIFY when it scales out.
+/** In-memory pub/sub for `LiveEvent`s, keyed by owner address; backs `GET /events`.
+ * ponytail: in-process only; one API instance. Swap for Postgres LISTEN/NOTIFY when it scales out. */
 export const createEventsBus = (): EventsBus => {
   const listenersByOwner = new Map<string, Set<Listener>>();
 

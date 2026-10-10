@@ -19,6 +19,8 @@ export const withOnrampLock = <Result>(
     return work(transaction);
   });
 
+/** How much an owner and a session wallet have already topped up since `since`, to enforce the
+ * per-owner daily cap and the one-top-up-per-wallet-per-day limit. */
 export const onrampUsageSince = async (
   transaction: Transaction,
   {
@@ -56,6 +58,7 @@ export const findUnsplitPayments = (transaction: Transaction) =>
       and(isNull(payments.splitBatchId), sql`${payments.upstreamStatus} is distinct from 'failed'`),
     );
 
+/** Books a simulated top-up after the transfer already landed on devnet. */
 export const recordOnramp = async (
   transaction: Transaction,
   onramp: typeof onramps.$inferInsert,

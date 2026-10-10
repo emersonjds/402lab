@@ -15,6 +15,11 @@ export interface EventOptions {
   bus: EventsBus;
 }
 
+/** `GET /events`: a `text/event-stream` of the caller's own `LiveEvent`s, hijacked past
+ * Fastify's reply pipeline (no response schema past 2xx, since the body is never one JSON
+ * document). Each `data:` line is one JSON-encoded `LiveEvent` from `@402lab/shared/events`:
+ * `payment.settled`, `split.confirmed`, `split.failed`, `allowance.cap_reached` or
+ * `allowance.updated`, plus a `: heartbeat` comment every 15s to keep the connection alive. */
 export const eventRoutes: FastifyPluginCallbackZod<EventOptions> = (app, { bus }, done) => {
   const openStreams = new Map<string, Set<ServerResponse>>();
 
@@ -26,6 +31,8 @@ export const eventRoutes: FastifyPluginCallbackZod<EventOptions> = (app, { bus }
     closed();
   });
 
+  /** Web or mobile. Caps streams per owner rather than per connection, so one owner cannot
+   * starve the process by opening the feed from many tabs or devices at once. */
   app.get(
     '/events',
     {

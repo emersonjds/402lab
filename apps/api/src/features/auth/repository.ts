@@ -3,6 +3,8 @@ import { and, eq, gt, lte } from 'drizzle-orm';
 import type { Database } from '../../shared/db/pool.js';
 import { authNonces } from '../../shared/db/schema.js';
 
+/** Records the nonce a wallet must sign to prove it holds the key; sweeps expired nonces first
+ * since there is no background job for that table. */
 export const storeNonce = async (
   db: Database,
   nonce: { nonce: string; address: string; expiresAt: Date },

@@ -38,7 +38,8 @@ export type DevnetChain = SolanaChain & {
 const COMMITMENT = 'confirmed';
 const RPC_TIMEOUT_MS = 15_000;
 
-/** A call past the timeout rejects, failing the split round instead of hanging it. */
+/** The `SolanaChain`/`DevnetChain` used by the split worker, reconciliation job and demo
+ * on-ramp. A call past the timeout rejects, failing the split round instead of hanging it. */
 export const createSolanaChain = (rpcUrl: string, timeoutMs = RPC_TIMEOUT_MS): DevnetChain => {
   const rpc = createSolanaRpc(rpcUrl);
   const deadline = () => ({ abortSignal: AbortSignal.timeout(timeoutMs) });

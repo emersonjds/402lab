@@ -19,12 +19,14 @@ export type Session = {
   expiresAt: number;
 };
 
+/** Issues a session JWT; `scope` fixes how long it lives and, via `MOBILE_ROUTES`, what it may call. */
 export const signSession = (address: string, scope: SessionScope, secret: string): string =>
   jwt.sign({ sub: address, scope }, secret, {
     algorithm: 'HS256',
     expiresIn: SESSION_LIFETIME_SECONDS[scope],
   });
 
+/** `undefined` on any bad, expired or wrongly-signed token; never throws. */
 export const verifySession = (token: string, secret: string): Session | undefined => {
   try {
     const claims = sessionClaimsSchema.safeParse(

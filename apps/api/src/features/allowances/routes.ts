@@ -50,11 +50,15 @@ const toView = (allowance: AllowanceWithSpend) => ({
 
 const SECURITY = [{ cookie: [] }, { bearer: [] }];
 
+/** Allowances, their spend and their payment history. Every route but
+ * `/allowances/by-session/:address` requires the owner's own session. */
 export const allowanceRoutes: FastifyPluginCallbackZod<AllowanceOptions> = (
   app,
   { db, bus, now, catalog },
   done,
 ) => {
+  /** 404 for an allowance id that exists but belongs to another owner: ownership is the WHERE
+   * clause in `findOwnedAllowance`, never a check made after the row is already fetched. */
   const ownedAllowance = async (ownerAddress: string, id: string) => {
     const allowance = await findOwnedAllowance(db, { ownerAddress, id, now: now() });
     if (!allowance) throw AppError.notFound();
@@ -62,6 +66,7 @@ export const allowanceRoutes: FastifyPluginCallbackZod<AllowanceOptions> = (
     return allowance;
   };
 
+  /** Web or mobile. One allowance per session wallet; a second attempt answers 409. */
   app.post(
     '/allowances',
     {
@@ -90,6 +95,7 @@ export const allowanceRoutes: FastifyPluginCallbackZod<AllowanceOptions> = (
     },
   );
 
+  /** Web or mobile. */
   app.get(
     '/allowances',
     {
@@ -107,6 +113,7 @@ export const allowanceRoutes: FastifyPluginCallbackZod<AllowanceOptions> = (
     }),
   );
 
+  /** Web or mobile. */
   app.get(
     '/allowances/:id',
     {
@@ -121,6 +128,8 @@ export const allowanceRoutes: FastifyPluginCallbackZod<AllowanceOptions> = (
     async (request) => toView(await ownedAllowance(callerOf(request).address, request.params.id)),
   );
 
+  /** Web freely; mobile only to flip `status` (see `MOBILE_ROUTES` in `shared/auth/authenticate.ts`).
+   * A per-call cap above the daily cap answers 400 instead of writing the row. */
   app.patch(
     '/allowances/:id',
     {
@@ -161,6 +170,8 @@ export const allowanceRoutes: FastifyPluginCallbackZod<AllowanceOptions> = (
     },
   );
 
+  /** Public: the MCP payer calls this with no session, by session wallet address, to learn the
+   * caps it must stay under before it ever signs a payment. */
   app.get(
     '/allowances/by-session/:address',
     {
@@ -184,6 +195,7 @@ export const allowanceRoutes: FastifyPluginCallbackZod<AllowanceOptions> = (
     },
   );
 
+  /** Web or mobile; mobile polls this to render new payments without a live stream. */
   app.get(
     '/allowances/:id/payments',
     {
@@ -213,6 +225,7 @@ export const allowanceRoutes: FastifyPluginCallbackZod<AllowanceOptions> = (
     },
   );
 
+  /** Web or mobile. */
   app.get(
     '/allowances/:id/statement',
     {

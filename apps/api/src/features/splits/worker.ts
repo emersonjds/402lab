@@ -130,6 +130,8 @@ const reconcileBatch = async (dependencies: SplitRoundDependencies, batch: Split
   await failBatch(dependencies, batch);
 };
 
+/** One worker tick: reconciles any batch already in flight against the chain, and only once
+ * none are pending does it group newly settled payments into the next batch and send it. */
 export const runSplitRound = async (dependencies: SplitRoundDependencies): Promise<void> => {
   const { db, chain, treasury, catalog, logger } = dependencies;
 

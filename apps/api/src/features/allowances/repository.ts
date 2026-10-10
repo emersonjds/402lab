@@ -9,6 +9,8 @@ import {
   type PaymentRow,
 } from '../../shared/db/schema.js';
 
+/** The allowance that backs a session wallet, if any. Used by the ledger hooks and the
+ * public `by-session` route to look up policy without the owner's identity. */
 export const findAllowanceBySession = async (
   db: Database,
   sessionAddress: string,
@@ -61,6 +63,7 @@ const selectWithSpend = (db: Database, now: Date, where: SQL | undefined) =>
     .orderBy(asc(allowances.createdAt), asc(allowances.id))
     .then((rows) => rows.map((row) => ({ ...row.allowance, spentToday: row.spentToday })));
 
+/** Every allowance owned by this caller, each with today's UTC spend. */
 export const listAllowances = (
   db: Database,
   { ownerAddress, now }: { ownerAddress: string; now: Date },
@@ -81,6 +84,7 @@ export const findOwnedAllowance = async (
   return allowance;
 };
 
+/** Same lookup as `findAllowanceBySession`, with today's spend attached. */
 export const findSessionAllowance = async (
   db: Database,
   { sessionAddress, now }: { sessionAddress: string; now: Date },
@@ -121,6 +125,7 @@ export const POLLING_PAGE_SIZE = 50;
 /** Keyset on (settled_at, id): ascending and never repeats a row already handed out.
  * A cursor that is not a payment of this allowance matches nothing. */
 // ponytail: a payment committed late with an earlier settled_at is skipped; add a sequence column if that shows up.
+/** One page of an owned allowance's payments for mobile polling, oldest first. */
 export const listPaymentsAfter = async (
   db: Database,
   { allowanceId, after }: { allowanceId: string; after: string | undefined },
@@ -139,6 +144,7 @@ export const listPaymentsAfter = async (
     .orderBy(asc(payments.settledAt), asc(payments.id))
     .limit(POLLING_PAGE_SIZE);
 
+/** An owned allowance's payments in `[from, to)`, for the monthly statement. */
 export const listPaymentsBetween = async (
   db: Database,
   { allowanceId, from, to }: { allowanceId: string; from: Date; to: Date },

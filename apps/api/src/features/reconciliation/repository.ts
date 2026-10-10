@@ -3,6 +3,7 @@ import { eq, inArray } from 'drizzle-orm';
 import type { Database } from '../../shared/db/pool.js';
 import { payments, reconciliationCursor, splitBatches } from '../../shared/db/schema.js';
 
+/** Newest treasury signature already reconciled for `account`, or `undefined` on a first run. */
 export const readCursor = async (db: Database, account: string): Promise<string | undefined> => {
   const [cursor] = await db
     .select({ lastSignature: reconciliationCursor.lastSignature })
@@ -12,6 +13,8 @@ export const readCursor = async (db: Database, account: string): Promise<string 
   return cursor?.lastSignature;
 };
 
+/** Advances the cursor one signature at a time, so a crash mid-round resumes at the signature
+ * that was being processed rather than skipping it. */
 export const saveCursor = async (
   db: Database,
   account: string,

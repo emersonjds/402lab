@@ -15,7 +15,9 @@ export interface WaitlistOptions {
   db: Database;
 }
 
+/** Public marketing sign-up, no session involved. */
 export const waitlistRoutes: FastifyPluginCallbackZod<WaitlistOptions> = (app, { db }, done) => {
+  /** Idempotent on purpose: see `joinWaitlist` for why the answer never reveals who already signed up. */
   app.post(
     '/waitlist',
     {

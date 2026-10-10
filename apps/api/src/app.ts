@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+
 import { buildCatalog, type Service } from '@402lab/shared';
 import cookie from '@fastify/cookie';
 import rateLimit from '@fastify/rate-limit';
@@ -10,6 +12,7 @@ import {
   serializerCompiler,
   validatorCompiler,
 } from 'fastify-type-provider-zod';
+import { z } from 'zod';
 
 import { allowanceRoutes } from './features/allowances/routes.js';
 import { authRoutes } from './features/auth/routes.js';
@@ -34,6 +37,14 @@ import type { EventsBus } from './shared/events-bus.js';
 import { createSolanaChain } from './shared/solana/rpc.js';
 import { loadTreasurySigner } from './shared/solana/treasury.js';
 
+const packageJsonSchema = z.object({ version: z.string() });
+
+/** Read once at import time rather than per-request; keeps the OpenAPI document's version in
+ * lockstep with `package.json` without an extra build step. */
+const API_VERSION = packageJsonSchema.parse(
+  JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')),
+).version;
+
 export interface AppDependencies {
   config: Config;
   adapters?: ServiceAdapters;
@@ -44,6 +55,8 @@ export interface AppDependencies {
   solanaChain?: OnrampChain;
 }
 
+/** The service catalog with recipients resolved from env; rebuilt from `Config` wherever
+ * `buildApp` is not in scope (the split worker, the reconciliation job, `split-once.ts`). */
 export const catalogFromConfig = (config: Config): Service[] =>
   buildCatalog({
     provider: {
@@ -55,6 +68,9 @@ export const catalogFromConfig = (config: Config): Service[] =>
     platform: config.TREASURY_ADDRESS,
   });
 
+/** Assembles the Fastify instance: plugins, every route slice, and — only on a devnet RPC with
+ * a treasury key configured and confirmed by its genesis hash — the demo on-ramp. Starts no
+ * background worker; `server.ts` starts the split worker and the reconciliation job itself. */
 export const buildApp = async ({
   config,
   adapters = resolveAdapters(config),
@@ -84,7 +100,15 @@ export const buildApp = async ({
   });
   await app.register(swagger, {
     openapi: {
-      info: { title: '402Lab API', version: '0.1.0' },
+      info: {
+        title: '402Lab API',
+        version: API_VERSION,
+        description:
+          'Consumption account for AI agents: an owner sets an allowance (per-call and daily ' +
+          'caps) and the agent pays per API call in USDC on Solana via HTTP 402 (x402), with ' +
+          'automatic settlement splits to providers and a monthly statement.',
+      },
+      servers: [{ url: 'http://localhost:8080' }],
       components: {
         securitySchemes: {
           cookie: { type: 'apiKey', in: 'cookie', name: 'session' },
