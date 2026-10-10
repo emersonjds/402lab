@@ -10,3 +10,8 @@ coverage
 *.keypair.json
 next-env.d.ts
 *.tsbuildinfo
+
+# Expo prebuild output (continuous native generation)
+apps/mobile/android
+apps/mobile/ios
+*.apk
