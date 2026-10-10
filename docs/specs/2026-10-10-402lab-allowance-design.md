@@ -19,7 +19,7 @@ Infra x402 genérica e gateway 402 genérico já existem e já foram premiados (
 3. O agente descobre os serviços, recebe 402, paga três provedores sozinho, sem popup. O dashboard e o app mostram cada pagamento ao vivo, com assinatura no Solscan.
 4. 30 s depois, uma única transação de split distribui os valores para provedores, integrador e plataforma — link no Solscan.
 5. No app, o humano toca "Pausar". A próxima chamada do agente é recusada.
-6. Contador: "3 chamadas, US$0,021 pagos; no cartão + IOF custariam US$0,93".
+6. Contador: "3 chamadas, US$0,017 pagos; no cartão + IOF custariam US$0,95".
 
 ## 3. Escopo
 
