@@ -12,7 +12,10 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "spike:pay": "tsx --env-file-if-exists=apps/api/.env scripts/devnet-pay.ts",
-    "e2e:devnet": "tsx --env-file-if-exists=apps/api/.env scripts/e2e-devnet.ts"
+    "e2e:devnet": "tsx --env-file-if-exists=apps/api/.env scripts/e2e-devnet.ts",
+    "db:up": "docker compose up -d postgres",
+    "dev": "pnpm --parallel --filter @402lab/api --filter @402lab/web dev",
+    "dev:mobile": "pnpm --filter @402lab/mobile start"
   },
   "devDependencies": {
     "@402lab/shared": "workspace:*",

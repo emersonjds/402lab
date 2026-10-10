@@ -83,11 +83,17 @@ Requirements: Node 24, pnpm 11, Docker.
 
 ```sh
 pnpm install
-docker compose up -d                          # Postgres 16 on localhost:5432
+pnpm db:up                                    # Postgres 16 on localhost:5432
 cp .env.example apps/api/.env                 # fill the wallet addresses (devnet)
-pnpm --filter @402lab/api dev                 # http://localhost:8080 — migrations run at boot
-pnpm --filter @402lab/web dev                 # http://localhost:3000 (API_URL in apps/web/.env.local)
-pnpm --filter @402lab/mobile start            # scan with Expo Go
+pnpm dev                                      # api on :8080 (migrations at boot) + web on :3000
+pnpm dev:mobile                               # scan with Expo Go
+```
+
+Android APK for the pitch QR code:
+
+```sh
+cd apps/mobile && eas build -p android --profile preview          # cloud build, prints install link + QR
+cd apps/mobile && eas build -p android --profile preview --local  # same APK built on this machine
 ```
 
 `apps/api/.env` needs the treasury, the three provider wallets and the integrator (public base58
