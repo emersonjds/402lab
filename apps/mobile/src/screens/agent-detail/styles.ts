@@ -10,6 +10,14 @@ export const styles = StyleSheet.create({
   backText: { color: colors.text, fontSize: 32, lineHeight: 36 },
   title: { flex: 1 },
   hero: { alignItems: 'stretch', gap: spacing.md, paddingVertical: spacing.md },
+  caption: { textAlign: 'center', fontSize: 11, letterSpacing: 1 },
+  stats: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: spacing.xl,
+  },
+  statItem: { alignItems: 'center', gap: spacing.xs },
+  feedLabel: { fontSize: 11, letterSpacing: 1, marginTop: spacing.sm },
   list: { gap: spacing.xs, paddingBottom: spacing.xl },
   row: {
     flexDirection: 'row',

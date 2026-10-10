@@ -36,3 +36,9 @@ export const setAllowanceStatus = (
 
 export const capReached = (allowance: Allowance): boolean =>
   allowance.spentToday >= allowance.dailyCap;
+
+export const spentPercent = (allowance: Allowance): number => {
+  if (allowance.dailyCap === 0n) return 100;
+  const ratio = (allowance.spentToday * 100n) / allowance.dailyCap;
+  return ratio > 100n ? 100 : Number(ratio);
+};

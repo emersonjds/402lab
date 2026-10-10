@@ -3,18 +3,36 @@ import { Redirect, router } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { FlatList, Pressable, RefreshControl, View } from 'react-native';
 
-import { listAllowances, type Allowance } from '@/entities/allowance';
+import { listAllowances, spentPercent, type Allowance } from '@/entities/allowance';
 import { useConnection } from '@/entities/session';
 import { AlertsPrompt, watchCaps } from '@/features/cap-alerts';
 import { theme } from '@/shared/config/theme';
 import { usePolling } from '@/shared/lib/use-polling';
-import { Body, Header, Muted, OfflineState, Screen, StatusPill } from '@/shared/ui';
+import { Body, Header, Mono, Muted, OfflineState, Screen, StatusPill } from '@/shared/ui';
 import { SpendRing } from '@/widgets/spend-ring';
 
 import { styles } from './styles';
 
+const FleetSummary = ({ allowances }: { allowances: Allowance[] }) => {
+  const spentToday = allowances.reduce((sum, allowance) => sum + allowance.spentToday, 0n);
+  const activeCount = allowances.filter((allowance) => allowance.status === 'active').length;
+
+  return (
+    <View style={styles.summary}>
+      <View>
+        <Muted style={styles.summaryLabel}>FLEET SPEND</Muted>
+        <Mono style={styles.summaryValue}>{formatUsd(spentToday)}</Mono>
+      </View>
+      <View style={styles.summaryItem}>
+        <Muted style={styles.summaryLabel}>ACTIVE</Muted>
+        <Mono style={styles.summaryValue}>{`${String(activeCount)}/${String(allowances.length)}`}</Mono>
+      </View>
+    </View>
+  );
+};
+
 const AgentCard = ({ allowance }: { allowance: Allowance }) => {
-  const spent = `Spent today ${formatUsd(allowance.spentToday)} of ${formatUsd(allowance.dailyCap)}`;
+  const spent = `${String(spentPercent(allowance))}% · Spent today ${formatUsd(allowance.spentToday)} of ${formatUsd(allowance.dailyCap)}`;
 
   return (
     <Pressable
@@ -68,6 +86,7 @@ export const AgentsScreen = () => {
   return (
     <Screen>
       <Header title="Your agents" />
+      {allowances && allowances.length > 0 && <FleetSummary allowances={allowances} />}
       <AlertsPrompt />
       {offline && (
         <OfflineState

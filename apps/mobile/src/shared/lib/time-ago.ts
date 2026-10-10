@@ -19,3 +19,15 @@ export const timeAgo = (iso: string, now = Date.now()): string => {
 
   return `${String(Math.floor(hours / 24))}d ago`;
 };
+
+export const resetsInLabel = (now = Date.now()): string => {
+  const today = new Date(now);
+  const nextUtcMidnight = Date.UTC(
+    today.getUTCFullYear(),
+    today.getUTCMonth(),
+    today.getUTCDate() + 1,
+  );
+  const minutesLeft = Math.max(0, Math.floor((nextUtcMidnight - now) / 60_000));
+
+  return `${String(Math.floor(minutesLeft / 60))}h ${String(minutesLeft % 60)}m`;
+};

@@ -9,13 +9,19 @@ import { useConnection } from '@/entities/session';
 import { notifyPausedFromPhone, watchCaps } from '@/features/cap-alerts';
 import { PauseControl } from '@/features/pause-agent';
 import { theme } from '@/shared/config/theme';
-import { timeAgo } from '@/shared/lib/time-ago';
+import { resetsInLabel, timeAgo } from '@/shared/lib/time-ago';
 import { usePolling } from '@/shared/lib/use-polling';
 import { Body, DevnetBadge, Mono, Muted, OfflineState, Screen, Title } from '@/shared/ui';
 import { PaymentSheet } from '@/widgets/payment-sheet';
 import { SpendRing } from '@/widgets/spend-ring';
 
 import { styles } from './styles';
+
+const startOfUtcDayMs = (): number => {
+  const now = new Date();
+  now.setUTCHours(0, 0, 0, 0);
+  return now.getTime();
+};
 
 const FeedRow = ({ payment, onPress }: { payment: Payment; onPress: () => void }) => {
   const name = serviceName(payment.serviceId);
@@ -115,7 +121,23 @@ export const AgentDetailScreen = () => {
         ListHeaderComponent={
           allowance ? (
             <View style={styles.hero}>
+              <Muted style={styles.caption}>TODAY&apos;S ALLOWANCE</Muted>
               <SpendRing spent={allowance.spentToday} cap={allowance.dailyCap} />
+              <View style={styles.stats}>
+                <View style={styles.statItem}>
+                  <Muted style={styles.caption}>RESETS IN</Muted>
+                  <Mono>{resetsInLabel()}</Mono>
+                </View>
+                <View style={styles.statItem}>
+                  <Muted style={styles.caption}>CALLS TODAY</Muted>
+                  <Mono>
+                    {String(
+                      payments.filter((payment) => Date.parse(payment.settledAt) >= startOfUtcDayMs())
+                        .length,
+                    )}
+                  </Mono>
+                </View>
+              </View>
               <PauseControl
                 allowance={allowance}
                 onUpdated={(updated) => {
@@ -125,6 +147,7 @@ export const AgentDetailScreen = () => {
                   }
                 }}
               />
+              <Muted style={styles.feedLabel}>LIVE PAYMENT STREAM</Muted>
             </View>
           ) : null
         }
