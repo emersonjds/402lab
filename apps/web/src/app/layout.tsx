@@ -1,7 +1,11 @@
 import type { Metadata, Viewport } from 'next';
+import { NextIntlClientProvider } from 'next-intl';
 import { Inter, JetBrains_Mono, Space_Grotesk } from 'next/font/google';
 import type { ReactNode } from 'react';
 
+import { SessionProvider } from '@/shared/auth/session-context';
+
+import messages from '../messages/en.json';
 import './globals.css';
 
 const spaceGrotesk = Space_Grotesk({
@@ -42,7 +46,9 @@ interface RootLayoutProps {
 const RootLayout = ({ children }: RootLayoutProps) => (
   <html
     lang="en"
-    className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable}`}
+    // Dark is the only theme this product ships (DESIGN.md); light is reserved
+    // for a future printable statement, so there is no runtime toggle yet.
+    className={`dark ${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable}`}
   >
     <body>
       <a
@@ -51,7 +57,9 @@ const RootLayout = ({ children }: RootLayoutProps) => (
       >
         Skip to content
       </a>
-      {children}
+      <NextIntlClientProvider locale="en" messages={messages}>
+        <SessionProvider>{children}</SessionProvider>
+      </NextIntlClientProvider>
     </body>
   </html>
 );
