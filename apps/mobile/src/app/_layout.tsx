@@ -6,7 +6,10 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 
 import { SessionProvider } from '@/entities/session';
+import { configureNotifications } from '@/features/cap-alerts';
 import { theme } from '@/shared/config/theme';
+
+configureNotifications();
 
 const RootLayout = () => {
   const [loaded, error] = useFonts({

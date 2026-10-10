@@ -6,6 +6,7 @@ import { FlatList, Pressable, RefreshControl, Text, View } from 'react-native';
 import { listAllowances, type Allowance } from '@/entities/allowance';
 import { listPayments, mergeNewestFirst, serviceName, type Payment } from '@/entities/payment';
 import { useConnection } from '@/entities/session';
+import { notifyPausedFromPhone, watchCaps } from '@/features/cap-alerts';
 import { PauseControl } from '@/features/pause-agent';
 import { theme } from '@/shared/config/theme';
 import { timeAgo } from '@/shared/lib/time-ago';
@@ -55,6 +56,7 @@ export const AgentDetailScreen = () => {
           listPayments(connection, id, cursor.current),
         ]);
         setAllowance(allowances.find((candidate) => candidate.id === id) ?? null);
+        watchCaps(allowances);
         cursor.current = page.at(-1)?.id ?? cursor.current;
         setPayments((current) => mergeNewestFirst(current, page));
       }),
@@ -114,7 +116,15 @@ export const AgentDetailScreen = () => {
           allowance ? (
             <View style={styles.hero}>
               <SpendRing spent={allowance.spentToday} cap={allowance.dailyCap} />
-              <PauseControl allowance={allowance} onUpdated={setAllowance} />
+              <PauseControl
+                allowance={allowance}
+                onUpdated={(updated) => {
+                  setAllowance(updated);
+                  if (updated.status === 'paused') {
+                    notifyPausedFromPhone(updated.agentName);
+                  }
+                }}
+              />
             </View>
           ) : null
         }

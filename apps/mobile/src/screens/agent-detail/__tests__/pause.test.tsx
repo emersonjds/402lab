@@ -1,4 +1,5 @@
 import { act, fireEvent, screen } from '@testing-library/react-native';
+import { scheduleNotificationAsync } from 'expo-notifications';
 import { router, useLocalSearchParams } from 'expo-router';
 
 import { mockFetch, renderWithSession, storePairing } from '@/shared/testing';
@@ -54,6 +55,28 @@ describe('pause and resume', () => {
     });
 
     expect(screen.getByText(PAUSED_COPY)).toBeTruthy();
+  });
+
+  it('confirms with a local notification once the pause is saved', async () => {
+    mockFetch(routes('active'));
+    await renderWithSession(<AgentDetailScreen />);
+
+    await fireEvent.press(await screen.findByRole('button', { name: 'Pause agent' }));
+
+    expect(await screen.findByText(PAUSED_COPY)).toBeTruthy();
+    expect(
+      jest.mocked(scheduleNotificationAsync).mock.calls.map(([request]) => request.content.body),
+    ).toEqual(['research-bot paused from your phone.']);
+  });
+
+  it('does not notify when the pause fails', async () => {
+    mockFetch(routes('active', { status: 500 }));
+    await renderWithSession(<AgentDetailScreen />);
+
+    await fireEvent.press(await screen.findByRole('button', { name: 'Pause agent' }));
+    await screen.findByText("Couldn't pause the agent. Try again.");
+
+    expect(scheduleNotificationAsync).not.toHaveBeenCalled();
   });
 
   it('rolls back and shows fixed copy when pausing fails', async () => {

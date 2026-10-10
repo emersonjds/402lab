@@ -1,5 +1,6 @@
 import { act, fireEvent, screen, userEvent } from '@testing-library/react-native';
 import { setStringAsync } from 'expo-clipboard';
+import { scheduleNotificationAsync } from 'expo-notifications';
 import { useLocalSearchParams } from 'expo-router';
 import { Linking } from 'react-native';
 
@@ -79,6 +80,28 @@ describe('agent detail feed', () => {
     expect(paymentCalls(pollMock)).toEqual([
       'https://api.402lab.test/allowances/a1/payments?after=p1',
     ]);
+  });
+
+  it('alerts once when the agent reaches its daily cap while being watched', async () => {
+    const capped = [
+      { path: '/allowances/a1/payments', body: { payments: [] } },
+      { path: '/allowances', body: { allowances: [allowance({ spentToday: '1000000' })] } },
+    ];
+    mockFetch([
+      { path: '/allowances/a1/payments', body: { payments: [] } },
+      { path: '/allowances', body: { allowances: [allowance()] } },
+    ]);
+    await renderWithSession(<AgentDetailScreen />);
+    await screen.findByText('$0.017');
+
+    mockFetch(capped);
+    await tick();
+    await tick();
+
+    expect(await screen.findByText('$1')).toBeTruthy();
+    expect(
+      jest.mocked(scheduleNotificationAsync).mock.calls.map(([request]) => request.content.body),
+    ).toEqual(['research-bot hit its daily cap ($1). Further calls are refused.']);
   });
 
   it('stops polling when the screen goes away', async () => {

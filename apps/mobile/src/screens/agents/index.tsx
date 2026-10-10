@@ -5,6 +5,7 @@ import { FlatList, Pressable, RefreshControl, View } from 'react-native';
 
 import { listAllowances, type Allowance } from '@/entities/allowance';
 import { useConnection } from '@/entities/session';
+import { AlertsPrompt, watchCaps } from '@/features/cap-alerts';
 import { theme } from '@/shared/config/theme';
 import { usePolling } from '@/shared/lib/use-polling';
 import { Body, Header, Muted, OfflineState, Screen, StatusPill } from '@/shared/ui';
@@ -45,7 +46,9 @@ export const AgentsScreen = () => {
   const load = useCallback(
     () =>
       run(async (connection) => {
-        setAllowances(await listAllowances(connection));
+        const list = await listAllowances(connection);
+        setAllowances(list);
+        watchCaps(list);
       }),
     [run],
   );
@@ -65,6 +68,7 @@ export const AgentsScreen = () => {
   return (
     <Screen>
       <Header title="Your agents" />
+      <AlertsPrompt />
       {offline && (
         <OfflineState
           onRetry={() => {
