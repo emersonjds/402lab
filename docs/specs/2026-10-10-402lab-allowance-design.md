@@ -1,6 +1,6 @@
-# agent402 — conta de consumo de agentes de IA (design)
+# 402Lab — conta de consumo de agentes de IA (design)
 
-> Nome do produto provisório. Pasta, pacotes e textos usam `agent402` até a marca ser escolhida.
+> Marca: 402Lab (empresa e produto no hackathon). Pacotes npm no escopo `@402lab/*`. Domínio alvo: 402lab.xyz.
 
 - Data: 2026-10-10
 - Hackathon: Colosseum Crypto World's Fair — submissão até 12/out/2026 23:59 PDT, track Solana
@@ -45,7 +45,7 @@ Infra x402 genérica e gateway 402 genérico já existem e já foram premiados (
 Monorepo pnpm:
 
 ```
-agent402/
+402lab/
   apps/api        Fastify 5.12 + @x402/fastify 2.28 + Drizzle/Postgres
   apps/web        Next.js 16.4 (App Router, RSC) + @solana/kit 8.4 + @solana/react 8.4
   apps/mobile     Expo SDK 57
@@ -160,7 +160,7 @@ OpenAPI gerado do schema Zod de cada rota (`@fastify/swagger`), sempre em dia. E
 
 ### packages/mcp
 
-- `npx agent402 init` gera a carteira de sessão em `~/.agent402/session.json` (permissão 600) e imprime o endereço e o link para criar a allowance no dashboard.
+- `npx @402lab/mcp init` gera a carteira de sessão em `~/.402lab/session.json` (permissão 600) e imprime o endereço e o link para criar a allowance no dashboard.
 - Tools: `list_services`, `call_service({serviceId, input})`, `get_allowance` (saldo on-chain + gasto do dia via API pública por endereço de sessão).
 - Paga via `wrapFetchWithPayment` com `ExactSvmScheme(signer)` e `registerPolicy` (teto por chamada).
 
