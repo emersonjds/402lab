@@ -14,6 +14,8 @@ export default defineConfig(
       '.claude/**',
       '**/.next',
       '**/next-env.d.ts',
+      // Vendored by `npx msw init` — not our source.
+      'apps/web/public/mockServiceWorker.js',
     ],
   },
   js.configs.recommended,

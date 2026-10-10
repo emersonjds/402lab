@@ -68,3 +68,16 @@ export const splitBatchListSchema = z.object({ batches: z.array(splitBatchSchema
 export const mobilePairingSchema = z.object({ token: z.string(), expiresAt: z.string() });
 
 export const onrampTransferSchema = z.object({ signature: z.string() });
+
+export const catalogServiceSchema = z.object({
+  id: serviceIdSchema,
+  name: z.string(),
+  description: z.string(),
+  upstream: z.string(),
+  price: atomicAmountString,
+  mode: z.enum(['live', 'demo']),
+});
+
+export type CatalogService = z.infer<typeof catalogServiceSchema>;
+
+export const catalogServiceListSchema = z.object({ services: z.array(catalogServiceSchema) });
