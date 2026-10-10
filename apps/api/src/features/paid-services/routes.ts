@@ -71,7 +71,7 @@ export const paidServiceRoutes: FastifyPluginCallback<PaidServiceOptions> = (
       };
 
   for (const { id } of catalog) {
-    app.post(`/svc/${id}`, serve(id));
+    app.post(`/svc/${id}`, { config: { public: true } }, serve(id));
   }
 
   done();

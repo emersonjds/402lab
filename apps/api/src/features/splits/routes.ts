@@ -9,7 +9,6 @@ export interface SplitRoutesOptions {
   db: Database;
 }
 
-// ponytail: public until LAB-3 auth is merged; the merge registers it behind the session guard.
 export const splitRoutes: FastifyPluginCallback<SplitRoutesOptions> = (app, { db }, done) => {
   app.get('/splits', async (): Promise<SplitBatchListResponse> => ({
     batches: (await listRecentBatches(db)).map((batch) => ({

@@ -1,4 +1,7 @@
+import { USDC_DEVNET_MINT } from '@402lab/shared';
+import { findAssociatedTokenPda, TOKEN_PROGRAM_ADDRESS } from '@solana-program/token';
 import {
+  type Address,
   address,
   type Blockhash,
   createSolanaRpc,
@@ -25,11 +28,18 @@ export type SolanaChain = {
   transaction: (signature: string) => Promise<unknown>;
 };
 
+/** The split worker needs only `SolanaChain`; the demo on-ramp also checks the cluster and the treasury balance. */
+export type DevnetChain = SolanaChain & {
+  genesisHash: () => Promise<string>;
+  /** Atomic devnet USDC held by the wallet's associated token account. */
+  usdcBalance: (owner: Address) => Promise<bigint>;
+};
+
 const COMMITMENT = 'confirmed';
 const RPC_TIMEOUT_MS = 15_000;
 
 /** A call past the timeout rejects, failing the split round instead of hanging it. */
-export const createSolanaChain = (rpcUrl: string, timeoutMs = RPC_TIMEOUT_MS): SolanaChain => {
+export const createSolanaChain = (rpcUrl: string, timeoutMs = RPC_TIMEOUT_MS): DevnetChain => {
   const rpc = createSolanaRpc(rpcUrl);
   const deadline = () => ({ abortSignal: AbortSignal.timeout(timeoutMs) });
 
@@ -79,5 +89,18 @@ export const createSolanaChain = (rpcUrl: string, timeoutMs = RPC_TIMEOUT_MS): S
           maxSupportedTransactionVersion: 0,
         })
         .send(deadline()),
+    genesisHash: () => rpc.getGenesisHash().send(deadline()),
+    usdcBalance: async (owner) => {
+      const [tokenAccount] = await findAssociatedTokenPda({
+        owner,
+        mint: address(USDC_DEVNET_MINT),
+        tokenProgram: TOKEN_PROGRAM_ADDRESS,
+      });
+      const { value } = await rpc
+        .getTokenAccountBalance(tokenAccount, { commitment: COMMITMENT })
+        .send(deadline());
+
+      return BigInt(value.amount);
+    },
   };
 };

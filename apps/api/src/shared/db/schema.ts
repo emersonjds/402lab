@@ -110,5 +110,27 @@ export const reconciliationCursor = pgTable('reconciliation_cursor', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+export const onramps = pgTable(
+  'onramps',
+  {
+    signature: text('signature').primaryKey(),
+    ownerAddress: text('owner_address').notNull(),
+    sessionAddress: text('session_address').notNull(),
+    amount: bigint('amount', { mode: 'bigint' }).notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    check('onramps_amount_is_positive', sql`${table.amount} > 0`),
+    index('onramps_owner_address_created_at_idx').on(table.ownerAddress, table.createdAt),
+    index('onramps_session_address_created_at_idx').on(table.sessionAddress, table.createdAt),
+  ],
+);
+
+/** Tokens of the owner issued before `valid_after` are refused. */
+export const ownerSessions = pgTable('owner_sessions', {
+  ownerAddress: text('owner_address').primaryKey(),
+  validAfter: timestamp('valid_after', { withTimezone: true }).notNull(),
+});
+
 export type AllowanceRow = typeof allowances.$inferSelect;
 export type PaymentRow = typeof payments.$inferSelect;

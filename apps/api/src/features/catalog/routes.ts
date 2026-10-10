@@ -24,7 +24,7 @@ export const catalogRoutes: FastifyPluginCallback<CatalogOptions> = (
     })),
   };
 
-  app.get('/services', () => listing);
+  app.get('/services', { config: { public: true } }, () => listing);
 
   done();
 };
