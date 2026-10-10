@@ -4,8 +4,10 @@ import { z } from 'zod';
 const solanaAddress = z.string().refine(isAddress, 'must be a base58 Solana address');
 
 /** A key left blank in `.env` means the upstream is off and the service runs in demo mode. */
-const optional = <Schema extends z.ZodType>(schema: Schema) =>
-  z.preprocess((value) => (value === '' ? undefined : value), schema.optional());
+const blankAsUnset = <Schema extends z.ZodType>(schema: Schema) =>
+  z.preprocess((value) => (value === '' ? undefined : value), schema);
+
+const optional = <Schema extends z.ZodType>(schema: Schema) => blankAsUnset(schema.optional());
 
 const configSchema = z.object({
   PORT: z.coerce.number().int().positive().max(65535).default(8080),
@@ -27,7 +29,9 @@ const configSchema = z.object({
   TREASURY_SECRET_KEY: optional(z.string()),
   SPLIT_WORKER_ENABLED: z.stringbool().default(true),
   /** Anything but `development` marks the session cookie `Secure`. */
-  NODE_ENV: z.enum(['development', 'test', 'production']).default('production'),
+  NODE_ENV: blankAsUnset(z.enum(['development', 'test', 'production']).default('production')),
+  /** Reverse proxies in front of the API; their X-Forwarded-For hops become the client IP. */
+  TRUST_PROXY_HOPS: z.coerce.number().int().min(0).default(0),
   JWT_SECRET: z.string().min(32),
 });
 

@@ -29,6 +29,8 @@ const clientFaultStatusOf = (error: unknown): number | undefined => {
 };
 
 export const registerErrorHandler = (app: FastifyInstance): void => {
+  app.setNotFoundHandler((_request, reply) => reply.status(404).send({ error: 'not_found' }));
+
   app.setErrorHandler((error, request, reply) => {
     if (error instanceof AppError) {
       return reply.status(error.status).send({ error: error.code });
