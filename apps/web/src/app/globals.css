@@ -1,0 +1,90 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-bg: #0b0d10;
+  --color-surface: #14171c;
+  --color-raised: #1c2027;
+  --color-line: #262b33;
+  --color-text: #e8eaed;
+  --color-muted: #8a93a0;
+  --color-lime: #b6f23a;
+  --color-cyan: #38d9f5;
+  --color-amber: #f5b83d;
+  --color-red: #ff5c5c;
+
+  --radius-card: 12px;
+
+  --animate-type-in: type-in 360ms steps(24, end) both;
+  --animate-blink: blink 1.1s steps(1, end) infinite;
+
+  @keyframes type-in {
+    from {
+      clip-path: inset(0 100% 0 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
+}
+
+@theme inline {
+  --font-display: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply min-h-dvh bg-bg font-sans text-text antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-cyan);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background-color: var(--color-lime);
+    color: var(--color-bg);
+  }
+}
+
+@utility bg-ledger-grid {
+  background-image:
+    linear-gradient(
+      to right,
+      color-mix(in oklab, var(--color-line) 55%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in oklab, var(--color-line) 55%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 48px 48px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
