@@ -3,6 +3,7 @@ import { Pressable, Text, View, type TextProps } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { theme } from '@/shared/config/theme';
+import { MOCKING_ENABLED } from '@/shared/mocks/is-enabled';
 
 import { styles } from './styles';
 
@@ -52,8 +53,15 @@ export const Button = ({
 );
 
 export const DevnetBadge = () => (
-  <View style={styles.badge}>
-    <Text style={styles.badgeText}>DEVNET</Text>
+  <View style={styles.badgeRow}>
+    {MOCKING_ENABLED && (
+      <View style={styles.badge}>
+        <Text style={styles.badgeText}>DEMO DATA</Text>
+      </View>
+    )}
+    <View style={styles.badge}>
+      <Text style={styles.badgeText}>DEVNET</Text>
+    </View>
   </View>
 );
 

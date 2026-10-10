@@ -31,6 +31,7 @@ export const styles = StyleSheet.create({
   warning: { backgroundColor: colors.amber },
   ghost: { borderWidth: 1, borderColor: colors.border },
   ghostText: { color: colors.text },
+  badgeRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
   badge: {
     alignSelf: 'flex-start',
     borderWidth: 1,
