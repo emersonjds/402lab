@@ -1,4 +1,4 @@
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 
 import pg from 'pg';
 
@@ -7,7 +7,8 @@ import { createDatabase, createPool, type Database } from '../../src/shared/db/p
 export const ADMIN_DATABASE_URL =
   process.env['DATABASE_URL'] ?? 'postgres://lab:lab@localhost:5432/lab402';
 
-export const TEMPLATE_DATABASE = 'lab402_test_template';
+/** Keyed by checkout path: parallel worktrees share one Postgres and must not drop each other's template. */
+export const TEMPLATE_DATABASE = `lab402_template_${createHash('sha256').update(process.cwd()).digest('hex').slice(0, 12)}`;
 
 export interface TestDatabase {
   database: Database;
