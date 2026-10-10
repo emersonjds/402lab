@@ -8,7 +8,7 @@
     "node": ">=24"
   },
   "scripts": {
-    "typecheck": "pnpm -r typecheck",
+    "typecheck": "tsc --noEmit -p . && pnpm -r typecheck",
     "lint": "eslint .",
     "format": "prettier --write .",
     "test": "pnpm -r test",
@@ -26,6 +26,7 @@
     "prettier": "^3.9.6",
     "tsx": "^4.23.15",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.69.0"
+    "typescript-eslint": "^8.69.0",
+    "zod": "^4.6.5"
   }
 }
