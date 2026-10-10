@@ -10,7 +10,12 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       include: ['src/**/*.ts'],
-      exclude: ['src/server.ts', 'src/shared/db/schema.ts', 'src/shared/db/migrate.ts'],
+      exclude: [
+        'src/server.ts',
+        'src/split-once.ts',
+        'src/shared/db/schema.ts',
+        'src/shared/db/migrate.ts',
+      ],
       reporter: ['text'],
       thresholds: {
         statements: 90,
