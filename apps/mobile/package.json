@@ -8,6 +8,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@402lab/mocks": "*",
     "@402lab/shared": "*",
     "@expo-google-fonts/inter": "^0.4.2",
     "@expo-google-fonts/jetbrains-mono": "^0.4.1",
@@ -22,11 +23,14 @@
     "expo-router": "~57.0.25",
     "expo-secure-store": "~57.0.4",
     "expo-status-bar": "~57.0.1",
+    "fast-text-encoding": "^1.0.6",
+    "msw": "^3.0.3",
     "react": "19.2.3",
     "react-native": "0.86.3",
     "react-native-safe-area-context": "~5.7.0",
     "react-native-screens": "~4.26.0",
     "react-native-svg": "15.15.4",
+    "react-native-url-polyfill": "^4.0.0",
     "zod": "^4.6.5"
   },
   "devDependencies": {

@@ -4,12 +4,19 @@ import { useState } from 'react';
 import { Linking, Modal, View } from 'react-native';
 
 import { useSession } from '@/entities/session';
+import { DEMO_PAIRING, MOCKING_ENABLED } from '@/shared/mocks/is-enabled';
 import { Body, Button, DevnetBadge, Mono, Muted, Screen, Title } from '@/shared/ui';
 
 import { styles } from './styles';
 
+const BULLETS = [
+  'Read-only observer mode',
+  'Zero private keys stored locally',
+  'One-tap emergency pause control',
+];
+
 export const PairScreen = () => {
-  const { state } = useSession();
+  const { state, pair } = useSession();
   const [permission, requestPermission] = useCameraPermissions();
   const [priming, setPriming] = useState(false);
   const [blocked, setBlocked] = useState(false);
@@ -31,6 +38,11 @@ export const PairScreen = () => {
     setPriming(true);
   };
 
+  const enterDemo = async () => {
+    await pair(DEMO_PAIRING);
+    router.replace('/agents');
+  };
+
   const allowCamera = async () => {
     if (permission && !permission.canAskAgain) {
       setBlocked(true);
@@ -50,7 +62,13 @@ export const PairScreen = () => {
 
   return (
     <Screen>
-      <DevnetBadge />
+      <View style={styles.topBar}>
+        <View>
+          <Mono style={styles.brand}>402Lab</Mono>
+          <Muted style={styles.observer}>OBSERVER MODE</Muted>
+        </View>
+        <DevnetBadge />
+      </View>
       <View style={styles.hero}>
         <View style={styles.qrFrame}>
           <Mono style={styles.qrMark}>402</Mono>
@@ -59,9 +77,18 @@ export const PairScreen = () => {
         <Body style={[styles.center, styles.lead]}>
           Open 402Lab on your computer → Allowance → Pair your phone.
         </Body>
+        <View style={styles.bullets}>
+          {BULLETS.map((bullet) => (
+            <Muted key={bullet} style={styles.bullet}>{`•  ${bullet}`}</Muted>
+          ))}
+        </View>
       </View>
       <View style={styles.footer}>
         <Button title="Scan QR code" large onPress={startScan} />
+        {MOCKING_ENABLED && (
+          <Button title="Try the demo" variant="ghost" onPress={() => void enterDemo()} />
+        )}
+        <Muted style={styles.footCaption}>Solana Devnet · HTTP 402</Muted>
       </View>
 
       <Modal

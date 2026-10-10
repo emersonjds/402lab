@@ -98,6 +98,19 @@ No devnet USDC, no Postgres, no API needed — the whole `/app` panel runs on `@
 NEXT_PUBLIC_API_MOCKING=enabled npm run dev -w @402lab/web
 ```
 
+### Run the mobile app on mock data
+
+Same idea for the phone: no API reachable from the device needed, including offline in front of
+judges. "Try the demo" on the pairing screen skips the scanner and pairs with `@402lab/mocks`
+fixtures, which keep settling new payments on a timer:
+
+```sh
+EXPO_PUBLIC_API_MOCKING=enabled npm run dev:mobile
+```
+
+An amber "DEMO DATA" badge marks every screen while it's on. The pitch APK ships built with this
+flag set — see [`apps/mobile/.env.example`](apps/mobile/.env.example).
+
 Android APK for the pitch QR code:
 
 ```sh

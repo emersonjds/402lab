@@ -153,6 +153,39 @@ export const recordPayment = (payment: Omit<MockPayment, 'id'>): MockPayment => 
   return stored;
 };
 
+export const LIVE_FEED_INTERVAL_MS = 4_000;
+
+const LIVE_SERVICE_IDS: ServiceId[] = ['ocr', 'translate', 'summarize'];
+
+let lastLiveFeedAt = Date.now();
+
+/**
+ * Settles one random payment on a random active allowance, no more often than
+ * `LIVE_FEED_INTERVAL_MS`. Shared by the SSE handler (web) and the REST handlers (mobile
+ * polling), so the feed evolves the same way no matter how a client observes it.
+ */
+export const maybeAdvanceLiveFeed = (): MockPayment | null => {
+  const now = Date.now();
+  if (now - lastLiveFeedAt < LIVE_FEED_INTERVAL_MS) return null;
+
+  const active = allowances.filter((allowance) => allowance.status === 'active');
+  const allowance = active[Math.floor(Math.random() * active.length)];
+  if (!allowance) return null;
+
+  lastLiveFeedAt = now;
+  const serviceId = LIVE_SERVICE_IDS[Math.floor(Math.random() * LIVE_SERVICE_IDS.length)] ?? 'ocr';
+  const service = serviceOf(serviceId);
+
+  return recordPayment({
+    allowanceId: allowance.id,
+    serviceId,
+    amount: service.price,
+    txSignature: `MockLive${Math.random().toString(36).slice(2)}`,
+    settledAt: new Date().toISOString(),
+    upstreamStatus: '200',
+  });
+};
+
 export const spentToday = (allowanceId: string): AtomicAmount => {
   const startOfUtcDay = new Date();
   startOfUtcDay.setUTCHours(0, 0, 0, 0);
