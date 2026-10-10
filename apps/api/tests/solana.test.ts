@@ -58,6 +58,7 @@ const rpcRequestSchema = z.object({
 describe('createSolanaChain', () => {
   const calls: RpcCall[] = [];
   let statusValue: unknown = null;
+  let hanging = false;
   let server: Server;
   let rpcUrl: string;
 
@@ -89,6 +90,7 @@ describe('createSolanaChain', () => {
       request.on('end', () => {
         const { id, method, params } = rpcRequestSchema.parse(JSON.parse(body));
         calls.push({ method, params });
+        if (hanging) return;
         response.setHeader('content-type', 'application/json');
         response.end(JSON.stringify({ jsonrpc: '2.0', id, result: resultFor(method) }));
       });
@@ -98,6 +100,7 @@ describe('createSolanaChain', () => {
   });
 
   afterAll(async () => {
+    server.closeAllConnections();
     await new Promise((resolve) => server.close(resolve));
   });
 
@@ -109,6 +112,10 @@ describe('createSolanaChain', () => {
       lastValidBlockHeight: 4_200n,
     });
     await expect(chain.blockHeight()).resolves.toBe(4_100n);
+    expect(calls.slice(-2)).toEqual([
+      { method: 'getLatestBlockhash', params: [{ commitment: 'confirmed' }] },
+      { method: 'getBlockHeight', params: [{ commitment: 'confirmed' }] },
+    ]);
   });
 
   it('sends the signed wire transaction in base64', async () => {
@@ -131,7 +138,7 @@ describe('createSolanaChain', () => {
       method: 'sendTransaction',
       params: [
         getBase64EncodedWireTransaction(signedTransaction),
-        expect.objectContaining({ encoding: 'base64' }),
+        { encoding: 'base64', preflightCommitment: 'confirmed', skipPreflight: false },
       ],
     });
   });
@@ -151,5 +158,29 @@ describe('createSolanaChain', () => {
       method: 'getSignatureStatuses',
       params: [[someSignature], { searchTransactionHistory: true }],
     });
+  });
+
+  it('gives up on every call when the rpc does not answer in time', async () => {
+    const chain = createSolanaChain(rpcUrl, 50);
+    const treasury = await generateKeyPairSigner();
+    const { signedTransaction } = await buildSplitTransaction({
+      treasury,
+      payouts: [],
+      mint: address(USDC_DEVNET_MINT),
+      latestBlockhash: {
+        blockhash: blockhash('EkSnNWid2cvwEVnVx9aBqawnmiCNiDgp3gUdkDPTKN1N'),
+        lastValidBlockHeight: 4_200n,
+      },
+    });
+    hanging = true;
+
+    try {
+      await expect(chain.latestBlockhash()).rejects.toThrow();
+      await expect(chain.blockHeight()).rejects.toThrow();
+      await expect(chain.signatureStatus(someSignature)).rejects.toThrow();
+      await expect(chain.send(signedTransaction)).rejects.toThrow();
+    } finally {
+      hanging = false;
+    }
   });
 });

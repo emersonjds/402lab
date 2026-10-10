@@ -6,7 +6,7 @@ import {
   getSignatureFromTransaction,
   type KeyPairSigner,
 } from '@solana/kit';
-import { asc, eq } from 'drizzle-orm';
+import { asc, eq, sql } from 'drizzle-orm';
 import Fastify from 'fastify';
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -32,6 +32,8 @@ import {
 
 const OWNER_ADDRESS = 'owner-address';
 const LAST_VALID_BLOCK_HEIGHT = 150n;
+/** First height the worker treats as expired: 150 blocks of margin past the last valid one. */
+const EXPIRED_HEIGHT = LAST_VALID_BLOCK_HEIGHT + 151n;
 const OCR_PROVIDER = RECIPIENT_ENVIRONMENT.PROVIDER_OCR_ADDRESS;
 const TRANSLATE_PROVIDER = RECIPIENT_ENVIRONMENT.PROVIDER_TRANSLATE_ADDRESS;
 const INTEGRATOR = RECIPIENT_ENVIRONMENT.INTEGRATOR_ADDRESS;
@@ -53,6 +55,10 @@ type FakeChain = SolanaChain & {
   sentSignatures: string[];
   /** Batch status found in the database for the signature, read inside `send`. */
   recordedBeforeSend: (string | undefined)[];
+  /** Runs right after the block height is read, before the signature status is. */
+  afterHeightRead: (() => void) | undefined;
+  /** Runs right before the signature status answers, as a concurrent round would. */
+  beforeStatus: (() => Promise<void>) | undefined;
 };
 
 let testDatabase: TestDatabase;
@@ -60,6 +66,8 @@ let treasury: KeyPairSigner;
 let chain: FakeChain;
 let events: LiveEvent[];
 let dependencies: SplitRoundDependencies;
+const createLogger = () => ({ error: vi.fn(), warn: vi.fn() });
+let logger: ReturnType<typeof createLogger>;
 let allowanceId: string;
 let paymentCount = 0;
 
@@ -71,6 +79,8 @@ const createFakeChain = (): FakeChain => {
     sendError: undefined,
     sentSignatures: [],
     recordedBeforeSend: [],
+    afterHeightRead: undefined,
+    beforeStatus: undefined,
     latestBlockhash: async () => {
       blockhashCount += 1;
       return {
@@ -88,8 +98,15 @@ const createFakeChain = (): FakeChain => {
       fake.sentSignatures.push(signature);
       if (fake.sendError) throw fake.sendError;
     },
-    signatureStatus: async () => fake.status,
-    blockHeight: async () => fake.height,
+    signatureStatus: async () => {
+      await fake.beforeStatus?.();
+      return fake.status;
+    },
+    blockHeight: async () => {
+      const height = fake.height;
+      fake.afterHeightRead?.();
+      return height;
+    },
   };
 
   return fake;
@@ -149,7 +166,8 @@ beforeEach(async () => {
   events = [];
   const bus = createEventsBus();
   bus.subscribe(OWNER_ADDRESS, (event) => events.push(event));
-  dependencies = { db: testDatabase.database, chain, treasury, catalog, bus };
+  logger = createLogger();
+  dependencies = { db: testDatabase.database, chain, treasury, catalog, bus, logger };
 });
 
 afterEach(async () => {
@@ -208,7 +226,8 @@ describe('runSplitRound', () => {
     await runSplitRound(dependencies);
     const [expiredBatch] = await batches();
 
-    chain.height = LAST_VALID_BLOCK_HEIGHT + 1n;
+    chain.height = EXPIRED_HEIGHT;
+    await runSplitRound(dependencies);
     await runSplitRound(dependencies);
 
     const [failedBatch, retryBatch, ...others] = await batches();
@@ -249,20 +268,155 @@ describe('runSplitRound', () => {
     expect(events).toEqual([]);
   });
 
-  it('releases a pending batch that never got a signature, since it was never sent', async () => {
-    const payment = await pay('ocr', 5_000n);
-    const [unsigned] = await testDatabase.database.insert(splitBatches).values({}).returning();
-    await testDatabase.database
-      .update(payments)
-      .set({ splitBatchId: unsigned!.id })
-      .where(eq(payments.id, payment.id));
+  it('keeps an expired unknown batch pending for one round, since a lagging rpc node may not see it yet', async () => {
+    await pay('ocr', 5_000n);
+    await runSplitRound(dependencies);
+    const before = await batches();
+
+    chain.height = EXPIRED_HEIGHT;
+    await runSplitRound(dependencies);
+
+    await expect(batches()).resolves.toMatchObject([{ id: before[0]!.id, status: 'pending' }]);
+    await expect(batchIdsOfPayments()).resolves.toEqual([before[0]!.id]);
+    expect(chain.sentSignatures).toHaveLength(1);
+    expect(events).toEqual([]);
+  });
+
+  it('waits within the 150-block margin past the last valid block height', async () => {
+    await pay('ocr', 5_000n);
+    await runSplitRound(dependencies);
+
+    chain.height = EXPIRED_HEIGHT - 1n;
+    await runSplitRound(dependencies);
+    await runSplitRound(dependencies);
+
+    await expect(batches()).resolves.toMatchObject([{ status: 'pending' }]);
+    expect(chain.sentSignatures).toHaveLength(1);
+  });
+
+  it('needs the expired unknown verdict in two consecutive rounds', async () => {
+    await pay('ocr', 5_000n);
+    await runSplitRound(dependencies);
+
+    chain.height = EXPIRED_HEIGHT;
+    await runSplitRound(dependencies);
+    chain.height = LAST_VALID_BLOCK_HEIGHT;
+    await runSplitRound(dependencies);
+    chain.height = EXPIRED_HEIGHT;
+    await runSplitRound(dependencies);
+
+    await expect(batches()).resolves.toMatchObject([{ status: 'pending' }]);
+    expect(chain.sentSignatures).toHaveLength(1);
+  });
+
+  it('reads the block height before the signature status', async () => {
+    await pay('ocr', 5_000n);
+    await runSplitRound(dependencies);
+    chain.height = EXPIRED_HEIGHT;
+    await runSplitRound(dependencies);
+
+    chain.afterHeightRead = () => {
+      chain.status = 'confirmed';
+    };
+    await runSplitRound(dependencies);
+
+    await expect(batches()).resolves.toMatchObject([{ status: 'confirmed' }]);
+    expect(events).toMatchObject([{ type: 'split.confirmed' }]);
+  });
+
+  it('leaves a batch confirmed by a concurrent round alone when the chain answers failed', async () => {
+    await pay('ocr', 5_000n);
+    await runSplitRound(dependencies);
+    const [batch] = await batches();
+
+    chain.status = 'failed';
+    chain.beforeStatus = async () => {
+      await testDatabase.database.update(splitBatches).set({ status: 'confirmed' });
+    };
+    await runSplitRound(dependencies);
+
+    await expect(batches()).resolves.toMatchObject([{ id: batch!.id, status: 'confirmed' }]);
+    await expect(batchIdsOfPayments()).resolves.toEqual([batch!.id]);
+    expect(chain.sentSignatures).toHaveLength(1);
+    expect(events).toEqual([]);
+  });
+
+  it('leaves a batch failed by a concurrent round alone when the chain answers confirmed', async () => {
+    await pay('ocr', 5_000n);
+    await runSplitRound(dependencies);
+    const [batch] = await batches();
+
+    chain.status = 'confirmed';
+    chain.beforeStatus = async () => {
+      await testDatabase.database.update(splitBatches).set({ status: 'failed' });
+    };
+    await runSplitRound(dependencies);
+
+    const [stillFailed] = await batches();
+    expect(stillFailed).toMatchObject({ id: batch!.id, status: 'failed' });
+    expect(events).toEqual([]);
+  });
+
+  it('refuses a batch without signature or last valid block height', async () => {
+    await expect(
+      testDatabase.database.execute(sql`insert into split_batches default values`),
+    ).rejects.toThrow();
+    await expect(
+      testDatabase.database.execute(
+        sql`insert into split_batches (tx_signature) values ('signature-without-height')`,
+      ),
+    ).rejects.toThrow();
+  });
+
+  it('skips and logs a payment whose service left the catalog, batching the rest', async () => {
+    const [retired] = await testDatabase.database
+      .insert(payments)
+      .values({
+        serviceId: 'retired-service',
+        payerAddress: 'payer-address',
+        amount: 1_000n,
+        txSignature: 'retired-signature',
+        settledAt: new Date('2026-10-10T11:00:00.000Z'),
+      })
+      .returning();
+    await pay('translate', 2_000n);
 
     await runSplitRound(dependencies);
 
-    const [failedBatch, retryBatch] = await batches();
-    expect(failedBatch).toMatchObject({ id: unsigned!.id, status: 'failed' });
-    expect(retryBatch).toMatchObject({ status: 'pending' });
-    expect(events).toEqual([{ type: 'split.failed', batchId: unsigned!.id, txSignature: null }]);
+    const [batch] = await batches();
+    await expect(payoutsOf(batch!.id)).resolves.toEqual([
+      { recipient: INTEGRATOR, role: 'integrator', amount: 100n },
+      { recipient: TRANSLATE_PROVIDER, role: 'provider', amount: 1_700n },
+    ]);
+    const [retiredAfter] = await testDatabase.database
+      .select()
+      .from(payments)
+      .where(eq(payments.id, retired!.id));
+    expect(retiredAfter?.splitBatchId).toBeNull();
+    expect(logger.warn).toHaveBeenCalledWith(
+      { paymentId: retired!.id, serviceId: 'retired-service' },
+      'split skipped a payment whose service is not in the catalog',
+    );
+  });
+
+  it('settles payments with nothing to transfer in a batch without payouts, so they leave the queue', async () => {
+    const platformOnly = catalog.map((service) =>
+      service.id === 'summarize'
+        ? {
+            ...service,
+            splits: [{ recipient: TREASURY_ADDRESS, role: 'platform' as const, bps: 10_000 }],
+          }
+        : service,
+    );
+    await pay('summarize', 10_000n);
+
+    await runSplitRound({ ...dependencies, catalog: platformOnly });
+
+    const [batch, ...others] = await batches();
+    expect(others).toEqual([]);
+    expect(batch).toMatchObject({ status: 'pending', txSignature: chain.sentSignatures[0] });
+    await expect(payoutsOf(batch!.id)).resolves.toEqual([]);
+    await expect(batchIdsOfPayments()).resolves.toEqual([batch!.id]);
   });
 
   it('leaves out payments whose upstream failed', async () => {
@@ -310,6 +464,7 @@ describe('selectSplitBatch', () => {
     ];
 
     expect(selectSplitBatch(settled, catalog, 2)).toEqual({
+      unknownService: [],
       paymentIds: ['first-ocr', 'second-ocr'],
       payouts: [
         { recipient: INTEGRATOR, role: 'integrator', amount: 500n },
@@ -318,10 +473,14 @@ describe('selectSplitBatch', () => {
     });
   });
 
-  it('refuses a payment for a service missing from the catalog', () => {
-    expect(() =>
-      selectSplitBatch([{ id: 'retired', serviceId: 'retired-service', amount: 1_000n }], catalog),
-    ).toThrow('Service retired-service is not in the catalog');
+  it('sets aside a payment for a service missing from the catalog', () => {
+    const retired = { id: 'retired', serviceId: 'retired-service', amount: 1_000n };
+
+    expect(selectSplitBatch([retired], catalog)).toEqual({
+      paymentIds: [],
+      payouts: [],
+      unknownService: [retired],
+    });
   });
 });
 
@@ -329,7 +488,6 @@ describe('startSplitWorker', () => {
   it('logs a failed round, keeps running and stops on demand', async () => {
     await pay('ocr', 5_000n);
     const latestBlockhash = vi.fn(() => Promise.reject(new Error('rpc down')));
-    const logger = { error: vi.fn() };
 
     const stop = startSplitWorker(
       { ...dependencies, chain: { ...chain, latestBlockhash }, logger },
@@ -350,9 +508,12 @@ describe('startSplitWorker', () => {
 
 describe('GET /splits', () => {
   it('lists batches newest first with payouts and the explorer link of their transaction', async () => {
-    await testDatabase.database
-      .insert(splitBatches)
-      .values({ status: 'failed', createdAt: new Date('2026-01-01T00:00:00.000Z') });
+    await testDatabase.database.insert(splitBatches).values({
+      status: 'failed',
+      txSignature: 'expired-signature',
+      lastValidBlockHeight: LAST_VALID_BLOCK_HEIGHT,
+      createdAt: new Date('2026-01-01T00:00:00.000Z'),
+    });
     await pay('translate', 2_000n);
     await runSplitRound(dependencies);
     const [failed, sent] = await batches();
@@ -378,8 +539,8 @@ describe('GET /splits', () => {
         {
           id: failed!.id,
           status: 'failed',
-          txSignature: null,
-          explorerUrl: null,
+          txSignature: 'expired-signature',
+          explorerUrl: 'https://solscan.io/tx/expired-signature?cluster=devnet',
           createdAt: '2026-01-01T00:00:00.000Z',
           payouts: [],
         },

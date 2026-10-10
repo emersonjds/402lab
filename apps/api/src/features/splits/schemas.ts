@@ -4,8 +4,8 @@ import { z } from 'zod';
 export const splitBatchListingSchema = z.object({
   id: z.string(),
   status: z.enum(['pending', 'confirmed', 'failed']),
-  txSignature: z.string().nullable(),
-  explorerUrl: z.url().nullable(),
+  txSignature: z.string(),
+  explorerUrl: z.url(),
   createdAt: z.iso.datetime(),
   payouts: z.array(
     z.object({

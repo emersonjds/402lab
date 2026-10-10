@@ -35,12 +35,13 @@ export const splitBatches = pgTable(
   'split_batches',
   {
     id: uuid('id').primaryKey().defaultRandom(),
-    txSignature: text('tx_signature').unique(),
+    txSignature: text('tx_signature').notNull().unique(),
     status: text('status', { enum: ['pending', 'confirmed', 'failed'] })
       .notNull()
       .default('pending'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
-    lastValidBlockHeight: bigint('last_valid_block_height', { mode: 'bigint' }),
+    lastValidBlockHeight: bigint('last_valid_block_height', { mode: 'bigint' }).notNull(),
+    expiredUnknownSeenAt: timestamp('expired_unknown_seen_at', { withTimezone: true }),
   },
   (table) => [
     check(
