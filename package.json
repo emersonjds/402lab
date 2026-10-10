@@ -11,8 +11,6 @@
     "typecheck": "tsc --noEmit -p . && pnpm -r typecheck",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "test": "pnpm -r test",
-    "test:coverage": "pnpm -r test:coverage",
     "spike:pay": "tsx --env-file-if-exists=apps/api/.env scripts/devnet-pay.ts"
   },
   "devDependencies": {

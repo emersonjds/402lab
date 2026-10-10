@@ -4,7 +4,7 @@ import typescript from 'typescript-eslint';
 
 // eslint-disable-next-line no-restricted-syntax -- eslint reads this config as a default export
 export default defineConfig(
-  { ignores: ['**/dist', '**/coverage', '**/node_modules'] },
+  { ignores: ['**/dist', '**/coverage', '**/node_modules', '.claude/**'] },
   js.configs.recommended,
   typescript.configs.strictTypeChecked,
   {
@@ -22,14 +22,6 @@ export default defineConfig(
         'error',
         { selector: 'ExportDefaultDeclaration', message: 'Use a named export.' },
       ],
-    },
-  },
-  {
-    files: ['**/tests/**/*.ts'],
-    rules: {
-      '@typescript-eslint/no-non-null-assertion': 'off',
-      // A route or handler declared async for Fastify's sake does not need to await.
-      '@typescript-eslint/require-await': 'off',
     },
   },
 );
