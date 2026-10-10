@@ -5,7 +5,7 @@ const apiUrl = process.env.API_URL ?? 'http://localhost:8080';
 const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
-  transpilePackages: ['@402lab/shared'],
+  transpilePackages: ['@402lab/shared', '@402lab/mocks'],
   // @402lab/shared imports `./money.js` (NodeNext); Turbopack has no extensionAlias, webpack does.
   webpack: (config: { resolve: { extensionAlias?: Record<string, string[]> } }) => {
     config.resolve.extensionAlias = { '.js': ['.ts', '.js'] };

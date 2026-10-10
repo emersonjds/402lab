@@ -89,6 +89,15 @@ npm run dev                                     # api on :8080 (migrations at bo
 npm run dev:mobile                               # scan with Expo Go
 ```
 
+### Run the web panel on mock data
+
+No devnet USDC, no Postgres, no API needed — the whole `/app` panel runs on `@402lab/mocks`
+(MSW) fixtures, including a mock wallet so Connect wallet works without a real extension:
+
+```sh
+NEXT_PUBLIC_API_MOCKING=enabled npm run dev -w @402lab/web
+```
+
 Android APK for the pitch QR code:
 
 ```sh
