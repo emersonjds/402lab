@@ -22,7 +22,7 @@ import {
 import { loadConfig } from '../src/shared/config/index.js';
 import { allowances, payments, payouts, splitBatches } from '../src/shared/db/schema.js';
 import { createEventsBus } from '../src/shared/events-bus.js';
-import type { SignatureStatus, SolanaChain } from '../src/shared/solana/rpc.js';
+import type { SignatureStatus } from '../src/shared/solana/rpc.js';
 import { ADMIN_DATABASE_URL, createTestDatabase, type TestDatabase } from './support/database.js';
 import { RECIPIENT_ENVIRONMENT, TREASURY_ADDRESS } from './support/environment.js';
 
@@ -44,7 +44,7 @@ const catalog = buildCatalog({
   platform: TREASURY_ADDRESS,
 });
 
-type FakeChain = SolanaChain & {
+type FakeChain = SplitRoundDependencies['chain'] & {
   status: SignatureStatus;
   height: bigint;
   sendError: Error | undefined;

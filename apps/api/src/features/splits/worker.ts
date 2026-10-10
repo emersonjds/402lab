@@ -28,7 +28,7 @@ import { buildSplitTransaction } from './transaction.js';
 
 export type SplitRoundDependencies = {
   db: Database;
-  chain: SolanaChain;
+  chain: Pick<SolanaChain, 'latestBlockhash' | 'send' | 'signatureStatus' | 'blockHeight'>;
   treasury: KeyPairSigner;
   catalog: readonly Service[];
   bus: EventsBus;
