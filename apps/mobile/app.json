@@ -9,10 +9,19 @@
     "backgroundColor": "#0B0D10",
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "app.lab402.mobile"
+      "bundleIdentifier": "app.lab402.mobile",
+      "buildNumber": "1"
     },
     "android": {
-      "package": "app.lab402.mobile"
+      "package": "app.lab402.mobile",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0B0D10"
+      },
+      "versionCode": 1,
+      "permissions": [
+        "CAMERA"
+      ]
     },
     "plugins": [
       "expo-router",
@@ -32,6 +41,12 @@
           "color": "#B6F23A"
         }
       ]
-    ]
+    ],
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0B0D10"
+    }
   }
 }
