@@ -15,7 +15,11 @@ export const createEventsBus = (): EventsBus => {
     publish: (ownerAddress, event) => {
       if (ownerAddress === null) return;
       listenersByOwner.get(ownerAddress)?.forEach((listener) => {
-        listener(event);
+        try {
+          listener(event);
+        } catch {
+          // A listener is one live stream; its failure is that stream's, never the publisher's.
+        }
       });
     },
     subscribe: (ownerAddress, listener) => {

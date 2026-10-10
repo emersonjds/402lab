@@ -39,4 +39,18 @@ describe('events bus', () => {
     expect(leaving).toEqual([]);
     expect(staying).toEqual([event]);
   });
+
+  it('keeps delivering to the other listeners when one throws', () => {
+    const bus = createEventsBus();
+    const received: LiveEvent[] = [];
+    bus.subscribe('owner-address', () => {
+      throw new Error('closed stream');
+    });
+    bus.subscribe('owner-address', (live) => received.push(live));
+
+    expect(() => {
+      bus.publish('owner-address', event);
+    }).not.toThrow();
+    expect(received).toEqual([event]);
+  });
 });
