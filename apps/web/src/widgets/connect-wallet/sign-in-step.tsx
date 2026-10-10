@@ -5,6 +5,7 @@ import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { useSiwsSignIn } from '@/shared/auth/siws';
+import { shortAddress } from '@/shared/format/address';
 
 interface SignInStepProps {
   account: UiWalletAccount;
@@ -12,8 +13,6 @@ interface SignInStepProps {
   onError: (message: string) => void;
   onCancel: () => void;
 }
-
-const shortAddress = (address: string): string => `${address.slice(0, 4)}…${address.slice(-4)}`;
 
 /** Hooks need a stable account at mount, so this only renders once one is picked. */
 export const SignInStep = ({ account, onSignedIn, onError, onCancel }: SignInStepProps) => {
