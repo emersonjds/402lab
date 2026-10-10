@@ -14,6 +14,7 @@ import {
 import { allowanceRoutes } from './features/allowances/routes.js';
 import { authRoutes } from './features/auth/routes.js';
 import { catalogRoutes } from './features/catalog/routes.js';
+import { eventRoutes } from './features/events/routes.js';
 import { resolveAdapters, resolveModes } from './features/paid-services/adapters/index.js';
 import type { ServiceAdapters } from './features/paid-services/adapters/types.js';
 import { paidServiceRoutes } from './features/paid-services/routes.js';
@@ -101,6 +102,7 @@ export const buildApp = async ({
     secureCookie: config.NODE_ENV !== 'development',
   });
   await app.register(allowanceRoutes, { db: database, bus, now, catalog });
+  await app.register(eventRoutes, { bus });
 
 
   return app;
