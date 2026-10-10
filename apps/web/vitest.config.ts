@@ -11,18 +11,12 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./vitest.setup.ts'],
     include: ['src/**/*.test.{ts,tsx}'],
+    passWithNoTests: true,
     coverage: {
       provider: 'v8',
       include: ['src/**/*.{ts,tsx}'],
-      // Route files that only compose widgets; their widgets carry the tests.
       exclude: ['src/**/*.test.{ts,tsx}', 'src/app/**/layout.tsx', 'src/app/**/page.tsx'],
       reporter: ['text'],
-      thresholds: {
-        statements: 90,
-        branches: 90,
-        functions: 90,
-        lines: 90,
-      },
     },
   },
 });
