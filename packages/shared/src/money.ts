@@ -1,9 +1,13 @@
+import { z } from 'zod';
+
 export type AtomicAmount = bigint;
 
 export const USDC_DECIMALS = 6;
 
 const ATOMIC_PER_USD = 10n ** BigInt(USDC_DECIMALS);
 const ATOMIC_PATTERN = /^\d+$/;
+export const atomicStringSchema = z.string().regex(ATOMIC_PATTERN);
+
 const USD_PATTERN = new RegExp(`^\\$?(\\d+)(?:\\.(\\d{1,${String(USDC_DECIMALS)}}))?$`);
 
 export const parseAtomic = (value: string): AtomicAmount => {
