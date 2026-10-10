@@ -11,3 +11,12 @@ export const serviceInputSchemas: { [Id in ServiceId]: z.ZodType<ServiceInput[Id
   }),
   summarize: z.object({ text: z.string().min(1).max(20_000) }),
 };
+
+export const serviceOutputSchema = z
+  .object({ mode: z.enum(['live', 'demo']), result: z.string() })
+  .meta({ id: 'ServiceOutput' });
+
+/** `issues` mirrors `z.flattenError().fieldErrors`: one array of messages per invalid field. */
+export const invalidInputSchema = z
+  .object({ error: z.literal('invalid_input'), issues: z.record(z.string(), z.array(z.string())) })
+  .meta({ id: 'InvalidServiceInput' });

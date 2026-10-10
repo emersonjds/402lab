@@ -90,11 +90,15 @@ const viaRpc = async <Result>(request: FastifyRequest, call: () => Promise<Resul
   }
 };
 
+/** Devnet-only demo faucet; `app.ts` registers it only when the configured RPC answers with the
+ * devnet genesis hash and a treasury key is set, so it is simply absent on any other cluster. */
 export const onrampRoutes: FastifyPluginCallbackZod<OnrampOptions> = (
   app,
   { db, chain, treasury, catalog, now },
   done,
 ) => {
+  /** Web or mobile. 404 when the session wallet's allowance belongs to another owner; 429 past
+   * one top-up per wallet per UTC day or past the owner's daily cap. */
   app.post(
     '/onramp/simulate',
     {
