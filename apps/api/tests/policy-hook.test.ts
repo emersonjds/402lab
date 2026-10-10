@@ -62,7 +62,7 @@ const logger = { error: vi.fn() };
 
 const buildPaidApp = async (database: Database): Promise<FastifyInstance> => {
   const paidApp = Fastify({ logger: false });
-  const resourceServer = createResourceServer(facilitatorUrl);
+  const resourceServer = createResourceServer(facilitatorUrl, logger);
   registerLedgerHooks(resourceServer, { db: database, bus, now: () => currentTime, logger });
 
   const accepts = (price: string) => [

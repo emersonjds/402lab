@@ -21,7 +21,7 @@ export const paidServiceRoutes: FastifyPluginCallback<PaidServiceOptions> = (
   { facilitatorUrl, treasuryAddress, catalog, adapters, ledger },
   done,
 ) => {
-  const resourceServer = createResourceServer(facilitatorUrl);
+  const resourceServer = createResourceServer(facilitatorUrl, app.log);
   registerLedgerHooks(resourceServer, { ...ledger, logger: app.log });
 
   paymentMiddleware(
