@@ -26,24 +26,43 @@ export const findBatchOwners = async (db: Database, batchId: string): Promise<st
   return owners.map(({ ownerAddress }) => ownerAddress);
 };
 
-export const confirmBatch = async (db: Database, batchId: string): Promise<void> => {
-  await db
+const isPending = (batchId: string) =>
+  and(eq(splitBatches.id, batchId), eq(splitBatches.status, 'pending'));
+
+/** True only when this call moved the batch out of pending. */
+export const confirmBatch = async (db: Database, batchId: string): Promise<boolean> => {
+  const confirmed = await db
     .update(splitBatches)
     .set({ status: 'confirmed' })
-    .where(and(eq(splitBatches.id, batchId), eq(splitBatches.status, 'pending')));
+    .where(isPending(batchId))
+    .returning({ id: splitBatches.id });
+
+  return confirmed.length > 0;
 };
 
-export const failBatchAndReleasePayments = async (db: Database, batchId: string): Promise<void> => {
-  await db.transaction(async (transaction) => {
-    await transaction
+/** True only when this call moved the batch out of pending; payments are released only then. */
+export const failBatchAndReleasePayments = (db: Database, batchId: string): Promise<boolean> =>
+  db.transaction(async (transaction) => {
+    const failed = await transaction
       .update(splitBatches)
       .set({ status: 'failed' })
-      .where(and(eq(splitBatches.id, batchId), eq(splitBatches.status, 'pending')));
+      .where(isPending(batchId))
+      .returning({ id: splitBatches.id });
+    if (failed.length === 0) return false;
+
     await transaction
       .update(payments)
       .set({ splitBatchId: null })
       .where(eq(payments.splitBatchId, batchId));
+    return true;
   });
+
+export const setExpiredUnknownSeenAt = async (
+  db: Database,
+  batchId: string,
+  seenAt: Date | null,
+): Promise<void> => {
+  await db.update(splitBatches).set({ expiredUnknownSeenAt: seenAt }).where(isPending(batchId));
 };
 
 export const findUnbatchedPayments = (db: Database) =>
@@ -75,9 +94,11 @@ export const createBatch = async (db: Database, batch: NewSplitBatch): Promise<v
       txSignature: batch.txSignature,
       lastValidBlockHeight: batch.lastValidBlockHeight,
     });
-    await transaction
-      .insert(payouts)
-      .values(batch.payouts.map((payout) => ({ ...payout, batchId })));
+    if (batch.payouts.length > 0) {
+      await transaction
+        .insert(payouts)
+        .values(batch.payouts.map((payout) => ({ ...payout, batchId })));
+    }
     const marked = await transaction
       .update(payments)
       .set({ splitBatchId: batchId })

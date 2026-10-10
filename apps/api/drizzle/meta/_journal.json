@@ -8,6 +8,13 @@
       "when": 1791663358934,
       "tag": "0000_initial_schema",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791665183521,
+      "tag": "0001_split_batches_expiry_guard",
+      "breakpoints": true
     }
   ]
 }
