@@ -6,6 +6,7 @@ const configSchema = z.object({
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent']).default('info'),
   FACILITATOR_URL: z.url().default('https://x402.org/facilitator'),
   TREASURY_ADDRESS: z.string().refine(isAddress, 'must be a base58 Solana address'),
+  DATABASE_URL: z.url({ protocol: /^postgres(ql)?$/ }),
 });
 
 export type Config = z.infer<typeof configSchema>;

@@ -12,6 +12,8 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { buildApp } from '../src/app.js';
 import { loadConfig } from '../src/shared/config/index.js';
+import { createEventsBus } from '../src/shared/events-bus.js';
+import { ADMIN_DATABASE_URL, createTestDatabase, type TestDatabase } from './support/database.js';
 
 const TREASURY_ADDRESS = '5seMttZKNoYKNVhkwbqkLS8HPpymFmtEWej6XNb7deCj';
 const PAYER_ADDRESS = '3Vp5E3DjqXhDJT3QuUGDhE4e6bnHxLgpnQY33oKtyUKQ';
@@ -49,6 +51,7 @@ const answerAsFacilitator = (request: IncomingMessage): unknown => {
 
 let facilitator: Server;
 let app: FastifyInstance;
+let testDatabase: TestDatabase;
 
 beforeAll(async () => {
   facilitator = createServer((request, response) => {
@@ -60,18 +63,24 @@ beforeAll(async () => {
   });
   await new Promise<void>((resolve) => facilitator.listen(0, '127.0.0.1', resolve));
   const { port } = facilitator.address() as AddressInfo;
+  testDatabase = await createTestDatabase();
 
   app = await buildApp({
     config: loadConfig({
       FACILITATOR_URL: `http://127.0.0.1:${String(port)}`,
       TREASURY_ADDRESS,
+      DATABASE_URL: ADMIN_DATABASE_URL,
       LOG_LEVEL: 'silent',
     }),
+    database: testDatabase.database,
+    bus: createEventsBus(),
+    now: () => new Date('2026-10-10T15:00:00.000Z'),
   });
 });
 
 afterAll(async () => {
   await app.close();
+  await testDatabase.drop();
   await new Promise((resolve) => facilitator.close(resolve));
 });
 
@@ -126,13 +135,22 @@ describe('paid services', () => {
 
 describe('config', () => {
   it('defaults to the public x402.org facilitator', () => {
-    expect(loadConfig({ TREASURY_ADDRESS }).FACILITATOR_URL).toBe('https://x402.org/facilitator');
+    expect(loadConfig({ TREASURY_ADDRESS, DATABASE_URL: ADMIN_DATABASE_URL }).FACILITATOR_URL).toBe(
+      'https://x402.org/facilitator',
+    );
   });
 
   it('refuses to boot without a valid treasury address', () => {
-    expect(() => loadConfig({ TREASURY_ADDRESS: 'not-a-solana-address' })).toThrow(
-      /TREASURY_ADDRESS/,
-    );
+    expect(() =>
+      loadConfig({ TREASURY_ADDRESS: 'not-a-solana-address', DATABASE_URL: ADMIN_DATABASE_URL }),
+    ).toThrow(/TREASURY_ADDRESS/);
     expect(() => loadConfig({})).toThrow(/TREASURY_ADDRESS/);
+  });
+
+  it('refuses to boot without a postgres connection string', () => {
+    expect(() => loadConfig({ TREASURY_ADDRESS })).toThrow(/DATABASE_URL/);
+    expect(() =>
+      loadConfig({ TREASURY_ADDRESS, DATABASE_URL: 'mysql://lab@localhost/lab' }),
+    ).toThrow(/DATABASE_URL/);
   });
 });
