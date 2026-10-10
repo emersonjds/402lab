@@ -1,16 +1,34 @@
 'use client';
 
 import { cardCostEquivalent, formatUsd, parseAtomic, type AtomicAmount } from '@402lab/shared';
-import Link from 'next/link';
-import { useMemo } from 'react';
+import { useRouter } from 'next/navigation';
+import { useMemo, useState } from 'react';
 
 import { Alert } from '@/components/ui/alert';
-import { buttonStyles } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { allowanceListSchema } from '@/shared/api/schemas';
 import { useApiQuery } from '@/shared/api/use-api-query';
+import { loadOrCreateSessionSigner } from '@/shared/wallet/session-signer';
 
 import { AllowanceCard } from './allowance-card';
+
+const CreateAllowanceButton = () => {
+  const router = useRouter();
+  const [pending, setPending] = useState(false);
+
+  const handleClick = async () => {
+    setPending(true);
+    const signer = await loadOrCreateSessionSigner();
+    router.push(`/app/allowances/new?session=${signer.address}`);
+  };
+
+  return (
+    <Button onClick={() => void handleClick()} disabled={pending}>
+      {pending ? 'Preparing…' : 'Create allowance'}
+    </Button>
+  );
+};
 
 interface SummaryStatProps {
   label: string;
@@ -51,9 +69,7 @@ export const AllowancesList = () => {
           <h1 className="font-display text-title-sm font-bold tracking-tight text-text">Allowances</h1>
           <p className="mt-1 text-sm text-muted">Budgets your agents spend from, one call at a time.</p>
         </div>
-        <Link href="/app/allowances/new" className={buttonStyles('primary')}>
-          Create allowance
-        </Link>
+        <CreateAllowanceButton />
       </div>
 
       {summary && (
