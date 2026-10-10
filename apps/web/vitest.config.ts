@@ -1,0 +1,28 @@
+import { fileURLToPath } from 'node:url';
+
+import { defineConfig } from 'vitest/config';
+
+// eslint-disable-next-line no-restricted-syntax -- vitest reads this config as a default export
+export default defineConfig({
+  resolve: {
+    alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
+  },
+  test: {
+    environment: 'jsdom',
+    setupFiles: ['./vitest.setup.ts'],
+    include: ['src/**/*.test.{ts,tsx}'],
+    coverage: {
+      provider: 'v8',
+      include: ['src/**/*.{ts,tsx}'],
+      // Route files that only compose widgets; their widgets carry the tests.
+      exclude: ['src/**/*.test.{ts,tsx}', 'src/app/**/layout.tsx', 'src/app/**/page.tsx'],
+      reporter: ['text'],
+      thresholds: {
+        statements: 90,
+        branches: 90,
+        functions: 90,
+        lines: 90,
+      },
+    },
+  },
+});
