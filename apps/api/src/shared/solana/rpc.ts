@@ -17,20 +17,24 @@ export type SolanaChain = {
 };
 
 const COMMITMENT = 'confirmed';
+const RPC_TIMEOUT_MS = 15_000;
 
-export const createSolanaChain = (rpcUrl: string): SolanaChain => {
+/** A call past the timeout rejects, failing the split round instead of hanging it. */
+export const createSolanaChain = (rpcUrl: string, timeoutMs = RPC_TIMEOUT_MS): SolanaChain => {
   const rpc = createSolanaRpc(rpcUrl);
+  const deadline = () => ({ abortSignal: AbortSignal.timeout(timeoutMs) });
 
   return {
     latestBlockhash: async () =>
-      (await rpc.getLatestBlockhash({ commitment: COMMITMENT }).send()).value,
+      (await rpc.getLatestBlockhash({ commitment: COMMITMENT }).send(deadline())).value,
     send: async (transaction) => {
       await rpc
         .sendTransaction(getBase64EncodedWireTransaction(transaction), {
           encoding: 'base64',
           preflightCommitment: COMMITMENT,
+          skipPreflight: false,
         })
-        .send();
+        .send(deadline());
     },
     // Without the history search a status older than the RPC's recent cache reads as null,
     // which would let reconciliation release a batch that did pay out.
@@ -38,11 +42,13 @@ export const createSolanaChain = (rpcUrl: string): SolanaChain => {
       const signatures: Signature[] = [toSignature(signature)];
       const {
         value: [status],
-      } = await rpc.getSignatureStatuses(signatures, { searchTransactionHistory: true }).send();
+      } = await rpc
+        .getSignatureStatuses(signatures, { searchTransactionHistory: true })
+        .send(deadline());
 
       if (!status || status.confirmationStatus === 'processed') return 'unknown';
       return status.err ? 'failed' : 'confirmed';
     },
-    blockHeight: () => rpc.getBlockHeight({ commitment: COMMITMENT }).send(),
+    blockHeight: () => rpc.getBlockHeight({ commitment: COMMITMENT }).send(deadline()),
   };
 };
