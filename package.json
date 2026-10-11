@@ -13,6 +13,9 @@
     "spike:pay": "tsx --env-file-if-exists=apps/api/.env scripts/devnet-pay.ts",
     "e2e:devnet": "tsx --env-file-if-exists=apps/api/.env scripts/e2e-devnet.ts",
     "db:up": "docker compose up -d postgres",
+    "docker:up": "docker compose up --build -d postgres api web",
+    "docker:mock": "docker compose --profile mock up --build -d web-mock",
+    "docker:down": "docker compose --profile mock down",
     "dev": "concurrently -n api,web -c green,cyan \"npm run dev -w @402lab/api\" \"npm run dev -w @402lab/web\"",
     "dev:mobile": "npm run start -w @402lab/mobile"
   },
