@@ -15,11 +15,12 @@ export const catalogRoutes: FastifyPluginCallback<CatalogOptions> = (
   done,
 ) => {
   const listing: ServiceListResponse = {
-    services: catalog.map(({ id, name, description, upstream, price }) => ({
+    services: catalog.map(({ id, name, description, upstream, provider, price }) => ({
       id,
       name,
       description,
       upstream,
+      provider,
       price: price.toString(),
       mode: modes[id],
     })),

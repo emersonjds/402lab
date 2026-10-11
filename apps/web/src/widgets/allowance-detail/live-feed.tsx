@@ -9,16 +9,11 @@ import { SolscanLink } from '@/components/ui/solscan-link';
 import { paymentListSchema, type Payment } from '@/shared/api/schemas';
 import { useApiQuery } from '@/shared/api/use-api-query';
 import { useLiveEvents } from '@/shared/api/use-live-events';
+import { serviceLabel } from '@/shared/catalog/service-info';
 
 interface LiveFeedProps {
   allowanceId: string;
 }
-
-const SERVICE_LABEL: Record<Payment['serviceId'], string> = {
-  ocr: 'OCR · Azure',
-  translate: 'Translate · AWS',
-  summarize: 'Summarize · Anthropic',
-};
 
 const HIGHLIGHT_MS = 2_500;
 
@@ -87,7 +82,7 @@ export const LiveFeed = ({ allowanceId }: LiveFeedProps) => {
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-text">{SERVICE_LABEL[payment.serviceId]}</span>
+                  <span className="text-sm text-text">{serviceLabel(payment.serviceId)}</span>
                   <span className="font-mono text-sm text-text">{formatUsd(parseAtomic(payment.amount))}</span>
                 </div>
                 <div className="mt-1 flex items-center justify-between text-xs text-muted">
@@ -116,7 +111,7 @@ export const LiveFeed = ({ allowanceId }: LiveFeedProps) => {
                       highlightId === payment.id ? 'bg-brand-500/10' : ''
                     }`}
                   >
-                    <td className="py-2.5 text-text">{SERVICE_LABEL[payment.serviceId]}</td>
+                    <td className="py-2.5 text-text">{serviceLabel(payment.serviceId)}</td>
                     <td className="py-2.5 font-mono text-text">{formatUsd(parseAtomic(payment.amount))}</td>
                     <td className="py-2.5 text-muted">{new Date(payment.settledAt).toLocaleTimeString()}</td>
                     <td className="py-2.5">

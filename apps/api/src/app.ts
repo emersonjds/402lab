@@ -55,6 +55,18 @@ export interface AppDependencies {
   solanaChain?: OnrampChain;
 }
 
+/** Generated once with `@solana/kit`'s `generateKeyPairSigner`, fixed so the demo is stable
+ * across restarts. Used only when the matching `PROVIDER_<ID>_ADDRESS` env is unset. */
+const DEMO_PROVIDER_ADDRESSES = {
+  vision: '2vdHv8Unyv49JuL2JfeS2ehJBwtcjck4RF3bRNjiAksv',
+  chat: 'HLTdiMuHqPsgGvUoog9fxdqK5TVeQBvT9N6eLRzGBzSo',
+  embed: '9MeP2DYBMWWyT7B3DdLMdXBicEPW3vHSd5CsJwAgQH6C',
+  image: 'DuQB6CsDwbMgbP2DXPRLUfNFt1MqqXSNEzsp6aamQXa4',
+  speech: 'HHWF44yCNw8k9HNBuwQHFjAkjNT1C9D6A8DwfCygW44M',
+  transcribe: 'C1DNmPtqJKkWKFESnHmm99JQ1gXAuvhKW7xByXhoY2fR',
+  bedrock: '8QiBpAEC3TqcwZKxoV5tpBetTRqfSjKFPMymHJKt5Dpp',
+} as const;
+
 /** The service catalog with recipients resolved from env; rebuilt from `Config` wherever
  * `buildApp` is not in scope (the split worker, the reconciliation job, `split-once.ts`). */
 export const catalogFromConfig = (config: Config): Service[] =>
@@ -63,6 +75,13 @@ export const catalogFromConfig = (config: Config): Service[] =>
       ocr: config.PROVIDER_OCR_ADDRESS,
       translate: config.PROVIDER_TRANSLATE_ADDRESS,
       summarize: config.PROVIDER_SUMMARIZE_ADDRESS,
+      vision: config.PROVIDER_VISION_ADDRESS ?? DEMO_PROVIDER_ADDRESSES.vision,
+      chat: config.PROVIDER_CHAT_ADDRESS ?? DEMO_PROVIDER_ADDRESSES.chat,
+      embed: config.PROVIDER_EMBED_ADDRESS ?? DEMO_PROVIDER_ADDRESSES.embed,
+      image: config.PROVIDER_IMAGE_ADDRESS ?? DEMO_PROVIDER_ADDRESSES.image,
+      speech: config.PROVIDER_SPEECH_ADDRESS ?? DEMO_PROVIDER_ADDRESSES.speech,
+      transcribe: config.PROVIDER_TRANSCRIBE_ADDRESS ?? DEMO_PROVIDER_ADDRESSES.transcribe,
+      bedrock: config.PROVIDER_BEDROCK_ADDRESS ?? DEMO_PROVIDER_ADDRESSES.bedrock,
     },
     integrator: config.INTEGRATOR_ADDRESS,
     platform: config.TREASURY_ADDRESS,

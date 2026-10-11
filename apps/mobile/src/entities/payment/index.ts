@@ -34,7 +34,18 @@ export const mergeNewestFirst = (current: Payment[], page: Payment[]): Payment[]
 
 // Names, providers and split rules are the same for everyone; recipients are not needed here.
 const CATALOG = buildCatalog({
-  provider: { ocr: '', translate: '', summarize: '' },
+  provider: {
+    ocr: '',
+    translate: '',
+    summarize: '',
+    vision: '',
+    chat: '',
+    embed: '',
+    image: '',
+    speech: '',
+    transcribe: '',
+    bedrock: '',
+  },
   integrator: '',
   platform: '',
 });
@@ -43,6 +54,13 @@ export const PROVIDER_NAMES: Record<Service['upstream'], string> = {
   'azure-ocr': 'Azure AI Vision',
   'aws-translate': 'AWS Translate',
   'anthropic-summary': 'Anthropic',
+  'google-vertex-vision': 'Google Cloud Vertex AI',
+  'openai-chat': 'OpenAI',
+  'cloudflare-workers-ai': 'Cloudflare Workers AI',
+  'replicate-image': 'Replicate',
+  'elevenlabs-speech': 'ElevenLabs',
+  'deepgram-transcribe': 'Deepgram',
+  'aws-bedrock': 'AWS Bedrock',
 };
 
 export const findService = (serviceId: string): Service | undefined =>

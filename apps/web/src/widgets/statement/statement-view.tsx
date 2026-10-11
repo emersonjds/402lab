@@ -11,9 +11,9 @@ import { Select } from '@/components/ui/select';
 import { SolscanLink } from '@/components/ui/solscan-link';
 import { allowanceListSchema, statementSchema } from '@/shared/api/schemas';
 import { useApiQuery } from '@/shared/api/use-api-query';
+import { serviceLabel } from '@/shared/catalog/service-info';
 import { shortAddress } from '@/shared/format/address';
 
-const SERVICE_LABEL = { ocr: 'OCR', translate: 'Translate', summarize: 'Summarize' } as const;
 const ROLE_LABEL = { provider: 'Provider', integrator: 'Integrator', platform: 'Platform' } as const;
 
 const currentMonth = (): string => new Date().toISOString().slice(0, 7);
@@ -144,7 +144,7 @@ export const StatementView = () => {
               {statementQuery.data.totals.byService.map((row) => (
                 <li key={row.serviceId} className="flex justify-between text-muted print:text-gray-700">
                   <span>
-                    {SERVICE_LABEL[row.serviceId]} ({row.count})
+                    {serviceLabel(row.serviceId)} ({row.count})
                   </span>
                   <span className="font-mono text-text print:text-black">
                     {formatUsd(parseAtomic(row.amount))}
@@ -182,7 +182,7 @@ export const StatementView = () => {
                   className="flex items-center justify-between text-muted print:text-gray-700"
                 >
                   <span>
-                    {SERVICE_LABEL[payment.serviceId]} · {new Date(payment.settledAt).toLocaleDateString()}
+                    {serviceLabel(payment.serviceId)} · {new Date(payment.settledAt).toLocaleDateString()}
                   </span>
                   <span className="flex items-center gap-2">
                     <span className="font-mono text-text print:text-black">

@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "402Lab API",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "description": "Consumption account for AI agents: an owner sets an allowance (per-call and daily caps) and the agent pays per API call in USDC on Solana via HTTP 402 (x402), with automatic settlement splits to providers and a monthly statement."
   },
   "components": {
@@ -193,7 +193,14 @@
             "enum": [
               "ocr",
               "translate",
-              "summarize"
+              "summarize",
+              "vision",
+              "chat",
+              "embed",
+              "image",
+              "speech",
+              "transcribe",
+              "bedrock"
             ]
           },
           "amount": {
@@ -263,7 +270,14 @@
                       "enum": [
                         "ocr",
                         "translate",
-                        "summarize"
+                        "summarize",
+                        "vision",
+                        "chat",
+                        "embed",
+                        "image",
+                        "speech",
+                        "transcribe",
+                        "bedrock"
                       ]
                     },
                     "count": {
@@ -651,7 +665,14 @@
             "enum": [
               "ocr",
               "translate",
-              "summarize"
+              "summarize",
+              "vision",
+              "chat",
+              "embed",
+              "image",
+              "speech",
+              "transcribe",
+              "bedrock"
             ]
           },
           "amount": {
@@ -723,7 +744,14 @@
                       "enum": [
                         "ocr",
                         "translate",
-                        "summarize"
+                        "summarize",
+                        "vision",
+                        "chat",
+                        "embed",
+                        "image",
+                        "speech",
+                        "transcribe",
+                        "bedrock"
                       ]
                     },
                     "count": {
@@ -986,7 +1014,14 @@
                             "enum": [
                               "ocr",
                               "translate",
-                              "summarize"
+                              "summarize",
+                              "vision",
+                              "chat",
+                              "embed",
+                              "image",
+                              "speech",
+                              "transcribe",
+                              "bedrock"
                             ]
                           },
                           "name": {
@@ -1000,8 +1035,42 @@
                             "enum": [
                               "azure-ocr",
                               "aws-translate",
-                              "anthropic-summary"
+                              "anthropic-summary",
+                              "google-vertex-vision",
+                              "openai-chat",
+                              "cloudflare-workers-ai",
+                              "replicate-image",
+                              "elevenlabs-speech",
+                              "deepgram-transcribe",
+                              "aws-bedrock"
                             ]
+                          },
+                          "provider": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "enum": [
+                                  "azure",
+                                  "aws",
+                                  "anthropic",
+                                  "google-cloud",
+                                  "openai",
+                                  "cloudflare",
+                                  "replicate",
+                                  "elevenlabs",
+                                  "deepgram"
+                                ]
+                              },
+                              "name": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name"
+                            ],
+                            "additionalProperties": false
                           },
                           "price": {
                             "type": "string",
@@ -1020,6 +1089,7 @@
                           "name",
                           "description",
                           "upstream",
+                          "provider",
                           "price",
                           "mode"
                         ],
@@ -1187,6 +1257,431 @@
                 },
                 "required": [
                   "text"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidServiceInput"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/svc/vision": {
+      "post": {
+        "summary": "Pay-per-call Vision ($0.003 USDC via x402)",
+        "tags": [
+          "paid-services"
+        ],
+        "description": "Describe and tag the contents of an image. HTTP 402 handshake: a call with no payment answers 402 with a PAYMENT-REQUIRED header describing what to pay; the same call retried with a PAYMENT-SIGNATURE header (X-PAYMENT also accepted) carrying the signed payment settles and answers 200 with a PAYMENT-RESPONSE header (X-PAYMENT-RESPONSE also accepted) carrying the settlement receipt. Example: `curl -i .../svc/vision` -> 402 with `payment-required: <base64 requirements>`; `curl -i -H \"payment-signature: <base64 signed payment>\" .../svc/vision` -> 200 with `payment-response: <base64 receipt>`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "imageUrl": {
+                    "type": "string",
+                    "format": "uri"
+                  }
+                },
+                "required": [
+                  "imageUrl"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidServiceInput"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/svc/chat": {
+      "post": {
+        "summary": "Pay-per-call Chat ($0.008 USDC via x402)",
+        "tags": [
+          "paid-services"
+        ],
+        "description": "Complete a chat prompt. HTTP 402 handshake: a call with no payment answers 402 with a PAYMENT-REQUIRED header describing what to pay; the same call retried with a PAYMENT-SIGNATURE header (X-PAYMENT also accepted) carrying the signed payment settles and answers 200 with a PAYMENT-RESPONSE header (X-PAYMENT-RESPONSE also accepted) carrying the settlement receipt. Example: `curl -i .../svc/chat` -> 402 with `payment-required: <base64 requirements>`; `curl -i -H \"payment-signature: <base64 signed payment>\" .../svc/chat` -> 200 with `payment-response: <base64 receipt>`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "prompt": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 10000
+                  }
+                },
+                "required": [
+                  "prompt"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidServiceInput"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/svc/embed": {
+      "post": {
+        "summary": "Pay-per-call Embed ($0.001 USDC via x402)",
+        "tags": [
+          "paid-services"
+        ],
+        "description": "Turn text into a vector embedding. HTTP 402 handshake: a call with no payment answers 402 with a PAYMENT-REQUIRED header describing what to pay; the same call retried with a PAYMENT-SIGNATURE header (X-PAYMENT also accepted) carrying the signed payment settles and answers 200 with a PAYMENT-RESPONSE header (X-PAYMENT-RESPONSE also accepted) carrying the settlement receipt. Example: `curl -i .../svc/embed` -> 402 with `payment-required: <base64 requirements>`; `curl -i -H \"payment-signature: <base64 signed payment>\" .../svc/embed` -> 200 with `payment-response: <base64 receipt>`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 10000
+                  }
+                },
+                "required": [
+                  "text"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidServiceInput"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/svc/image": {
+      "post": {
+        "summary": "Pay-per-call Image ($0.012 USDC via x402)",
+        "tags": [
+          "paid-services"
+        ],
+        "description": "Generate an image from a prompt. HTTP 402 handshake: a call with no payment answers 402 with a PAYMENT-REQUIRED header describing what to pay; the same call retried with a PAYMENT-SIGNATURE header (X-PAYMENT also accepted) carrying the signed payment settles and answers 200 with a PAYMENT-RESPONSE header (X-PAYMENT-RESPONSE also accepted) carrying the settlement receipt. Example: `curl -i .../svc/image` -> 402 with `payment-required: <base64 requirements>`; `curl -i -H \"payment-signature: <base64 signed payment>\" .../svc/image` -> 200 with `payment-response: <base64 receipt>`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "prompt": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 2000
+                  }
+                },
+                "required": [
+                  "prompt"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidServiceInput"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/svc/speech": {
+      "post": {
+        "summary": "Pay-per-call Speech ($0.006 USDC via x402)",
+        "tags": [
+          "paid-services"
+        ],
+        "description": "Synthesize speech from text. HTTP 402 handshake: a call with no payment answers 402 with a PAYMENT-REQUIRED header describing what to pay; the same call retried with a PAYMENT-SIGNATURE header (X-PAYMENT also accepted) carrying the signed payment settles and answers 200 with a PAYMENT-RESPONSE header (X-PAYMENT-RESPONSE also accepted) carrying the settlement receipt. Example: `curl -i .../svc/speech` -> 402 with `payment-required: <base64 requirements>`; `curl -i -H \"payment-signature: <base64 signed payment>\" .../svc/speech` -> 200 with `payment-response: <base64 receipt>`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 5000
+                  }
+                },
+                "required": [
+                  "text"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidServiceInput"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/svc/transcribe": {
+      "post": {
+        "summary": "Pay-per-call Transcribe ($0.004 USDC via x402)",
+        "tags": [
+          "paid-services"
+        ],
+        "description": "Transcribe speech from audio. HTTP 402 handshake: a call with no payment answers 402 with a PAYMENT-REQUIRED header describing what to pay; the same call retried with a PAYMENT-SIGNATURE header (X-PAYMENT also accepted) carrying the signed payment settles and answers 200 with a PAYMENT-RESPONSE header (X-PAYMENT-RESPONSE also accepted) carrying the settlement receipt. Example: `curl -i .../svc/transcribe` -> 402 with `payment-required: <base64 requirements>`; `curl -i -H \"payment-signature: <base64 signed payment>\" .../svc/transcribe` -> 200 with `payment-response: <base64 receipt>`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "audioUrl": {
+                    "type": "string",
+                    "format": "uri"
+                  }
+                },
+                "required": [
+                  "audioUrl"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidServiceInput"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/svc/bedrock": {
+      "post": {
+        "summary": "Pay-per-call Bedrock ($0.009 USDC via x402)",
+        "tags": [
+          "paid-services"
+        ],
+        "description": "Complete a prompt through a hosted foundation model. HTTP 402 handshake: a call with no payment answers 402 with a PAYMENT-REQUIRED header describing what to pay; the same call retried with a PAYMENT-SIGNATURE header (X-PAYMENT also accepted) carrying the signed payment settles and answers 200 with a PAYMENT-RESPONSE header (X-PAYMENT-RESPONSE also accepted) carrying the settlement receipt. Example: `curl -i .../svc/bedrock` -> 402 with `payment-required: <base64 requirements>`; `curl -i -H \"payment-signature: <base64 signed payment>\" .../svc/bedrock` -> 200 with `payment-response: <base64 receipt>`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "prompt": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 10000
+                  }
+                },
+                "required": [
+                  "prompt"
                 ]
               }
             }

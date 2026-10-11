@@ -2,7 +2,8 @@
   "sidebar": {
     "groups": { "menu": "Menu" },
     "items": {
-      "allowances": "Allowances",
+      "overview": "Overview",
+      "agents": "Agents",
       "payments": "Payments",
       "splits": "Splits",
       "statement": "Statement",

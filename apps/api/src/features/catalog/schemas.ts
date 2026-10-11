@@ -4,7 +4,7 @@ import { z } from 'zod';
 export const serviceModeSchema = z.enum(['live', 'demo']);
 
 export const serviceListingSchema = serviceSchema
-  .pick({ id: true, name: true, description: true, upstream: true })
+  .pick({ id: true, name: true, description: true, upstream: true, provider: true })
   .extend({ price: atomicStringSchema, mode: serviceModeSchema });
 
 export const serviceListResponseSchema = z.object({ services: z.array(serviceListingSchema) });

@@ -4,6 +4,13 @@ export type ServiceInput = {
   ocr: { imageUrl: string };
   translate: { text: string; targetLanguage: string };
   summarize: { text: string };
+  vision: { imageUrl: string };
+  chat: { prompt: string };
+  embed: { text: string };
+  image: { prompt: string };
+  speech: { text: string };
+  transcribe: { audioUrl: string };
+  bedrock: { prompt: string };
 };
 
 export type ServiceOutput = { mode: 'live' | 'demo'; result: string };
