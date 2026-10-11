@@ -67,12 +67,21 @@ const rng = createRng(402_014);
 
 const BASE58_ALPHABET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
 
-// A real ed25519 Solana signature base58-encodes to 86-88 characters (64 bytes); sample
-// signatures here match that length instead of the shorter 32-byte pubkey shape.
-const nextSignature = (): string =>
-  Array.from({ length: 88 }, () => BASE58_ALPHABET[Math.floor(rng() * BASE58_ALPHABET.length)]).join(
-    '',
-  );
+const SIGNATURE_LENGTH = 88;
+
+/** A real ed25519 Solana signature base58-encodes to 86-88 characters (64 bytes); sample
+ * signatures here match that length instead of the shorter 32-byte pubkey shape. A plain loop
+ * over `draw()` runs ~5x faster than `Array.from` + callback at the tens-of-thousands of calls a
+ * stage-scale day needs (measured, see commit). */
+const signatureOf = (draw: () => number): string => {
+  let signature = '';
+  for (let i = 0; i < SIGNATURE_LENGTH; i += 1) {
+    signature += BASE58_ALPHABET.charAt(Math.floor(draw() * BASE58_ALPHABET.length));
+  }
+  return signature;
+};
+
+const nextSignature = (): string => signatureOf(rng);
 
 const pickWeighted = <Item extends { weight: number }>(items: readonly Item[]): Item => {
   const total = items.reduce((sum, item) => sum + item.weight, 0);
@@ -132,7 +141,7 @@ const AGENT_PROFILES: AgentProfile[] = [
     sessionAddress: SESSION_RESEARCH,
     status: 'active',
     perCallCap: 20_000n,
-    dailyCap: 1_000_000n,
+    dailyCap: 70_000_000n,
     createdAt: '2026-09-20T12:00:00.000Z',
     services: ['summarize', 'chat', 'embed', 'vision'],
     weight: 26,
@@ -144,7 +153,7 @@ const AGENT_PROFILES: AgentProfile[] = [
     sessionAddress: SESSION_SUPPORT,
     status: 'active',
     perCallCap: 15_000n,
-    dailyCap: 600_000n,
+    dailyCap: 65_000_000n,
     createdAt: '2026-09-23T09:00:00.000Z',
     services: ['chat', 'translate', 'summarize'],
     weight: 22,
@@ -156,7 +165,7 @@ const AGENT_PROFILES: AgentProfile[] = [
     sessionAddress: SESSION_PIPELINE,
     status: 'active',
     perCallCap: 25_000n,
-    dailyCap: 900_000n,
+    dailyCap: 50_000_000n,
     createdAt: '2026-09-18T07:30:00.000Z',
     services: ['ocr', 'translate', 'embed', 'bedrock'],
     weight: 22,
@@ -168,7 +177,7 @@ const AGENT_PROFILES: AgentProfile[] = [
     sessionAddress: SESSION_VOICE,
     status: 'active',
     perCallCap: 12_000n,
-    dailyCap: 400_000n,
+    dailyCap: 45_000_000n,
     createdAt: '2026-09-28T15:00:00.000Z',
     services: ['speech', 'transcribe'],
     weight: 16,
@@ -193,7 +202,7 @@ const AGENT_PROFILES: AgentProfile[] = [
     sessionAddress: SESSION_CRAWLER,
     status: 'paused',
     perCallCap: 10_000n,
-    dailyCap: 300_000n,
+    dailyCap: 20_000_000n,
     createdAt: '2026-09-25T09:30:00.000Z',
     services: ['ocr', 'translate'],
     weight: 10,
@@ -228,14 +237,13 @@ export type MockPayment = {
 };
 
 const bootTime = Date.now();
-const hoursAgo = (hours: number): string => new Date(bootTime - hours * 3_600_000).toISOString();
 
 // A realistic business-hours traffic shape: quiet overnight, ramping through the morning, a
 // midday/afternoon peak, tapering into the evening. Index 0 = 24h ago, index 23 = the last hour.
 const HOUR_WEIGHTS = [
   2, 1, 1, 1, 1, 2, 4, 7, 10, 13, 15, 16, 15, 14, 16, 17, 15, 13, 11, 9, 7, 5, 4, 3,
 ];
-const TOTAL_PAYMENTS_24H = 300;
+const TOTAL_PAYMENTS_24H = 40000;
 const hourlyPaymentCounts = allocateByWeight(HOUR_WEIGHTS, TOTAL_PAYMENTS_24H);
 
 const generateHistoricalPayments = (): MockPayment[] => {
@@ -339,42 +347,66 @@ export type MockSplitBatch = {
   payouts: PayoutLine[];
 };
 
-/** One settlement batch per ~6-7 payments, oldest first — the same shape the real split worker
- * produces: `computeSplit` per payment, `aggregatePayouts` per batch. The newest batch is still
- * PENDING; every earlier one is CONFIRMED. */
-const generateSplitBatches = (): MockSplitBatch[] => {
-  const ordered = [...payments].sort((a, b) => a.settledAt.localeCompare(b.settledAt));
-  const batchCount = 46;
-  const batchSizes = allocateByWeight(Array.from({ length: batchCount }, () => 1), ordered.length);
+/** Same cadence as the real split worker (`apps/api/src/features/splits/worker.ts`'s
+ * `SPLIT_ROUND_INTERVAL_MS`): one batch per 30s tick, grouping whatever settled since the last
+ * one. Exported so the web client can derive "payment → payout" latency from the same window. */
+export const SPLIT_WINDOW_MS = 30_000;
 
+const windowKeyOf = (isoDate: string): number => Math.floor(new Date(isoDate).getTime() / SPLIT_WINDOW_MS);
+
+/** A batch's signature is seeded by its window key alone, not the shared `rng()` stream, so it
+ * stays identical across repeated `/splits` requests instead of drifting on every refetch. */
+const signatureForWindow = (windowKey: number): string => signatureOf(createRng(900_001 + windowKey));
+
+/** Builds the `limit` most recent non-empty 30s settlement batches on demand — the same shape
+ * (and totals) a full day of eager generation would produce, since each batch only depends on
+ * payments inside its own time window. Walking `payments` from the newest entry backward instead
+ * of generating all ~2,880 windows a day holds keeps a 40k-payment day cheap to serve.
+ * ponytail: O(payments scanned until `limit` windows close), not O(all payments); fine while
+ * `/splits` only ever asks for 50. */
+export const recentSplitBatches = (limit: number): MockSplitBatch[] => {
   const batches: MockSplitBatch[] = [];
-  let cursor = 0;
+  let currentKey: number | null = null;
+  let currentSlice: MockPayment[] = [];
 
-  for (let batchIndex = 0; batchIndex < batchCount; batchIndex += 1) {
-    const size = batchSizes[batchIndex] ?? 0;
-    const slice = ordered.slice(cursor, cursor + size);
-    cursor += size;
-    if (slice.length === 0) continue;
+  const closeWindow = () => {
+    if (currentKey === null || currentSlice.length === 0) return;
 
-    const payoutLines = slice.flatMap((payment) => computeSplit(payment.amount, serviceOf(payment.serviceId).splits));
-    const lastPayment = slice[slice.length - 1];
+    const payoutLines = currentSlice.flatMap((payment) =>
+      computeSplit(payment.amount, serviceOf(payment.serviceId).splits),
+    );
 
     batches.push({
-      id: fixedId(10_000 + batchIndex),
+      id: `split-${String(currentKey)}`,
       status: 'confirmed',
-      txSignature: nextSignature(),
-      createdAt: lastPayment ? lastPayment.settledAt : hoursAgo(0),
+      txSignature: signatureForWindow(currentKey),
+      createdAt: new Date((currentKey + 1) * SPLIT_WINDOW_MS).toISOString(),
       payouts: aggregatePayouts(payoutLines),
     });
+  };
+
+  for (let index = payments.length - 1; index >= 0; index -= 1) {
+    const payment = payments[index];
+    if (!payment) continue;
+    const key = windowKeyOf(payment.settledAt);
+
+    if (key !== currentKey) {
+      closeWindow();
+      if (batches.length >= limit) break;
+      currentKey = key;
+      currentSlice = [];
+    }
+    currentSlice.push(payment);
   }
+  // The oldest in-progress window only reaches here once every payment in it has been scanned
+  // (there is nothing older left), so closing it now is still a complete window, not a partial one.
+  if (batches.length < limit) closeWindow();
 
-  const lastBatch = batches[batches.length - 1];
-  if (lastBatch) lastBatch.status = 'pending';
+  const [newest] = batches;
+  if (newest) newest.status = 'pending';
 
-  return batches;
+  return batches.reverse();
 };
-
-export const splitBatches: MockSplitBatch[] = generateSplitBatches();
 
 export const statementTotalsOf = (
   allowanceId: string,

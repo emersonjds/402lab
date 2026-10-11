@@ -15,6 +15,7 @@ import { useAllPayments, type PaymentWithAgent } from '@/shared/api/use-all-paym
 import { useLiveEvents } from '@/shared/api/use-live-events';
 import { PROVIDERS, serviceInfo } from '@/shared/catalog/service-info';
 import { shortAddress } from '@/shared/format/address';
+import { avgPaymentToPayoutSeconds } from '@/shared/metrics/payment-to-payout';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -311,27 +312,15 @@ export const SplitsTable = () => {
     [batchesQuery],
   );
 
-  const totalProviderPayouts = effectiveBatches
-    .filter((batch) => batch.status === 'confirmed')
-    .flatMap((batch) => batch.payouts)
-    .filter((payout) => payout.role === 'provider')
-    .reduce((sum, payout) => sum + parseAtomic(payout.amount), 0n);
+  // `/splits` only ever returns the 50 most recent batches (same cap as the real API), too few
+  // to total a full day of settlements; every payment old enough to matter is already folded into
+  // some confirmed batch by now, so the provider share of all-time gross revenue is the accurate
+  // total instead.
+  const totalProviderPayouts = stats.reduce((sum, stat) => sum + stat.providerShare, 0n);
 
   const providersWithRevenue = stats.filter((stat) => stat.grossRevenue > 0n).length;
 
-  const avgSettlementSeconds = (() => {
-    const createdAts = effectiveBatches.map((batch) => new Date(batch.createdAt).getTime()).sort((a, b) => a - b);
-    if (createdAts.length < 2) return null;
-
-    const gaps: number[] = [];
-    for (let i = 1; i < createdAts.length; i += 1) {
-      const previous = createdAts[i - 1];
-      const current = createdAts[i];
-      if (previous !== undefined && current !== undefined) gaps.push((current - previous) / 1_000);
-    }
-
-    return gaps.reduce((sum, gap) => sum + gap, 0) / gaps.length;
-  })();
+  const avgPaymentToPayout = avgPaymentToPayoutSeconds(payments, effectiveBatches);
 
   return (
     <div>
@@ -350,7 +339,7 @@ export const SplitsTable = () => {
       )}
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Kpi label="Settled to providers" value={formatUsd(totalProviderPayouts)} hint="across confirmed batches" />
+        <Kpi label="Settled to providers" value={formatUsd(totalProviderPayouts)} hint="85% of gross revenue (24h)" />
         <Kpi label="Split batches" value={String(effectiveBatches.length)} hint={`${String(effectiveBatches.filter((b) => b.status === 'confirmed').length)} confirmed`} />
         <Kpi
           label="Providers paid"
@@ -358,9 +347,9 @@ export const SplitsTable = () => {
           hint={`of ${String(PROVIDERS.length)} on the catalog`}
         />
         <Kpi
-          label="Avg settlement interval"
-          value={avgSettlementSeconds === null ? '—' : `${avgSettlementSeconds.toFixed(1)}s`}
-          hint="between batches"
+          label="Payment → payout"
+          value={avgPaymentToPayout === null ? '—' : `${avgPaymentToPayout.toFixed(1)}s`}
+          hint="avg. settle to split payout"
         />
       </div>
 
