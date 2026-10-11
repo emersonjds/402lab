@@ -2,6 +2,7 @@ import createNextIntlPlugin from 'next-intl/plugin';
 import type { NextConfig } from 'next';
 import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const apiUrl = process.env.API_URL ?? 'http://localhost:8080';
 const withNextIntl = createNextIntlPlugin();
@@ -15,6 +16,9 @@ type WebpackConfig = {
 };
 
 const nextConfig: NextConfig = {
+  // Docker image: .next/standalone mirrors the monorepo, server at apps/web/server.js.
+  output: 'standalone',
+  outputFileTracingRoot: join(dirname(fileURLToPath(import.meta.url)), '../..'),
   transpilePackages: ['@402lab/shared', '@402lab/mocks'],
   webpack: (config: WebpackConfig) => {
     // @402lab/shared imports `./money.js` (NodeNext); Turbopack has no extensionAlias, webpack does.
@@ -27,7 +31,8 @@ const nextConfig: NextConfig = {
     };
     return config;
   },
-  // Same-origin proxy: the API session cookie stays first-party.
+  // Same-origin proxy: the API session cookie stays first-party. Rewrites are compiled into
+  // the build manifest, so API_URL must be set at `next build` (Docker build arg).
   rewrites: () => Promise.resolve([{ source: '/api/:path*', destination: `${apiUrl}/:path*` }]),
 };
 
