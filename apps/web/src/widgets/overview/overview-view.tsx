@@ -16,6 +16,7 @@ import { useApiQuery } from '@/shared/api/use-api-query';
 import { useAllPayments, type PaymentWithAgent } from '@/shared/api/use-all-payments';
 import { useLiveEvents } from '@/shared/api/use-live-events';
 import { PROVIDERS, serviceInfo, serviceLabel } from '@/shared/catalog/service-info';
+import { avgPaymentToPayoutSeconds } from '@/shared/metrics/payment-to-payout';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -310,22 +311,8 @@ export const OverviewView = () => {
       ? 100
       : Math.round((payments.filter((p) => p.upstreamStatus === '200').length / payments.length) * 100);
 
-  const avgSettlementSeconds = useMemo(() => {
-    if (batchesQuery.status !== 'ready') return null;
-    const createdAts = batchesQuery.data.batches
-      .map((batch) => new Date(batch.createdAt).getTime())
-      .sort((a, b) => a - b);
-    if (createdAts.length < 2) return null;
-
-    const gaps: number[] = [];
-    for (let i = 1; i < createdAts.length; i += 1) {
-      const previous = createdAts[i - 1];
-      const current = createdAts[i];
-      if (previous !== undefined && current !== undefined) gaps.push((current - previous) / 1_000);
-    }
-
-    return gaps.reduce((sum, gap) => sum + gap, 0) / gaps.length;
-  }, [batchesQuery]);
+  const avgPaymentToPayout =
+    batchesQuery.status === 'ready' ? avgPaymentToPayoutSeconds(payments, batchesQuery.data.batches) : null;
 
   const agentRows: AgentRow[] = allowances.map((allowance) => {
     const theirs = payments.filter((payment) => payment.allowanceId === allowance.id);
@@ -374,9 +361,9 @@ export const OverviewView = () => {
           hint={`${String(successRate)}% success`}
         />
         <Kpi
-          label="Avg settlement interval"
-          value={avgSettlementSeconds === null ? '—' : `${avgSettlementSeconds.toFixed(1)}s`}
-          hint="between split batches"
+          label="Payment → payout"
+          value={avgPaymentToPayout === null ? '—' : `${avgPaymentToPayout.toFixed(1)}s`}
+          hint="avg. settle to split payout"
         />
       </div>
 
