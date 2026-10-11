@@ -9,12 +9,7 @@ import { SolscanLink } from '@/components/ui/solscan-link';
 import { apiRequest } from '@/shared/api/client';
 import { allowanceListSchema, paymentListSchema, type Payment } from '@/shared/api/schemas';
 import { useApiQuery } from '@/shared/api/use-api-query';
-
-const SERVICE_LABEL: Record<Payment['serviceId'], string> = {
-  ocr: 'OCR · Azure',
-  translate: 'Translate · AWS',
-  summarize: 'Summarize · Anthropic',
-};
+import { serviceLabel } from '@/shared/catalog/service-info';
 
 type Row = Payment & { agentName: string };
 
@@ -78,7 +73,7 @@ export const PaymentsTable = () => {
                     <span className="font-mono text-sm text-text">{formatUsd(parseAtomic(row.amount))}</span>
                   </div>
                   <div className="mt-1 flex items-center justify-between text-xs text-muted">
-                    <span>{SERVICE_LABEL[row.serviceId]}</span>
+                    <span>{serviceLabel(row.serviceId)}</span>
                     <span>{new Date(row.settledAt).toLocaleString()}</span>
                   </div>
                   <div className="mt-1">
@@ -103,7 +98,7 @@ export const PaymentsTable = () => {
                   {rows.map((row) => (
                     <tr key={row.id} className="border-b border-line/60">
                       <td className="py-2.5 text-text">{row.agentName}</td>
-                      <td className="py-2.5 text-text">{SERVICE_LABEL[row.serviceId]}</td>
+                      <td className="py-2.5 text-text">{serviceLabel(row.serviceId)}</td>
                       <td className="py-2.5 font-mono text-text">{formatUsd(parseAtomic(row.amount))}</td>
                       <td className="py-2.5 text-muted">{new Date(row.settledAt).toLocaleString()}</td>
                       <td className="py-2.5">
