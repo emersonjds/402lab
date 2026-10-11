@@ -17,6 +17,15 @@ const configSchema = z.object({
   PROVIDER_OCR_ADDRESS: solanaAddress,
   PROVIDER_TRANSLATE_ADDRESS: solanaAddress,
   PROVIDER_SUMMARIZE_ADDRESS: solanaAddress,
+  // New providers are optional: unset falls back to a deterministic demo address per service
+  // (see `DEMO_PROVIDER_ADDRESSES` in app.ts) so boot never breaks for anyone who hasn't set them.
+  PROVIDER_VISION_ADDRESS: optional(solanaAddress),
+  PROVIDER_CHAT_ADDRESS: optional(solanaAddress),
+  PROVIDER_EMBED_ADDRESS: optional(solanaAddress),
+  PROVIDER_IMAGE_ADDRESS: optional(solanaAddress),
+  PROVIDER_SPEECH_ADDRESS: optional(solanaAddress),
+  PROVIDER_TRANSCRIBE_ADDRESS: optional(solanaAddress),
+  PROVIDER_BEDROCK_ADDRESS: optional(solanaAddress),
   INTEGRATOR_ADDRESS: solanaAddress,
   AZURE_VISION_ENDPOINT: optional(z.url()),
   AZURE_VISION_KEY: optional(z.string()),
