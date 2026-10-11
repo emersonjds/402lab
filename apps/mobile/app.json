@@ -3,7 +3,7 @@
     "name": "402Lab",
     "slug": "402lab",
     "scheme": "lab402",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
     "backgroundColor": "#0B0D10",
