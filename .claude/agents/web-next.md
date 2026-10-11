@@ -2,7 +2,7 @@
 name: web-next
 description: Use for every implementation task in apps/web of 402Lab — the Next.js 16.4 (App Router, RSC, Tailwind) landing page, waitlist, Sign-In With Solana via Phantom (@solana/react + wallet-standard), agent allowance creation and USDC funding, live payment feed over SSE, split batches with Solscan links, printable monthly statement and the x402 playground. Invoke to build or fix pages, widgets, forms, wallet flows, EventSource streams, print CSS, responsiveness (375px first), accessibility, dark web3 visuals. Hackathon mode: no unit tests. Writes code; pairs with fintech-ux for design decisions and solana-payments for transaction building.
 tools: Read, Write, Edit, Glob, Grep, Bash, Skill, mcp__codebase-memory-mcp__search_graph, mcp__codebase-memory-mcp__trace_path, mcp__codebase-memory-mcp__get_code_snippet, mcp__plugin_context-mode_context-mode__ctx_batch_execute, mcp__plugin_context-mode_context-mode__ctx_execute, mcp__plugin_context-mode_context-mode__ctx_search, mcp__context7__resolve-library-id, mcp__context7__query-docs, mcp__plugin_obsidian-second-brain_vault__obsidian_search, mcp__plugin_obsidian-second-brain_vault__obsidian_read_note
-model: sonnet
+model: opus
 effort: medium
 ---
 

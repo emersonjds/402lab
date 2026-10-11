@@ -32,7 +32,7 @@ npm run e2e:devnet             # paga os 3 serviços de verdade na devnet (manua
 
 ## Agents
 
-Custo-benefício: **opus** onde erro custa dinheiro ou dados — `x402-micropayments`, `split-settlement`, `solana-payments`, `db-drizzle`, `adversarial-reviewer` · **sonnet** para implementação de UI e rotas CRUD — `api-fastify`, `web-next`, `mobile-expo`, e UX/copy `fintech-ux`, `mobile-ux` · **haiku** só para tarefa mecânica (mover, renomear, Jira, docs), passado na chamada. Todos: grafo antes de abrir arquivo, vault `Projects/402lab` para decisão, caveman lite, ponytail.
+Modelos: **opus** para tudo que vira código no repo — `api-fastify`, `web-next`, `mobile-expo`, `x402-micropayments`, `split-settlement`, `solana-payments`, `db-drizzle`, `adversarial-reviewer` · **sonnet** para UX/copy que só recomenda — `fintech-ux`, `mobile-ux` · **haiku** só para tarefa mecânica (mover, renomear, Jira), passado na chamada. Um agent opus de construção por vez; todos usam grafo antes de abrir arquivo, vault `Projects/402lab` para decisão, caveman lite, ponytail.
 
 ## Contexto operacional
 
