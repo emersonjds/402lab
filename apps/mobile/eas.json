@@ -10,13 +10,16 @@
         "buildType": "apk"
       },
       "env": {
-        "EXPO_NO_TELEMETRY": "1"
-      }
+        "EXPO_NO_TELEMETRY": "1",
+        "EXPO_PUBLIC_API_MOCKING": "enabled"
+      },
+      "channel": "preview"
     },
     "production": {
       "android": {
         "buildType": "app-bundle"
-      }
+      },
+      "channel": "production"
     }
   }
 }
