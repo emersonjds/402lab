@@ -3,7 +3,8 @@
 import 'react-native-url-polyfill/auto';
 import 'fast-text-encoding';
 
-// msw's core references `EventTarget`, `Event`, `MessageEvent` and `EventSource` at import time.
+// msw's core references `EventTarget`, `Event`, `MessageEvent`, `EventSource` and (for its
+// WebSocket support) `BroadcastChannel` at import time.
 // Hermes has none of them and the phone never streams events (it polls REST), so inert stand-ins
 // are enough. The web-only SSE handler lives in `@402lab/mocks/browser` and is never loaded here.
 class InertEventTarget {
@@ -20,11 +21,20 @@ class InertEvent {
 
 class InertMessageEvent extends InertEvent {}
 
+class InertBroadcastChannel extends InertEventTarget {
+  constructor(readonly name: string) {
+    super();
+  }
+  postMessage(): void {}
+  close(): void {}
+}
+
 const missingGlobals = {
   EventTarget: InertEventTarget,
   Event: InertEvent,
   MessageEvent: InertMessageEvent,
   EventSource: InertEventTarget,
+  BroadcastChannel: InertBroadcastChannel,
 };
 
 for (const [name, standIn] of Object.entries(missingGlobals)) {
