@@ -1,12 +1,21 @@
 # Deploy
 
-Three pieces, all on Solana **devnet**:
+Everything runs on Solana **devnet**, in one Railway project (`402lab`):
 
-| Piece          | Where                | Built from                                                           |
-| -------------- | -------------------- | -------------------------------------------------------------------- |
-| API + Postgres | Railway              | `apps/api/Dockerfile` (context = repo root), `apps/api/railway.json` |
-| Web dashboard  | Vercel               | `apps/web` (Next.js)                                                 |
-| Mobile app     | Expo Go / EAS Update | `apps/mobile`                                                        |
+| Service    | Built from                                               | Public URL                                      |
+| ---------- | -------------------------------------------------------- | ----------------------------------------------- |
+| `Postgres` | Railway PostgreSQL template                              | none (private network only)                     |
+| `api`      | `apps/api/Dockerfile`                                    | https://api-production-570e4.up.railway.app     |
+| `web`      | `apps/web/Dockerfile`                                    | https://web-production-1b5d1.up.railway.app     |
+| `web-demo` | `apps/web/Dockerfile`, `NEXT_PUBLIC_API_MOCKING=enabled` | https://web-demo-production-0d9a.up.railway.app |
+| Mobile app | Expo Go / EAS Update (`apps/mobile`)                     | —                                               |
+
+Every service builds from the repository root; the variable `RAILWAY_DOCKERFILE_PATH` picks the
+Dockerfile, so no dashboard setting is needed. Redeploy from the laptop with
+`railway up --service <name> --detach`. The web services read `API_URL` and `NEXT_PUBLIC_*` as
+Docker build args, so changing them needs a redeploy, not only a restart.
+
+The sections below describe each piece; section 2 (Vercel) is the alternative host for the web.
 
 ## 1. API on Railway
 

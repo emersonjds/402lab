@@ -32,8 +32,7 @@
 
 [![Google Stitch](https://img.shields.io/badge/Google%20Stitch-design-4285F4?logo=google&logoColor=white)](https://stitch.withgoogle.com)
 [![Expo EAS](https://img.shields.io/badge/Expo%20EAS-build%20%26%20updates-000020?logo=expo&logoColor=white)](https://docs.expo.dev/eas/)
-[![Railway](https://img.shields.io/badge/Railway-API-0B0D0E?logo=railway&logoColor=white)](https://railway.com)
-[![Vercel](https://img.shields.io/badge/Vercel-web-000000?logo=vercel&logoColor=white)](https://vercel.com)
+[![Railway](https://img.shields.io/badge/Railway-API%20%2B%20web%20%2B%20Postgres-0B0D0E?logo=railway&logoColor=white)](https://railway.com)
 
 **Pocket money for AI agents.** A human gives an agent an allowance — a cap per call and a cap
 per day — and the agent pays every API call by itself in USDC on Solana through HTTP 402
@@ -41,6 +40,12 @@ per day — and the agent pays every API call by itself in USDC on Solana throug
 watches, pauses and gets one monthly statement.
 
 Built for the Colosseum Crypto World's Fair (Solana track). Runs on **devnet**.
+
+**Live**
+
+- Landing and panel (devnet): https://web-production-1b5d1.up.railway.app
+- Panel on demo data (no wallet needed): https://web-demo-production-0d9a.up.railway.app/app
+- API and Swagger: https://api-production-570e4.up.railway.app/docs
 
 ## The problem
 
@@ -303,8 +308,8 @@ npm run e2e:devnet          # real devnet payments + split (manual)
 
 ## Deploy
 
-API + Postgres on Railway (`apps/api/Dockerfile`), web on Vercel, mobile through Expo Go and EAS
-— step by step in [`docs/deploy.md`](docs/deploy.md).
+API, web, demo web and Postgres on one Railway project (each service picks its Dockerfile),
+mobile through Expo Go and EAS — step by step in [`docs/deploy.md`](docs/deploy.md).
 
 ## Roadmap
 
