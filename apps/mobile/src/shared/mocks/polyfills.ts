@@ -40,3 +40,26 @@ const missingGlobals = {
 for (const [name, standIn] of Object.entries(missingGlobals)) {
   if (!(name in globalThis)) Object.assign(globalThis, { [name]: standIn });
 }
+
+// msw builds every mocked Response through `Headers.prototype.getSetCookie` and tags requests with
+// `crypto.randomUUID`; Hermes ships neither. Mock traffic carries no cookies and ids only need to
+// be unique within the session.
+if (typeof Headers.prototype.getSetCookie !== 'function') {
+  Headers.prototype.getSetCookie = function getSetCookie(this: Headers): string[] {
+    const cookie = this.get('set-cookie');
+    return cookie === null ? [] : [cookie];
+  };
+}
+
+const randomHex = (length: number) =>
+  Array.from({ length }, () => Math.floor(Math.random() * 16).toString(16)).join('');
+
+const hasRandomUUID =
+  'crypto' in globalThis && typeof Reflect.get(globalThis.crypto, 'randomUUID') === 'function';
+
+if (!hasRandomUUID) {
+  const randomUUID = (): `${string}-${string}-${string}-${string}-${string}` =>
+    `${randomHex(8)}-${randomHex(4)}-4${randomHex(3)}-a${randomHex(3)}-${randomHex(12)}`;
+  const existingCrypto: object = 'crypto' in globalThis ? globalThis.crypto : {};
+  Object.assign(globalThis, { crypto: Object.assign(existingCrypto, { randomUUID }) });
+}

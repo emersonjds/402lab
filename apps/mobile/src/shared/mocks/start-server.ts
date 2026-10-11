@@ -19,9 +19,14 @@ export const startMockServer = (): Promise<void> => {
   const originalFetch = globalThis.fetch;
 
   globalThis.fetch = async (input, init) => {
-    const request = new Request(input, init);
-    const mocked = await getResponse(restHandlers, request);
-    return mocked ?? originalFetch(input, init);
+    try {
+      const request = new Request(input, init);
+      const mocked = await getResponse(restHandlers, request);
+      return mocked ?? (await originalFetch(input, init));
+    } catch (error) {
+      console.warn('[mocks] request failed', error instanceof Error ? error.message : error);
+      throw error;
+    }
   };
 
   return Promise.resolve();
