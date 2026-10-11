@@ -3,9 +3,9 @@
 import 'react-native-url-polyfill/auto';
 import 'fast-text-encoding';
 
-// `@402lab/mocks` builds one `sse()` handler for the web dashboard's live feed, and msw touches
-// `EventTarget`, `Event`, `MessageEvent` and `EventSource` at import time. Hermes has none of them;
-// the phone polls REST and never opens that stream, so inert stand-ins are enough.
+// msw's core references `EventTarget`, `Event`, `MessageEvent` and `EventSource` at import time.
+// Hermes has none of them and the phone never streams events (it polls REST), so inert stand-ins
+// are enough. The web-only SSE handler lives in `@402lab/mocks/browser` and is never loaded here.
 class InertEventTarget {
   addEventListener(): void {}
   removeEventListener(): void {}

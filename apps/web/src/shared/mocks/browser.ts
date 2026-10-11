@@ -1,6 +1,6 @@
 'use client';
 
-import { handlers } from '@402lab/mocks';
+import { handlers } from '@402lab/mocks/browser';
 import { setupWorker } from 'msw/browser';
 
 import { registerMockWallet } from './mock-wallet';

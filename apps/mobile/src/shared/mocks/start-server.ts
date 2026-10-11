@@ -1,6 +1,6 @@
 import './polyfills';
 
-import { handlers } from '@402lab/mocks';
+import { restHandlers } from '@402lab/mocks';
 import { getResponse } from 'msw';
 
 let started = false;
@@ -20,7 +20,7 @@ export const startMockServer = (): Promise<void> => {
 
   globalThis.fetch = async (input, init) => {
     const request = new Request(input, init);
-    const mocked = await getResponse(handlers, request);
+    const mocked = await getResponse(restHandlers, request);
     return mocked ?? originalFetch(input, init);
   };
 

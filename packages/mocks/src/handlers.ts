@@ -7,7 +7,7 @@ import {
   type ServiceId,
 } from '@402lab/shared';
 import { encodePaymentResponseHeader } from '@x402/core/http';
-import { http, HttpResponse, sse } from 'msw';
+import { http, HttpResponse } from 'msw';
 
 import {
   allowanceOf,
@@ -105,7 +105,8 @@ const paidServiceHandler = (id: ServiceId) =>
     );
   });
 
-export const handlers = [
+/** Every REST route of the API contract — safe on any runtime (browser, Node, Hermes). */
+export const restHandlers = [
   // --- auth ---
   http.get('*/api/auth/nonce', () => {
     const nonce = Math.random().toString(36).slice(2);
@@ -371,29 +372,4 @@ export const handlers = [
   paidServiceHandler('ocr'),
   paidServiceHandler('translate'),
   paidServiceHandler('summarize'),
-
-  // --- live feed ---
-  sse('*/api/events', ({ client, finalize }) => {
-    const tick = () => {
-      const payment = maybeAdvanceLiveFeed();
-      if (!payment) return;
-
-      client.send({
-        data: JSON.stringify({
-          type: 'payment.settled',
-          paymentId: payment.id,
-          serviceId: payment.serviceId,
-          allowanceId: payment.allowanceId,
-          amount: atomicToApi(payment.amount),
-          txSignature: payment.txSignature,
-          settledAt: payment.settledAt,
-        }),
-      });
-    };
-
-    const interval = setInterval(tick, 4_000);
-    finalize(() => {
-      clearInterval(interval);
-    });
-  }),
 ];
