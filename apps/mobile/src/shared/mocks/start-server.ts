@@ -1,25 +1,4 @@
-// React Native has no URL/TextEncoder globals; msw needs both to parse request URLs and bodies.
-import 'react-native-url-polyfill/auto';
-import 'fast-text-encoding';
-
-// `@402lab/mocks` registers one `sse()` handler for the web dashboard's live feed. Building that
-// handler needs `EventTarget`/`EventSource` to exist at import time — Hermes has neither — even
-// though the phone polls REST instead and never opens the connection.
-if (typeof globalThis.EventTarget === 'undefined') {
-  Object.assign(globalThis, {
-    EventTarget: class NoopEventTarget {
-      addEventListener(): void {}
-      removeEventListener(): void {}
-      dispatchEvent(): boolean {
-        return true;
-      }
-    },
-  });
-}
-function NoopEventSource(): void {}
-if (typeof globalThis.EventSource === 'undefined') {
-  Object.assign(globalThis, { EventSource: NoopEventSource });
-}
+import './polyfills';
 
 import { handlers } from '@402lab/mocks';
 import { getResponse } from 'msw';
