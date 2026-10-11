@@ -18,13 +18,15 @@ import {
   MOCK_SERVICE_IDS,
   MOCK_SERVICES,
   payments,
+  recentSplitBatches,
   serviceOf,
   spentToday,
-  splitBatches,
   statementTotalsOf,
   type MockAllowance,
   type MockPayment,
 } from './fixtures.js';
+
+const LISTED_BATCHES = 50;
 
 const atomicToApi = (amount: AtomicAmount): string => amount.toString();
 
@@ -348,14 +350,17 @@ export const restHandlers = [
     if (!authState.isSignedIn()) return unauthorized();
 
     return HttpResponse.json({
-      batches: splitBatches.map((batch) => ({
-        id: batch.id,
-        status: batch.status,
-        txSignature: batch.txSignature,
-        explorerUrl: explorerTxUrl(batch.txSignature),
-        createdAt: batch.createdAt,
-        payouts: batch.payouts.map(toApiPayout),
-      })),
+      batches: recentSplitBatches(LISTED_BATCHES)
+        .slice()
+        .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+        .map((batch) => ({
+          id: batch.id,
+          status: batch.status,
+          txSignature: batch.txSignature,
+          explorerUrl: explorerTxUrl(batch.txSignature),
+          createdAt: batch.createdAt,
+          payouts: batch.payouts.map(toApiPayout),
+        })),
     });
   }),
 
