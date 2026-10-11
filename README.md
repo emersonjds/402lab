@@ -111,7 +111,9 @@ EXPO_PUBLIC_API_MOCKING=enabled npm run dev:mobile
 An amber "DEMO DATA" badge marks every screen while it's on. The pitch APK ships built with this
 flag set — see [`apps/mobile/.env.example`](apps/mobile/.env.example).
 
-Android APK for the pitch QR code:
+Android demo APK (runs on built-in demo data — tap **Try the demo**): [download](https://github.com/emersonjds/402lab/releases/download/v0.1.0-demo/402lab-demo.apk) · QR in [`docs/design/screens/apk-qr.png`](docs/design/screens/apk-qr.png).
+
+Build it yourself:
 
 ```sh
 cd apps/mobile && eas build -p android --profile preview          # cloud build, prints install link + QR
