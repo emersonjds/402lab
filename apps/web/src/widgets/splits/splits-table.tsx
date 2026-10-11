@@ -169,7 +169,29 @@ const PayoutsPerHourChart = ({ payments, stats }: { payments: PaymentWithAgent[]
 const ProviderLeaderboard = ({ stats }: { stats: ProviderStats[] }) => (
   <Card className="p-5">
     <h2 className="font-display font-semibold text-text">Provider settlement leaderboard</h2>
-    <div className="mt-4 overflow-x-auto">
+
+    <ul className="mt-4 grid gap-2 sm:hidden">
+      {stats.map((stat) => (
+        <li key={stat.provider.id} className="rounded-lg border border-line p-3">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <Monogram name={stat.provider.name} color={stat.color} />
+              <span className="text-sm text-text">{stat.provider.name}</span>
+            </div>
+            <span className="font-mono text-sm text-brand-400">{formatUsd(stat.providerShare)}</span>
+          </div>
+          <div className="mt-2 flex items-center justify-between text-xs text-muted">
+            <span>{stat.calls} calls · {stat.activeServices} service{stat.activeServices === 1 ? '' : 's'}</span>
+            <span className="font-mono">{formatUsd(stat.grossRevenue)} gross</span>
+          </div>
+          <p className="mt-1 text-xs text-muted">
+            Last payment: {stat.lastSettled ? new Date(stat.lastSettled).toLocaleTimeString() : '—'}
+          </p>
+        </li>
+      ))}
+    </ul>
+
+    <div className="mt-4 hidden overflow-x-auto sm:block">
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-line text-left text-xs text-muted">

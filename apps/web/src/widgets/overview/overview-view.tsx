@@ -160,7 +160,36 @@ const AgentAllowancesTable = ({ rows }: { rows: AgentRow[] }) => (
       </Link>
     </div>
 
-    <div className="mt-4 overflow-x-auto">
+    <ul className="mt-4 grid gap-2 sm:hidden">
+      {rows.map((row) => {
+        const progress = row.dailyCap > 0n ? Number((row.spentToday * 100n) / row.dailyCap) : 0;
+
+        return (
+          <li key={row.id} className="rounded-lg border border-line p-3">
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-sm text-text">{row.agentName}</span>
+              <Badge color={STATUS_BADGE[row.status]}>{row.status.toUpperCase()}</Badge>
+            </div>
+            <div className="mt-2 flex items-center gap-2">
+              <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-raised">
+                <div
+                  className="h-full rounded-full bg-brand-500"
+                  style={{ width: `${String(Math.min(100, progress))}%` }}
+                />
+              </div>
+              <span className="font-mono text-xs text-muted">
+                {formatUsd(row.spentToday)} / {formatUsd(row.dailyCap)}
+              </span>
+            </div>
+            <p className="mt-1 text-xs text-muted">
+              Last activity: {row.lastActivity ? new Date(row.lastActivity).toLocaleTimeString() : '—'}
+            </p>
+          </li>
+        );
+      })}
+    </ul>
+
+    <div className="mt-4 hidden overflow-x-auto sm:block">
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-line text-left text-xs text-muted">
