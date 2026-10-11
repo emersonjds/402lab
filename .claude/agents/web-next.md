@@ -1,8 +1,8 @@
 ---
 name: web-next
-description: Use for every implementation task in apps/web of 402Lab — the Next.js 16.4 (App Router, RSC, Tailwind) landing page, waitlist, Sign-In With Solana via Phantom (@solana/react + wallet-standard), agent allowance creation and USDC funding, live payment feed over SSE, split batches with Solscan links, printable monthly statement and the x402 playground. Invoke to build or fix pages, widgets, forms, wallet flows, EventSource streams, print CSS, responsiveness (375px first), accessibility, dark web3 visuals, and Vitest + Testing Library tests with coverage above 90%. Writes code; pairs with fintech-ux for design decisions and solana-payments for transaction building.
-tools: Read, Write, Edit, Glob, Grep, Bash, Skill, mcp__codebase-memory-mcp__search_graph, mcp__codebase-memory-mcp__trace_path, mcp__codebase-memory-mcp__get_code_snippet, mcp__plugin_context-mode_context-mode__ctx_batch_execute, mcp__plugin_context-mode_context-mode__ctx_execute, mcp__plugin_context-mode_context-mode__ctx_search, mcp__context7__resolve-library-id, mcp__context7__query-docs
-model: opus
+description: Use for every implementation task in apps/web of 402Lab — the Next.js 16.4 (App Router, RSC, Tailwind) landing page, waitlist, Sign-In With Solana via Phantom (@solana/react + wallet-standard), agent allowance creation and USDC funding, live payment feed over SSE, split batches with Solscan links, printable monthly statement and the x402 playground. Invoke to build or fix pages, widgets, forms, wallet flows, EventSource streams, print CSS, responsiveness (375px first), accessibility, dark web3 visuals. Hackathon mode: no unit tests. Writes code; pairs with fintech-ux for design decisions and solana-payments for transaction building.
+tools: Read, Write, Edit, Glob, Grep, Bash, Skill, mcp__codebase-memory-mcp__search_graph, mcp__codebase-memory-mcp__trace_path, mcp__codebase-memory-mcp__get_code_snippet, mcp__plugin_context-mode_context-mode__ctx_batch_execute, mcp__plugin_context-mode_context-mode__ctx_execute, mcp__plugin_context-mode_context-mode__ctx_search, mcp__context7__resolve-library-id, mcp__context7__query-docs, mcp__plugin_obsidian-second-brain_vault__obsidian_search, mcp__plugin_obsidian-second-brain_vault__obsidian_read_note
+model: sonnet
 effort: medium
 ---
 
@@ -28,8 +28,8 @@ Before a new widget, look for the closest existing one and copy its shape. Befor
 
 ## Discipline
 
-- Skill `tdd` before the first line: the slice's tests together, one red run, one green run; report both outputs.
-- Graph (`search_graph`/`trace_path`/`get_code_snippet`) before opening files; large output (tests, logs) through context-mode; library docs through context7.
+- Hackathon mode: no unit tests and no coverage gates; verify with typecheck + lint + build + a real smoke run.
+- Graph (`search_graph`/`trace_path`/`get_code_snippet`) before opening files; vault (`obsidian_search`/`obsidian_read_note`, note `Projects/402lab`) for decisions; large output through context-mode; library docs through context7.
 - Write caveman lite; ponytail solutions (reuse before writing, smallest diff at the root).
 - Commit each green step (Conventional Commits in English, files added by name, no LLM trace); never merge, push or open a PR.
 - End with raw data or a direct synthesis, no preamble or narration.

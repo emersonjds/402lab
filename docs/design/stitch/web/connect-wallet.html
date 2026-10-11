@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>402Lab — Auth / Sign In — Autonomous Micro-Fi Engine</title>
+<!-- Google Fonts: Space Grotesk, Inter, JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS with custom configuration -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "tertiary": "#fffaff",
+            "surface-bright": "#37393d",
+            "secondary-fixed-dim": "#37d8f4",
+            "on-primary-fixed": "#131f00",
+            "inverse-surface": "#e2e2e6",
+            "tertiary-fixed-dim": "#fabc41",
+            "on-secondary-fixed": "#001f25",
+            "primary": "#f8ffe2",
+            "on-error": "#690005",
+            "surface-dim": "#111317",
+            "error": "#ffb4ab",
+            "on-primary-fixed-variant": "#364e00",
+            "background": "#111317",
+            "outline": "#8d947c",
+            "on-background": "#e2e2e6",
+            "inverse-primary": "#496800",
+            "surface-container": "#1e2023",
+            "surface-container-highest": "#333538",
+            "on-tertiary-fixed": "#271900",
+            "on-surface": "#e2e2e6",
+            "secondary": "#45e1fd",
+            "primary-fixed-dim": "#9ed81b",
+            "surface-variant": "#333538",
+            "on-tertiary-fixed-variant": "#5e4200",
+            "tertiary-container": "#ffda9c",
+            "on-tertiary": "#422d00",
+            "on-secondary-fixed-variant": "#004e5a",
+            "primary-fixed": "#b9f63e",
+            "primary-container": "#b6f23a",
+            "on-error-container": "#ffdad6",
+            "tertiary-fixed": "#ffdea8",
+            "on-surface-variant": "#c3caaf",
+            "on-tertiary-container": "#815b00",
+            "surface": "#111317",
+            "outline-variant": "#434935",
+            "surface-container-high": "#282a2d",
+            "surface-container-low": "#1a1c1f",
+            "secondary-container": "#00c5e0",
+            "on-primary-container": "#4c6c00",
+            "secondary-fixed": "#a4eeff",
+            "on-secondary": "#00363f",
+            "error-container": "#93000a",
+            "inverse-on-surface": "#2f3034",
+            "surface-container-lowest": "#0c0e11",
+            "on-primary": "#243600",
+            "surface-tint": "#9ed81b",
+            "on-secondary-container": "#004d59"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "space-md": "1rem",
+            "space-lg": "1.5rem",
+            "space-xl": "2rem",
+            "space-xs": "0.25rem",
+            "margin": "1rem",
+            "gutter": "1rem",
+            "space-sm": "0.5rem",
+            "gutter-desktop": "1.5rem",
+            "margin-desktop": "2rem"
+          },
+          "fontFamily": {
+            "headline-lg-mobile": ["Space Grotesk"],
+            "display-hero-mobile": ["Space Grotesk"],
+            "display-hero": ["Space Grotesk"],
+            "label-caps": ["JetBrains Mono"],
+            "body-sm": ["Inter"],
+            "headline-md": ["Space Grotesk"],
+            "headline-sm": ["Space Grotesk"],
+            "headline-lg": ["Space Grotesk"],
+            "mono-md": ["JetBrains Mono"],
+            "mono-lg": ["JetBrains Mono"],
+            "body-lg": ["Inter"],
+            "body-md": ["Inter"],
+            "mono-sm": ["JetBrains Mono"]
+          },
+          "fontSize": {
+            "headline-lg-mobile": ["24px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "display-hero-mobile": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "display-hero": ["48px", { "lineHeight": "52px", "letterSpacing": "-0.03em", "fontWeight": "600" }],
+            "label-caps": ["10px", { "lineHeight": "12px", "letterSpacing": "0.08em", "fontWeight": "600" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "headline-md": ["20px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "500" }],
+            "headline-sm": ["16px", { "lineHeight": "22px", "letterSpacing": "0em", "fontWeight": "500" }],
+            "headline-lg": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "mono-md": ["13px", { "lineHeight": "18px", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+            "mono-lg": ["16px", { "lineHeight": "22px", "letterSpacing": "-0.02em", "fontWeight": "500" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+            "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "mono-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.02em", "fontWeight": "400" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      background-color: #0B0D10;
+      color: #E8EAED;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      line-height: 1;
+    }
+    .tnum {
+      font-feature-settings: 'tnum' 1;
+    }
+  </style>
+</head>
+<body class="bg-surface-dim min-h-screen flex flex-row">
+<!-- ========================================================
+       SHARED COMPONENT 1: SideNavBar (Fixed Left Sidebar)
+       Exact mapping from JSON tokens & strict classes
+       ======================================================== -->
+<aside class="h-screen w-64 fixed left-0 top-0 flex flex-col bg-surface-dim border-r border-outline-variant z-50 select-none">
+<div class="flex flex-col justify-between h-full p-space-md">
+<!-- Top Brand Anchor -->
+<div>
+<div class="flex items-center gap-2.5 pb-6 border-b border-outline-variant">
+<div class="h-8 w-8 bg-surface-container-high rounded flex items-center justify-center border border-outline-variant text-primary-container font-mono-sm font-semibold tracking-tighter shadow-none">
+            [402]
+          </div>
+<div class="flex flex-col">
+<span class="text-headline-md font-headline-md text-primary tracking-tight">402Lab</span>
+<span class="text-mono-sm font-mono-sm text-on-surface-variant text-[10px] tracking-normal leading-none">Autonomous Micro-Fi Engine</span>
+</div>
+</div>
+<!-- Navigation Tabs: Exact JSON labels & icons -->
+<nav class="mt-6 flex flex-col space-y-1">
+<!-- Allowances -->
+<a class="flex items-center gap-3 px-3 py-2 text-mono-md font-mono-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors duration-150 ease-in-out rounded-lg group" href="#">
+<span class="material-symbols-outlined text-[18px]">account_balance_wallet</span>
+<span>Allowances</span>
+</a>
+<!-- Payments -->
+<a class="flex items-center gap-3 px-3 py-2 text-mono-md font-mono-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors duration-150 ease-in-out rounded-lg group" href="#">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+<span>Payments</span>
+</a>
+<!-- Splits -->
+<a class="flex items-center gap-3 px-3 py-2 text-mono-md font-mono-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors duration-150 ease-in-out rounded-lg group" href="#">
+<span class="material-symbols-outlined text-[18px]">call_split</span>
+<span>Splits</span>
+</a>
+<!-- Statement -->
+<a class="flex items-center gap-3 px-3 py-2 text-mono-md font-mono-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors duration-150 ease-in-out rounded-lg group" href="#">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+<span>Statement</span>
+</a>
+<!-- Playground -->
+<a class="flex items-center gap-3 px-3 py-2 text-mono-md font-mono-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors duration-150 ease-in-out rounded-lg group" href="#">
+<span class="material-symbols-outlined text-[18px]">terminal</span>
+<span>Playground</span>
+</a>
+<!-- Settings (Contextually closest to Auth / Account setup) -->
+<a class="flex items-center gap-3 px-3 py-2 text-mono-md font-mono-md text-primary-container bg-surface-container-high border-l-2 border-primary-container transition-colors duration-150 ease-in-out rounded-r-lg group" href="#">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span class="font-medium text-primary">Settings</span>
+</a>
+</nav>
+<!-- CTA from JSON: Execute Agent Batch -->
+<div class="mt-8">
+<button class="w-full h-11 bg-surface-container-high border border-outline-variant hover:border-outline text-on-surface font-mono-md text-xs font-semibold px-3 rounded flex items-center justify-between transition-all duration-100 ease-linear active:scale-95 group">
+<span class="flex items-center gap-2 text-on-surface-variant group-hover:text-primary">
+<span class="material-symbols-outlined text-[16px] text-primary-container">play_arrow</span>
+              Execute Agent Batch
+            </span>
+<span class="text-[10px] text-on-surface-variant font-mono-sm border border-outline-variant px-1 rounded">⌘K</span>
+</button>
+</div>
+</div>
+<!-- Bottom Utility: API Docs & System Status -->
+<div class="border-t border-outline-variant pt-4 flex flex-col space-y-2">
+<a class="flex items-center justify-between px-3 py-1.5 text-mono-sm font-mono-sm text-on-surface-variant hover:text-on-surface transition-colors duration-150 ease-in-out" href="#">
+<span class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">code</span>
+            API Docs
+          </span>
+<span class="text-[10px] text-outline font-mono-sm">v2.1</span>
+</a>
+<div class="flex items-center justify-between px-3 py-1.5 text-mono-sm font-mono-sm text-on-surface-variant">
+<span class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">dns</span>
+            System Status
+          </span>
+<span class="flex items-center gap-1.5 text-primary-container font-mono-sm text-[10px]">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container animate-pulse"></span>
+            2,410 tx/s
+          </span>
+</div>
+</div>
+</div>
+</aside>
+<!-- ========================================================
+       SHARED COMPONENT 2: TopNavBar (Fixed Web Header)
+       Left pinned after 64 (256px), h-14, flat borders
+       ======================================================== -->
+<header class="h-14 fixed top-0 right-0 left-64 z-40 bg-surface-dim border-b border-outline-variant flex items-center justify-between px-space-lg select-none">
+<!-- Left Section: Breadcrumb & Network State -->
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 text-mono-sm font-mono-sm">
+<span class="text-on-surface-variant">Auth</span>
+<span class="text-outline-variant">/</span>
+<span class="text-primary font-medium">Sign In</span>
+</div>
+<!-- DEVNET Badge from JSON/Prompt -->
+<div class="flex items-center gap-1 px-2 py-0.5 rounded bg-tertiary-container/10 border border-tertiary-fixed-dim/30 text-tertiary-fixed-dim text-label-caps font-label-caps">
+<span class="w-1 h-1 rounded-full bg-tertiary-fixed-dim"></span>
+<span>DEVNET</span>
+</div>
+<!-- Latency Telemetry -->
+<div class="hidden sm:flex items-center gap-1 text-mono-sm font-mono-sm text-on-surface-variant text-[11px]">
+<span class="material-symbols-outlined text-[13px] text-outline">speed</span>
+<span class="text-on-surface tnum">24ms</span>
+</div>
+</div>
+<!-- Right Section: Actions & Keypair Identifier -->
+<div class="flex items-center gap-3">
+<!-- Latency & Notification trailing icons from JSON -->
+<button class="w-8 h-8 rounded border border-outline-variant hover:border-outline bg-surface-container-low flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-all duration-100 ease-linear active:scale-95" title="Notifications">
+<span class="material-symbols-outlined text-[18px]">notifications</span>
+</button>
+<!-- Trailing Primary Action (Keypair address from JSON: 7xKp...9fQ2) -->
+<div class="flex items-center gap-2 pl-2 pr-3 py-1 bg-surface-container-low border border-outline-variant rounded hover:border-outline transition-colors cursor-pointer group">
+<div class="w-5 h-5 rounded bg-secondary/20 border border-secondary/40 flex items-center justify-center text-[10px] font-mono-sm text-secondary font-bold" title="Solana Keypair Identity Blockies Avatar">
+          7x
+        </div>
+<span class="text-mono-sm font-mono-sm text-on-surface group-hover:text-primary transition-colors">7xKp...9fQ2</span>
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+</div>
+</div>
+</header>
+<!-- ========================================================
+       MAIN CONTENT: Split Auth Layout (1200px terminal container)
+       ======================================================== -->
+<main class="ml-64 mt-14 flex-1 min-h-[calc(100vh-3.5rem)] bg-surface-container-lowest p-space-lg lg:p-space-xl flex items-center justify-center">
+<div class="w-full max-w-[1200px] grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch my-auto">
+<!-- LEFT BRAND PANEL: Dark Raised Terminal Aesthetic (Col 7) -->
+<div class="lg:col-span-7 bg-surface-container-low border border-outline-variant rounded-xl p-space-lg lg:p-space-xl flex flex-col justify-between">
+<div>
+<!-- Section Tag -->
+<div class="flex items-center gap-2 mb-4">
+<span class="text-label-caps font-label-caps text-secondary uppercase tracking-widest px-2 py-0.5 bg-secondary/10 border border-secondary/20 rounded">
+              RFC 9110 §15.5.3 COMPLIANT
+            </span>
+<span class="text-mono-sm font-mono-sm text-outline-variant">|</span>
+<span class="text-mono-sm font-mono-sm text-on-surface-variant text-[11px]">STATUS CODE 402</span>
+</div>
+<!-- Headline & Subtitle -->
+<h1 class="text-headline-lg font-headline-lg text-primary tracking-tight mb-2">
+            Pocket money for AI agents
+          </h1>
+<p class="text-body-md font-body-md text-on-surface-variant mb-8 max-w-xl">
+            Deterministic cryptographic allowances for autonomous software. Enable micro-metered execution rails with hardware-secured boundaries.
+          </p>
+<!-- 3 Structured Bullet Facts -->
+<div class="space-y-4">
+<!-- Bullet 1 -->
+<div class="p-3.5 bg-surface-dim border border-outline-variant rounded-lg flex items-start gap-3.5 hover:border-outline transition-colors">
+<div class="mt-0.5 w-6 h-6 rounded bg-primary-container/10 border border-primary-container/30 flex items-center justify-center shrink-0">
+<span class="text-mono-sm font-mono-sm text-primary-container font-bold text-[11px]">01</span>
+</div>
+<div class="space-y-1">
+<div class="text-headline-sm font-headline-sm text-on-surface flex items-center gap-2">
+<span>Instant Micro-Settlement</span>
+<span class="text-mono-sm font-mono-sm text-primary-container text-[11px] px-1.5 py-0.2 bg-primary-container/10 rounded">~400ms</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant leading-relaxed">
+                  Pay APIs per call in USDC on Solana in ~400ms without credit card interchange fees, rolling subscriptions, or custody overhead.
+                </p>
+</div>
+</div>
+<!-- Bullet 2 -->
+<div class="p-3.5 bg-surface-dim border border-outline-variant rounded-lg flex items-start gap-3.5 hover:border-outline transition-colors">
+<div class="mt-0.5 w-6 h-6 rounded bg-secondary/10 border border-secondary/30 flex items-center justify-center shrink-0">
+<span class="text-mono-sm font-mono-sm text-secondary font-bold text-[11px]">02</span>
+</div>
+<div class="space-y-1">
+<div class="text-headline-sm font-headline-sm text-on-surface flex items-center gap-2">
+<span>Zero Blanket Authority</span>
+<span class="text-mono-sm font-mono-sm text-secondary text-[11px] px-1.5 py-0.2 bg-secondary/10 rounded">SOLANA PDAs</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant leading-relaxed">
+                  Agents use bounded Solana Program Derived Addresses with deterministic per-call parameters and daily maximum spending caps.
+                </p>
+</div>
+</div>
+<!-- Bullet 3 -->
+<div class="p-3.5 bg-surface-dim border border-outline-variant rounded-lg flex items-start gap-3.5 hover:border-outline transition-colors">
+<div class="mt-0.5 w-6 h-6 rounded bg-tertiary-fixed-dim/10 border border-tertiary-fixed-dim/30 flex items-center justify-center shrink-0">
+<span class="text-mono-sm font-mono-sm text-tertiary-fixed-dim font-bold text-[11px]">03</span>
+</div>
+<div class="space-y-1">
+<div class="text-headline-sm font-headline-sm text-on-surface flex items-center gap-2">
+<span>Non-Custodial Multi-Signature Escrow</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant leading-relaxed">
+                  Revoke allowances in a single block. Your master private keys never leave your device or cloud HSM.
+                </p>
+</div>
+</div>
+</div>
+</div>
+<!-- Live Mini Terminal Telemetry Widget -->
+<div class="mt-8 bg-surface-dim border border-outline-variant rounded-lg p-3 font-mono-sm text-[12px] leading-5 text-on-surface-variant select-none">
+<div class="flex items-center justify-between pb-2 mb-2 border-b border-outline-variant text-[10px] text-outline uppercase tracking-wider">
+<span class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+              NODE TELEMETRY ENGINE
+            </span>
+<span class="text-primary-container font-mono-sm">ACTIVE</span>
+</div>
+<div class="space-y-0.5 text-mono-sm">
+<p><span class="text-outline">&gt; cluster:</span> <span class="text-tertiary-fixed-dim">solana-devnet</span></p>
+<p><span class="text-outline">&gt; program:</span> <span class="text-secondary hover:underline cursor-pointer">402LabX89q...88x</span></p>
+<p><span class="text-outline">&gt; protocol_fee:</span> <span class="text-on-surface tnum">0.000005 SOL</span> <span class="text-[10px] text-outline">(relayer sponsored)</span></p>
+<p><span class="text-outline">&gt; state:</span> <span class="text-primary-container animate-pulse">awaiting_auth_challenge</span></p>
+</div>
+</div>
+</div>
+<!-- RIGHT SIDE: Wallet Sign-In Card (Col 5) -->
+<div class="lg:col-span-5 bg-surface-container-low border border-outline-variant rounded-xl p-space-lg flex flex-col justify-between">
+<div>
+<!-- Card Header -->
+<div class="mb-6">
+<div class="flex items-center justify-between mb-2">
+<h2 class="text-headline-md font-headline-md text-primary">
+                Sign in with your Solana wallet
+              </h2>
+<span class="material-symbols-outlined text-[20px] text-primary-container">lock_open</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant leading-relaxed">
+              Select a detected wallet to authenticate your account and manage agent allowances.
+            </p>
+</div>
+<!-- Detected Wallets List -->
+<div class="space-y-2.5">
+<!-- Phantom (Active Highlight) -->
+<button class="w-full h-14 px-3.5 bg-surface-dim border-2 border-primary-container rounded-lg flex items-center justify-between transition-all duration-100 ease-linear hover:bg-surface-container group cursor-pointer text-left">
+<div class="flex items-center gap-3">
+<!-- Branded Ghost Icon Container -->
+<div class="w-9 h-9 rounded bg-[#AB9FF2]/10 border border-[#AB9FF2]/30 flex items-center justify-center shrink-0">
+<svg class="w-5 h-5 text-[#AB9FF2]" fill="currentColor" viewbox="0 0 24 24">
+<path d="M12 2C6.48 2 2 6.48 2 12c0 3.84 2.16 7.18 5.34 8.87-.03-.43-.05-.88-.05-1.35 0-3.1 1.7-5.83 4.25-7.23-.27-.47-.44-1.02-.44-1.61 0-1.82 1.48-3.3 3.3-3.3s3.3 1.48 3.3 3.3c0 .59-.17 1.14-.44 1.61 2.55 1.4 4.25 4.13 4.25 7.23 0 .47-.02.92-.05 1.35C20.84 19.18 23 15.84 23 12c0-5.52-4.48-10-10-10z"></path>
+</svg>
+</div>
+<div>
+<div class="text-mono-md font-mono-md text-on-surface font-semibold group-hover:text-primary">Phantom</div>
+<div class="text-[10px] font-mono-sm text-outline">v24.12.0 • Web Extension</div>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded text-label-caps font-label-caps bg-primary-container/10 border border-primary-container/30 text-primary-container">
+                  Detected
+                </span>
+<span class="material-symbols-outlined text-[16px] text-primary-container">arrow_forward</span>
+</div>
+</button>
+<!-- Solflare -->
+<button class="w-full h-14 px-3.5 bg-surface-dim border border-outline-variant hover:border-outline rounded-lg flex items-center justify-between transition-all duration-100 ease-linear hover:bg-surface-container group cursor-pointer text-left">
+<div class="flex items-center gap-3">
+<!-- Branded Flame Icon Container -->
+<div class="w-9 h-9 rounded bg-[#FC7226]/10 border border-[#FC7226]/30 flex items-center justify-center shrink-0">
+<svg class="w-5 h-5 text-[#FC7226]" fill="currentColor" viewbox="0 0 24 24">
+<path d="M12 23c-4.97 0-9-4.03-9-9 0-3.8 2.37-7.05 5.75-8.32.22-.08.45.1.42.34-.34 2.45.74 4.8 2.83 5.98 0-2.45 1.5-4.66 3.78-5.56.24-.09.48.1.45.36-.36 2.65.91 5.2 3.19 6.42 1.05.57 1.58 1.8 1.58 2.78 0 3.86-3.14 7-7 7z"></path>
+</svg>
+</div>
+<div>
+<div class="text-mono-md font-mono-md text-on-surface font-semibold group-hover:text-primary">Solflare</div>
+<div class="text-[10px] font-mono-sm text-outline">v1.44.2 • Injected</div>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded text-label-caps font-label-caps bg-primary-container/10 border border-primary-container/30 text-primary-container">
+                  Detected
+                </span>
+<span class="material-symbols-outlined text-[16px] text-outline-variant group-hover:text-on-surface">arrow_forward</span>
+</div>
+</button>
+<!-- Backpack -->
+<button class="w-full h-14 px-3.5 bg-surface-dim border border-outline-variant hover:border-outline rounded-lg flex items-center justify-between transition-all duration-100 ease-linear hover:bg-surface-container group cursor-pointer text-left">
+<div class="flex items-center gap-3">
+<!-- Branded Backpack Icon Container -->
+<div class="w-9 h-9 rounded bg-[#E33E3E]/10 border border-[#E33E3E]/30 flex items-center justify-center shrink-0">
+<svg class="w-5 h-5 text-[#E33E3E]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="M4 10a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"></path>
+<path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"></path>
+<path d="M8 21v-5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v5"></path>
+<path d="M8 10h8"></path>
+</svg>
+</div>
+<div>
+<div class="text-mono-md font-mono-md text-on-surface font-semibold group-hover:text-primary">Backpack</div>
+<div class="text-[10px] font-mono-sm text-outline">xNFT Native</div>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded text-label-caps font-label-caps bg-surface-container-high border border-outline-variant text-on-surface-variant">
+                  Installed
+                </span>
+<span class="material-symbols-outlined text-[16px] text-outline-variant group-hover:text-on-surface">arrow_forward</span>
+</div>
+</button>
+<!-- MetaMask (Solana Snap) -->
+<button class="w-full h-14 px-3.5 bg-surface-dim border border-outline-variant hover:border-outline rounded-lg flex items-center justify-between transition-all duration-100 ease-linear hover:bg-surface-container group cursor-pointer text-left">
+<div class="flex items-center gap-3">
+<!-- MetaMask Fox Icon Container -->
+<div class="w-9 h-9 rounded bg-[#F6851B]/10 border border-[#F6851B]/30 flex items-center justify-center shrink-0">
+<svg class="w-5 h-5 text-[#F6851B]" fill="currentColor" viewbox="0 0 24 24">
+<path d="M21.5 8.5L13.8 2.8c-.8-.6-1.8-.6-2.6 0L3.5 8.5c-.7.5-.9 1.4-.6 2.2l2.4 6.7c.3.9 1.2 1.6 2.2 1.6h9c1 0 1.9-.7 2.2-1.6l2.4-6.7c.3-.8.1-1.7-.6-2.2zM12 6.5l3.5 2.5-3.5 2-3.5-2L12 6.5z"></path>
+</svg>
+</div>
+<div>
+<div class="text-mono-md font-mono-md text-on-surface font-semibold group-hover:text-primary">MetaMask</div>
+<div class="text-[10px] font-mono-sm text-outline">Solana Snap Plugin</div>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded text-label-caps font-label-caps bg-secondary/10 border border-secondary/25 text-secondary">
+                  Available via Snap
+                </span>
+<span class="material-symbols-outlined text-[16px] text-outline-variant group-hover:text-on-surface">arrow_forward</span>
+</div>
+</button>
+</div>
+<!-- Prominent Security Note Box -->
+<div class="mt-6 p-3 bg-surface-dim border border-tertiary-fixed-dim/30 rounded-lg flex items-start gap-3">
+<span class="material-symbols-outlined text-[18px] text-tertiary-fixed-dim shrink-0 mt-0.5">verified_user</span>
+<div class="space-y-1">
+<div class="text-mono-sm font-mono-sm text-tertiary-fixed-dim font-medium text-[11px] uppercase tracking-wide">
+                Zero Gas Cryptographic Proof
+              </div>
+<p class="text-body-sm font-body-sm text-on-surface-variant text-[12px] leading-relaxed">
+                We will ask you to sign a cryptographic message (<span class="text-on-surface font-mono-sm">SIWS / Sign-In with Solana</span>) to verify ownership. No transaction will be submitted, zero gas fee.
+              </p>
+</div>
+</div>
+</div>
+<!-- Card Footer -->
+<div class="mt-8 pt-4 border-t border-outline-variant flex items-center justify-between text-mono-sm font-mono-sm text-xs">
+<a class="text-on-surface-variant hover:text-secondary transition-colors inline-flex items-center gap-1 group" href="https://phantom.app" rel="noopener noreferrer" target="_blank">
+<span>No wallet? Install Phantom</span>
+<span class="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform text-secondary">↗</span>
+</a>
+<span class="text-outline text-[11px]">SOLANA MAINNET READY</span>
+</div>
+</div>
+</div>
+</main>
+</body></html>

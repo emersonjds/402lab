@@ -6,18 +6,18 @@ Conta de consumo para agentes de IA: o humano dá uma allowance (tetos por chama
 
 ## Stack
 
-Monorepo pnpm, Node 24, TypeScript. `apps/api` Fastify 5.12 + `@x402/fastify` 2.28 + Drizzle + Postgres 16 · `apps/web` Next.js 16.4 + `@solana/react` · `apps/mobile` Expo SDK 57 · `packages/mcp` MCP server pagador · `packages/shared` domínio puro (dinheiro, split, política, catálogo, eventos). Solana devnet, `@solana/kit` 8.4.
+Monorepo npm workspaces, Node 24, TypeScript. `apps/api` Fastify 5.12 + `@x402/fastify` 2.28 + Drizzle + Postgres 16 · `apps/web` Next.js 16.4 + `@solana/react` · `apps/mobile` Expo SDK 57 · `packages/mcp` MCP server pagador · `packages/shared` domínio puro (dinheiro, split, política, catálogo, eventos). Solana devnet, `@solana/kit` 8.4.
 
 ## Comandos (criados no card LAB-1)
 
 ```bash
 docker compose up -d        # Postgres local
-pnpm --filter @402lab/api dev
-pnpm --filter @402lab/web dev
-pnpm --filter @402lab/mobile start
-pnpm test:coverage          # todos os pacotes, limiar 90% travado
-pnpm lint && pnpm typecheck
-pnpm e2e:devnet             # paga os 3 serviços de verdade na devnet (manual)
+npm run dev -w @402lab/api
+npm run dev -w @402lab/web
+npm run start -w @402lab/mobile
+# hackathon: sem testes unitários — verificar com typecheck + lint + build + smoke
+npm run lint && npm run typecheck
+npm run e2e:devnet             # paga os 3 serviços de verdade na devnet (manual)
 ```
 
 ## Convenções locais
@@ -32,11 +32,12 @@ pnpm e2e:devnet             # paga os 3 serviços de verdade na devnet (manual)
 
 ## Agents
 
-`api-fastify`, `db-drizzle`, `web-next`, `mobile-expo` (implementação, opus) · `x402-micropayments`, `split-settlement`, `solana-payments` (especialistas de pagamento, opus) · `adversarial-reviewer` (opus) · `fintech-ux`, `mobile-ux` (UX e copy, sonnet).
+Custo-benefício: **opus** onde erro custa dinheiro ou dados — `x402-micropayments`, `split-settlement`, `solana-payments`, `db-drizzle`, `adversarial-reviewer` · **sonnet** para implementação de UI e rotas CRUD — `api-fastify`, `web-next`, `mobile-expo`, e UX/copy `fintech-ux`, `mobile-ux` · **haiku** só para tarefa mecânica (mover, renomear, Jira, docs), passado na chamada. Todos: grafo antes de abrir arquivo, vault `Projects/402lab` para decisão, caveman lite, ponytail.
 
 ## Contexto operacional
 
 - Spec: `docs/specs/2026-10-10-402lab-allowance-design.md` · Plano: `docs/superpowers/plans/2026-10-10-402lab-mvp.md` · Pesquisa: `docs/research/`
 - Jira: projeto `LAB` em emersonsilvan.atlassian.net (cards = cards do plano)
+- Repo: github.com/emersonjds/402lab. Gitflow global (branch por card a partir de `developer`, merge `--no-ff` em `developer`, micro commits sem rastro de LLM). **Push liberado em qualquer branch neste projeto, inclusive `main` e `developer`** (decisão do Emerson, 2026-10-10).
 - Nota do vault: `second-brain/Projects/402lab.md`
 - Grafo indexado no codebase-memory: sim (2026-10-10)

@@ -1,8 +1,8 @@
 ---
 name: api-fastify
-description: Use for every implementation task in apps/api of 402Lab — Fastify 5.12 vertical slices (routes.ts, schemas.ts, repository.ts) with fastify-type-provider-zod, the x402 paymentMiddleware wiring for the paid catalog (/svc/:id), upstream adapters (Azure OCR, AWS Translate, Anthropic summary, deterministic demo mode), Sign-In With Solana and mobile pairing tokens, allowance routes, SSE events and polling, waitlist, demo on-ramp, OpenAPI via @fastify/swagger, config by env with Zod, and Vitest integration tests against real Postgres with coverage above 90%. Invoke to build or fix any route, hook, plugin, error mapping or Fastify bug. Pairs with x402-micropayments for payment hooks, db-drizzle for schema and queries, split-settlement for the worker.
-tools: Read, Write, Edit, Glob, Grep, Bash, Skill, mcp__codebase-memory-mcp__search_graph, mcp__codebase-memory-mcp__trace_path, mcp__codebase-memory-mcp__get_code_snippet, mcp__plugin_context-mode_context-mode__ctx_batch_execute, mcp__plugin_context-mode_context-mode__ctx_execute, mcp__plugin_context-mode_context-mode__ctx_search, mcp__context7__resolve-library-id, mcp__context7__query-docs
-model: opus
+description: Use for every implementation task in apps/api of 402Lab — Fastify 5.12 vertical slices (routes.ts, schemas.ts, repository.ts) with fastify-type-provider-zod, the x402 paymentMiddleware wiring for the paid catalog (/svc/:id), upstream adapters (Azure OCR, AWS Translate, Anthropic summary, deterministic demo mode), Sign-In With Solana and mobile pairing tokens, allowance routes, SSE events and polling, waitlist, demo on-ramp, OpenAPI via @fastify/swagger, config by env with Zod. Hackathon mode: no unit tests. Invoke to build or fix any route, hook, plugin, error mapping or Fastify bug. Pairs with x402-micropayments for payment hooks, db-drizzle for schema and queries, split-settlement for the worker.
+tools: Read, Write, Edit, Glob, Grep, Bash, Skill, mcp__codebase-memory-mcp__search_graph, mcp__codebase-memory-mcp__trace_path, mcp__codebase-memory-mcp__get_code_snippet, mcp__plugin_context-mode_context-mode__ctx_batch_execute, mcp__plugin_context-mode_context-mode__ctx_execute, mcp__plugin_context-mode_context-mode__ctx_search, mcp__context7__resolve-library-id, mcp__context7__query-docs, mcp__plugin_obsidian-second-brain_vault__obsidian_search, mcp__plugin_obsidian-second-brain_vault__obsidian_read_note
+model: sonnet
 effort: high
 ---
 
@@ -23,8 +23,8 @@ Same structure as `/Users/emerson/Documents/workspace/personal-projects/radarge-
 
 ## Discipline
 
-- Skill `tdd` before the first line: the slice's tests together, one red run, one green run; report both outputs.
-- Graph (`search_graph`/`trace_path`/`get_code_snippet`) before opening files; large output (tests, logs) through context-mode; library docs through context7.
+- Hackathon mode: no unit tests and no coverage gates; verify with typecheck + lint + build + a real smoke run.
+- Graph (`search_graph`/`trace_path`/`get_code_snippet`) before opening files; vault (`obsidian_search`/`obsidian_read_note`, note `Projects/402lab`) for decisions; large output through context-mode; library docs through context7.
 - Write caveman lite; ponytail solutions (reuse before writing, smallest diff at the root).
 - Commit each green step (Conventional Commits in English, files added by name, no LLM trace); never merge, push or open a PR.
 - End with raw data or a direct synthesis, no preamble or narration.

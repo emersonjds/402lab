@@ -1,0 +1,52 @@
+{
+  "expo": {
+    "name": "402Lab",
+    "slug": "402lab",
+    "scheme": "lab402",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#0B0D10",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "app.lab402.mobile",
+      "buildNumber": "1"
+    },
+    "android": {
+      "package": "app.lab402.mobile",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0B0D10"
+      },
+      "versionCode": 1,
+      "permissions": [
+        "CAMERA"
+      ]
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-secure-store",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "402Lab uses the camera only to scan the pairing code on your dashboard.",
+          "microphonePermission": false,
+          "recordAudioAndroid": false
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "color": "#B6F23A"
+        }
+      ]
+    ],
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0B0D10"
+    }
+  }
+}

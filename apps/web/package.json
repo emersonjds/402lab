@@ -1,0 +1,49 @@
+{
+  "name": "@402lab/web",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --webpack",
+    "build": "next build --webpack",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@402lab/mocks": "*",
+    "@402lab/shared": "*",
+    "@solana-program/token": "0.17.0",
+    "@solana/kit": "8.4.0",
+    "@solana/react": "8.4.0",
+    "@solana/wallet-standard": "1.1.8",
+    "@wallet-standard/app": "1.1.1",
+    "@wallet-standard/base": "1.1.1",
+    "@wallet-standard/react": "1.0.3",
+    "@x402/core": "2.28.0",
+    "@x402/fetch": "2.28.0",
+    "@x402/svm": "2.28.0",
+    "apexcharts": "^7.1.0",
+    "lucide-react": "1.53.0",
+    "msw": "^3.0.3",
+    "next": "16.4.0",
+    "next-intl": "4.14.2",
+    "qrcode": "1.5.4",
+    "react": "^19.3.0",
+    "react-apexcharts": "^2.1.1",
+    "react-dom": "^19.3.0",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/qrcode": "1.5.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "tailwindcss": "^4.3.3"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
+  }
+}

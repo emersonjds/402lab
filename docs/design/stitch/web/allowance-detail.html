@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>402Lab — Autonomous Micro-Fi Engine</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-tertiary-fixed": "#271900",
+            "tertiary": "#fffaff",
+            "surface-dim": "#111317",
+            "background": "#111317",
+            "on-tertiary-fixed-variant": "#5e4200",
+            "error-container": "#93000a",
+            "secondary-fixed": "#a4eeff",
+            "on-secondary-container": "#004d59",
+            "on-error-container": "#ffdad6",
+            "surface-tint": "#9ed81b",
+            "on-surface-variant": "#c3caaf",
+            "inverse-surface": "#e2e2e6",
+            "surface-container-low": "#1a1c1f",
+            "secondary-fixed-dim": "#37d8f4",
+            "on-background": "#e2e2e6",
+            "surface-container-lowest": "#0c0e11",
+            "on-primary-fixed-variant": "#364e00",
+            "tertiary-container": "#ffda9c",
+            "outline": "#8d947c",
+            "on-tertiary-container": "#815b00",
+            "on-primary-container": "#4c6c00",
+            "primary-fixed": "#b9f63e",
+            "tertiary-fixed-dim": "#fabc41",
+            "surface-container-high": "#282a2d",
+            "on-secondary-fixed": "#001f25",
+            "on-primary-fixed": "#131f00",
+            "secondary": "#45e1fd",
+            "surface-bright": "#37393d",
+            "tertiary-fixed": "#ffdea8",
+            "surface-container-highest": "#333538",
+            "on-surface": "#e2e2e6",
+            "on-primary": "#243600",
+            "inverse-primary": "#496800",
+            "surface-container": "#1e2023",
+            "secondary-container": "#00c5e0",
+            "primary-container": "#b6f23a",
+            "surface-variant": "#333538",
+            "primary": "#f8ffe2",
+            "inverse-on-surface": "#2f3034",
+            "primary-fixed-dim": "#9ed81b",
+            "on-tertiary": "#422d00",
+            "outline-variant": "#434935",
+            "error": "#ffb4ab",
+            "on-error": "#690005",
+            "on-secondary": "#00363f",
+            "on-secondary-fixed-variant": "#004e5a",
+            "surface": "#111317"
+          },
+          borderRadius: {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          spacing: {
+            "margin": "1rem",
+            "space-xs": "0.25rem",
+            "space-sm": "0.5rem",
+            "gutter-desktop": "1.5rem",
+            "space-xl": "2rem",
+            "space-md": "1rem",
+            "margin-desktop": "2rem",
+            "space-lg": "1.5rem",
+            "gutter": "1rem"
+          },
+          fontFamily: {
+            "display-hero": ["Space Grotesk"],
+            "mono-lg": ["JetBrains Mono"],
+            "headline-sm": ["Space Grotesk"],
+            "body-lg": ["Inter"],
+            "headline-md": ["Space Grotesk"],
+            "headline-lg": ["Space Grotesk"],
+            "display-hero-mobile": ["Space Grotesk"],
+            "label-caps": ["JetBrains Mono"],
+            "body-md": ["Inter"],
+            "mono-sm": ["JetBrains Mono"],
+            "headline-lg-mobile": ["Space Grotesk"],
+            "mono-md": ["JetBrains Mono"],
+            "body-sm": ["Inter"]
+          },
+          fontSize: {
+            "display-hero": ["48px", { lineHeight: "52px", letterSpacing: "-0.03em", fontWeight: "600" }],
+            "mono-lg": ["16px", { lineHeight: "22px", letterSpacing: "-0.02em", fontWeight: "500" }],
+            "headline-sm": ["16px", { lineHeight: "22px", letterSpacing: "0em", fontWeight: "500" }],
+            "body-lg": ["16px", { lineHeight: "24px", letterSpacing: "-0.01em", fontWeight: "400" }],
+            "headline-md": ["20px", { lineHeight: "26px", letterSpacing: "-0.01em", fontWeight: "500" }],
+            "headline-lg": ["32px", { lineHeight: "38px", letterSpacing: "-0.02em", fontWeight: "600" }],
+            "display-hero-mobile": ["32px", { lineHeight: "38px", letterSpacing: "-0.02em", fontWeight: "600" }],
+            "label-caps": ["10px", { lineHeight: "12px", letterSpacing: "0.08em", fontWeight: "600" }],
+            "body-md": ["14px", { lineHeight: "20px", letterSpacing: "0em", fontWeight: "400" }],
+            "mono-sm": ["11px", { lineHeight: "14px", letterSpacing: "0.02em", fontWeight: "400" }],
+            "headline-lg-mobile": ["24px", { lineHeight: "30px", letterSpacing: "-0.01em", fontWeight: "600" }],
+            "mono-md": ["13px", { lineHeight: "18px", letterSpacing: "-0.01em", fontWeight: "400" }],
+            "body-sm": ["12px", { lineHeight: "16px", letterSpacing: "0em", fontWeight: "400" }]
+          }
+        }
+      }
+    };
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      font-size: 18px;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .tnum {
+      font-feature-settings: 'tnum' 1;
+    }
+  </style>
+</head>
+<body class="bg-surface-container-lowest text-on-surface min-h-screen font-body-md antialiased overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
+<!-- ================= SIDEBAR COMPONENT (SideNavBar Anchor) ================= -->
+<aside class="h-screen w-64 fixed left-0 top-0 flex flex-col bg-surface-dim border-r border-outline-variant z-50">
+<div class="flex flex-col justify-between h-full p-space-md">
+<!-- Top Segment: Brand & Navigation -->
+<div class="flex flex-col gap-y-6">
+<!-- Brand Wordmark & Pill -->
+<div class="flex items-center justify-between px-2 pt-1">
+<div class="flex items-center gap-2.5">
+<div class="h-7 w-7 bg-surface-container-high border border-outline-variant flex items-center justify-center rounded">
+<span class="text-primary-container font-mono-sm font-semibold tracking-tighter">402</span>
+</div>
+<div>
+<span class="text-headline-md font-headline-md text-primary tracking-tight">402Lab</span>
+<p class="text-label-caps font-label-caps text-on-surface-variant tracking-wider uppercase text-[9px] -mt-0.5">Autonomous Micro-Fi</p>
+</div>
+</div>
+<span class="px-1.5 py-0.5 text-[9px] font-mono-sm font-semibold text-primary-container bg-surface-container-high border border-outline-variant rounded">v0.9</span>
+</div>
+<!-- Navigation Links -->
+<nav class="flex flex-col gap-1">
+<!-- Item 1: Allowances (ACTIVE MATCH) -->
+<a class="text-primary-container bg-surface-container-high border-l-2 border-primary-container flex items-center gap-3 px-3 py-2.5 rounded-r transition-colors duration-150 ease-in-out font-mono-md text-mono-md" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span>Allowances</span>
+</a>
+<!-- Item 2: Payments -->
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container flex items-center gap-3 px-3 py-2.5 rounded transition-colors duration-150 ease-in-out font-mono-md text-mono-md" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span>Payments</span>
+</a>
+<!-- Item 3: Splits -->
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container flex items-center gap-3 px-3 py-2.5 rounded transition-colors duration-150 ease-in-out font-mono-md text-mono-md" href="#">
+<span class="material-symbols-outlined" data-icon="call_split">call_split</span>
+<span>Splits</span>
+</a>
+<!-- Item 4: Statement -->
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container flex items-center gap-3 px-3 py-2.5 rounded transition-colors duration-150 ease-in-out font-mono-md text-mono-md" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span>Statement</span>
+</a>
+<!-- Item 5: Playground -->
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container flex items-center gap-3 px-3 py-2.5 rounded transition-colors duration-150 ease-in-out font-mono-md text-mono-md" href="#">
+<span class="material-symbols-outlined" data-icon="terminal">terminal</span>
+<span>Playground</span>
+</a>
+<!-- Item 6: Settings -->
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container flex items-center gap-3 px-3 py-2.5 rounded transition-colors duration-150 ease-in-out font-mono-md text-mono-md" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<!-- Sidebar Action Trigger -->
+<div class="px-1">
+<button class="w-full h-10 px-3 bg-surface-container-high hover:bg-surface-bright border border-outline-variant hover:border-outline text-primary font-mono-sm text-mono-sm rounded flex items-center justify-between transition-colors duration-150">
+<span class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container text-[16px]" data-icon="bolt">bolt</span>
+<span>Execute Agent Batch</span>
+</span>
+<span class="text-[10px] text-on-surface-variant bg-surface-container-low px-1.5 py-0.5 rounded border border-outline-variant">⌘K</span>
+</button>
+</div>
+</div>
+<!-- Bottom Segment: Meta & System Status -->
+<div class="flex flex-col gap-2 pt-4 border-t border-outline-variant">
+<a class="text-on-surface-variant hover:text-on-surface flex items-center gap-2.5 px-2 py-1.5 rounded transition-colors duration-150 text-mono-sm font-mono-sm" href="#">
+<span class="material-symbols-outlined text-[16px]" data-icon="code">code</span>
+<span>API Docs</span>
+</a>
+<div class="px-2 py-2 bg-surface-container-lowest border border-outline-variant rounded flex flex-col gap-1">
+<div class="flex items-center justify-between text-[11px] font-mono-sm text-on-surface-variant">
+<span class="flex items-center gap-1.5">
+<span class="h-1.5 w-1.5 rounded-full bg-primary-container animate-pulse"></span>
+<span>Devnet Status</span>
+</span>
+<span class="text-primary-container font-mono-sm">412ms</span>
+</div>
+<div class="flex items-center justify-between text-[10px] font-mono-sm text-on-surface-variant border-t border-outline-variant pt-1 mt-0.5">
+<span>TPS</span>
+<span class="text-on-surface tnum">2,410 tx/s</span>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- ================= TOPBAR COMPONENT (TopNavBar Anchor) ================= -->
+<header class="h-14 fixed top-0 right-0 left-64 z-40 bg-surface-dim border-b border-outline-variant">
+<div class="flex items-center justify-between px-space-lg h-full w-full">
+<!-- Left: Breadcrumb Anchor -->
+<div class="flex items-center gap-2 font-mono-sm text-mono-sm">
+<span class="text-on-surface-variant hover:text-on-surface cursor-pointer">Agents</span>
+<span class="text-outline">/</span>
+<span class="text-on-surface font-semibold">research-bot</span>
+<span class="text-[10px] font-mono-sm text-on-surface-variant bg-surface-container px-2 py-0.5 rounded border border-outline-variant ml-1.5 tnum">
+          PDA: 402a...c89e
+        </span>
+</div>
+<!-- Right: Action Controls -->
+<div class="flex items-center gap-3">
+<!-- Devnet Alert Pill -->
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-surface-container border border-outline-variant text-[11px] font-mono-sm">
+<span class="h-2 w-2 rounded-full bg-tertiary-fixed-dim"></span>
+<span class="text-tertiary-fixed-dim font-medium tracking-wide">DEVNET</span>
+</div>
+<!-- Latency / Ping Indicator -->
+<div class="flex items-center gap-1 px-2 py-1 text-on-surface-variant text-[11px] font-mono-sm border border-outline-variant bg-surface-container rounded">
+<span class="material-symbols-outlined text-[15px] text-on-surface-variant" data-icon="speed">speed</span>
+<span class="tnum">24ms</span>
+</div>
+<!-- Notification Bell -->
+<button class="h-8 w-8 rounded flex items-center justify-center border border-outline-variant bg-surface-container text-on-surface-variant hover:text-on-surface hover:border-outline transition-all duration-100 ease-linear active:scale-95" title="Notifications">
+<span class="material-symbols-outlined text-[18px]" data-icon="notifications">notifications</span>
+</button>
+<!-- Connected Wallet Pill with Avatar -->
+<div class="flex items-center gap-2 pl-2 pr-2.5 py-1 bg-surface-container border border-outline-variant rounded transition-all duration-100 ease-linear hover:border-outline cursor-pointer">
+<div class="h-5 w-5 rounded bg-surface-bright flex items-center justify-center border border-outline-variant overflow-hidden" title="Solana Keypair Identity Blockies Avatar">
+<div class="w-full h-full bg-gradient-to-tr from-surface-variant to-secondary-container opacity-80"></div>
+</div>
+<span class="font-mono-sm text-mono-sm text-on-surface tnum">7xKp...9fQ2</span>
+<a class="text-secondary hover:text-secondary-fixed transition-colors" href="#" title="View on Solscan">
+<span class="material-symbols-outlined text-[14px]" data-icon="open_in_new">open_in_new</span>
+</a>
+</div>
+</div>
+</div>
+</header>
+<!-- ================= MAIN CONTENT VIEWPORT ================= -->
+<main class="ml-64 pt-14 min-h-screen bg-surface-container-lowest p-space-lg flex flex-col gap-6">
+<!-- 1. Allowance Detail Header for 'research-bot' -->
+<section class="bg-surface-container-low border border-outline-variant rounded-xl p-space-lg flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+<div class="flex flex-col gap-2">
+<div class="flex items-center flex-wrap gap-3">
+<h1 class="text-headline-lg font-headline-lg text-primary tracking-tight">research-bot</h1>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[11px] font-mono-sm font-medium bg-primary-container/10 text-primary-container border border-primary-container/25">
+<span class="h-1.5 w-1.5 rounded-full bg-primary-container"></span>
+            ACTIVE
+          </span>
+<span class="px-2 py-0.5 rounded text-[11px] font-mono-sm bg-surface-container border border-outline-variant text-secondary">
+            Solana PDA #392
+          </span>
+</div>
+<div class="flex items-center flex-wrap gap-x-4 gap-y-1 text-mono-sm font-mono-sm text-on-surface-variant">
+<span class="flex items-center gap-1.5">
+<span class="text-outline">Cap:</span>
+<span class="text-on-surface tnum">$0.05 max/call</span>
+</span>
+<span class="text-outline-variant">·</span>
+<span class="flex items-center gap-1.5">
+<span class="text-outline">Daily:</span>
+<span class="text-on-surface tnum">$1.00 USDC</span>
+</span>
+<span class="text-outline-variant">·</span>
+<span class="flex items-center gap-1.5">
+<span class="text-outline">Topup:</span>
+<span class="text-on-surface">PDA Multisig</span>
+</span>
+</div>
+</div>
+<!-- Action Cluster -->
+<div class="flex items-center flex-wrap gap-2.5 self-start lg:self-auto">
+<!-- Amber-outline Pause Button -->
+<button class="h-10 px-3.5 rounded bg-surface-container border border-tertiary-fixed-dim/60 text-tertiary-fixed-dim hover:bg-surface-container-high transition-colors duration-150 flex items-center gap-2 text-mono-sm font-mono-sm">
+<span class="material-symbols-outlined text-[17px]" data-icon="pause_circle">pause_circle</span>
+<span>Pause agent</span>
+</button>
+<!-- Secondary Edit Limits Button -->
+<button class="h-10 px-3.5 rounded bg-surface-container border border-outline-variant hover:border-outline text-on-surface transition-colors duration-150 flex items-center gap-2 text-mono-sm font-mono-sm">
+<span class="material-symbols-outlined text-[17px]" data-icon="tune">tune</span>
+<span>Edit limits</span>
+</button>
+<!-- Primary Lime Deposit Button -->
+<button class="h-10 px-4 rounded bg-primary-container hover:bg-primary-fixed text-surface-container-lowest font-mono-sm font-semibold transition-colors duration-150 flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="add_card">add_card</span>
+<span>Deposit USDC</span>
+</button>
+</div>
+</section>
+<!-- 2. KPI Cards Row (4 cards) -->
+<section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+<!-- KPI 1: Spent Today -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-space-md flex flex-col justify-between">
+<div class="flex items-center justify-between text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider">
+<span>Spent Today</span>
+<span class="text-[10px] text-primary-container font-mono-sm">1.7% CAP</span>
+</div>
+<div class="my-3">
+<div class="flex items-baseline gap-2 font-mono-lg text-mono-lg tnum text-primary">
+<span class="text-2xl font-semibold">$0.017</span>
+<span class="text-on-surface-variant text-sm font-normal">/ $1.00</span>
+</div>
+<!-- Micro-progress bar -->
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full mt-2.5 overflow-hidden">
+<div class="bg-primary-container h-full rounded-full" style="width: 1.7%;"></div>
+</div>
+</div>
+<div class="text-[11px] font-mono-sm text-on-surface-variant flex items-center justify-between">
+<span>$0.983 remaining</span>
+<span class="text-outline">Resets 00:00 UTC</span>
+</div>
+</div>
+<!-- KPI 2: Calls Today -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-space-md flex flex-col justify-between">
+<div class="flex items-center justify-between text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider">
+<span>Calls Today</span>
+<span class="text-secondary font-mono-sm text-[10px]">HTTP 402</span>
+</div>
+<div class="my-3">
+<div class="flex items-baseline gap-2 font-mono-lg text-mono-lg tnum text-primary">
+<span class="text-2xl font-semibold">3</span>
+<span class="text-on-surface-variant text-sm font-normal">executions</span>
+</div>
+<div class="text-label-caps text-[10px] font-mono-sm text-primary-container mt-2">
+            100% 402 settled
+          </div>
+</div>
+<div class="text-[11px] font-mono-sm text-on-surface-variant flex items-center justify-between">
+<span>Avg latency 394ms</span>
+<span class="text-outline">0 failed</span>
+</div>
+</div>
+<!-- KPI 3: Saved vs Card + IOF -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-space-md flex flex-col justify-between">
+<div class="flex items-center justify-between text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider">
+<span>Saved vs Card + IOF</span>
+<span class="text-primary-container font-mono-sm text-[10px]">98.2% LESS</span>
+</div>
+<div class="my-3">
+<div class="flex items-baseline gap-2 font-mono-lg text-mono-lg tnum text-primary-container">
+<span class="text-2xl font-semibold">$0.93</span>
+<span class="text-primary text-sm font-normal">USDC</span>
+</div>
+<p class="text-[11px] font-mono-sm text-on-surface-variant mt-2 truncate">
+            Baseline Stripe + IOF $0.95 vs $0.017
+          </p>
+</div>
+<div class="text-[11px] font-mono-sm text-outline flex items-center justify-between">
+<span>Fixed fee bypass</span>
+<span class="text-on-surface-variant">Zero interchange</span>
+</div>
+</div>
+<!-- KPI 4: Session Balance -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-space-md flex flex-col justify-between">
+<div class="flex items-center justify-between text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider">
+<span>Session Balance</span>
+<span class="text-outline font-mono-sm text-[10px]">ESCROW</span>
+</div>
+<div class="my-3">
+<div class="flex items-baseline gap-2 font-mono-lg text-mono-lg tnum text-primary">
+<span class="text-2xl font-semibold">4.983</span>
+<span class="text-on-surface-variant text-sm font-normal">USDC</span>
+</div>
+<div class="mt-2">
+<a class="inline-flex items-center gap-1 text-[11px] font-mono-sm text-secondary hover:text-secondary-fixed" href="#">
+              Deposit funds ↗
+            </a>
+</div>
+</div>
+<div class="text-[11px] font-mono-sm text-on-surface-variant flex items-center justify-between">
+<span>Safe for ~293 calls</span>
+<span class="text-outline">Vault v1.4</span>
+</div>
+</div>
+</section>
+<!-- 3. Main 2-Column Dashboard Grid (Left 68%, Right 32%) -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+<!-- ================= LEFT COLUMN (68% - col-span-8) ================= -->
+<div class="lg:col-span-8 flex flex-col gap-6">
+<!-- Spend Activity (24h) Chart Container -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-space-lg flex flex-col gap-4">
+<div class="flex items-center justify-between flex-wrap gap-2">
+<div>
+<h2 class="text-headline-sm font-headline-sm text-primary">Spend Activity (24h)</h2>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Continuous deterministic micropayment flow by timestamp</p>
+</div>
+<!-- Timeframe Toggle Buttons -->
+<div class="flex items-center bg-surface-container border border-outline-variant rounded p-0.5 text-mono-sm font-mono-sm">
+<button class="px-2.5 py-1 text-on-surface-variant hover:text-on-surface transition-colors">1h</button>
+<button class="px-2.5 py-1 bg-surface-container-high text-primary-container rounded border border-outline-variant font-medium">24h</button>
+<button class="px-2.5 py-1 text-on-surface-variant hover:text-on-surface transition-colors">7d</button>
+</div>
+</div>
+<!-- Vector Area Chart Canvas -->
+<div class="w-full h-56 bg-surface-container-lowest border border-outline-variant rounded-lg p-3 relative flex flex-col justify-between overflow-hidden">
+<!-- Axis lines overlay -->
+<div class="absolute inset-0 grid grid-rows-4 pointer-events-none p-3">
+<div class="border-b border-outline-variant/30 flex items-start justify-end pr-1 text-[10px] font-mono-sm text-outline">$0.015</div>
+<div class="border-b border-outline-variant/30 flex items-start justify-end pr-1 text-[10px] font-mono-sm text-outline">$0.010</div>
+<div class="border-b border-outline-variant/30 flex items-start justify-end pr-1 text-[10px] font-mono-sm text-outline">$0.005</div>
+<div class="flex items-start justify-end pr-1 text-[10px] font-mono-sm text-outline">$0.000</div>
+</div>
+<!-- SVG Line & Area chart representation -->
+<svg class="w-full h-full relative z-10 overflow-visible" preserveaspectratio="none" viewbox="0 0 600 180">
+<defs>
+<lineargradient id="spendGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#b6f23a" stop-opacity="0.25"></stop>
+<stop offset="100%" stop-color="#b6f23a" stop-opacity="0.0"></stop>
+</lineargradient>
+</defs>
+<!-- Gradient fill -->
+<polygon fill="url(#spendGradient)" points="
+                0,170 
+                80,170 
+                105,110 
+                120,170 
+                230,170 
+                245,145 
+                260,170 
+                350,170 
+                370,60 
+                385,170 
+                600,170
+              "></polygon>
+<!-- Main Stroke Line -->
+<polyline fill="none" points="
+                0,170 
+                80,170 
+                105,110 
+                120,170 
+                230,170 
+                245,145 
+                260,170 
+                350,170 
+                370,60 
+                385,170 
+                600,170
+              " stroke="#b6f23a" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></polyline>
+<!-- Micro Spike Markers -->
+<!-- Spike 1: 04:12 ($0.005) -->
+<circle cx="105" cy="110" fill="#111317" r="3.5" stroke="#b6f23a" stroke-width="2"></circle>
+<!-- Spike 2: 09:30 ($0.002) -->
+<circle cx="245" cy="145" fill="#111317" r="3.5" stroke="#b6f23a" stroke-width="2"></circle>
+<!-- Spike 3: 14:05 ($0.010) Peak with Tooltip -->
+<circle cx="370" cy="60" fill="#b6f23a" r="4.5" stroke="#111317" stroke-width="2"></circle>
+<line stroke="#b6f23a" stroke-dasharray="3 3" stroke-width="1" x1="370" x2="370" y1="60" y2="170"></line>
+</svg>
+<!-- Floating Tooltip Box over Peak -->
+<div class="absolute left-[58%] top-[14%] z-20 bg-surface-container-high border border-outline px-2.5 py-1.5 rounded shadow-lg text-[11px] font-mono-sm pointer-events-none">
+<div class="text-primary-container font-semibold tnum">$0.0100 USDC</div>
+<div class="text-on-surface-variant text-[10px]">14:05:12 UTC · Anthropic</div>
+</div>
+<!-- X-axis Labels -->
+<div class="w-full flex items-center justify-between text-[10px] font-mono-sm text-on-surface-variant relative z-10 pt-1 border-t border-outline-variant">
+<span>00:00</span>
+<span>04:12 [+$0.005]</span>
+<span>08:00</span>
+<span>09:30 [+$0.002]</span>
+<span>12:00</span>
+<span class="text-primary-container">14:05 [+$0.010]</span>
+<span>18:00</span>
+<span>23:59</span>
+</div>
+</div>
+</div>
+<!-- Live HTTP 402 Payments Table -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl overflow-hidden flex flex-col">
+<!-- Header Bar -->
+<div class="p-space-lg pb-3 flex items-center justify-between border-b border-outline-variant">
+<div class="flex items-center gap-3">
+<h2 class="text-headline-sm font-headline-sm text-primary">Live HTTP 402 Payments</h2>
+<div class="flex items-center gap-1.5 px-2 py-0.5 rounded bg-surface-container border border-outline-variant text-[11px] font-mono-sm text-primary-container">
+<span class="h-1.5 w-1.5 rounded-full bg-primary-container animate-ping"></span>
+<span>Real-time sync</span>
+</div>
+</div>
+<span class="text-[11px] font-mono-sm text-on-surface-variant">Showing latest 3 stream events</span>
+</div>
+<!-- Table Content -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse font-mono-sm text-mono-sm">
+<thead>
+<tr class="border-b border-outline-variant bg-surface-container-lowest/60 text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider text-[10px]">
+<th class="py-3 px-4 font-semibold">Timestamp</th>
+<th class="py-3 px-4 font-semibold">Service &amp; Method</th>
+<th class="py-3 px-4 font-semibold text-right">Amount</th>
+<th class="py-3 px-4 font-semibold text-right">Card Equiv</th>
+<th class="py-3 px-4 font-semibold text-center">Status</th>
+<th class="py-3 px-4 font-semibold text-right">Transaction Proof</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row 1 (Highlighted as Just Arrived) -->
+<tr class="bg-surface-container-high/40 hover:bg-surface-container-high transition-colors border-l-2 border-primary-container">
+<td class="py-3.5 px-4 whitespace-nowrap">
+<div class="flex items-center gap-1.5">
+<span class="h-1.5 w-1.5 rounded-full bg-primary-container"></span>
+<span class="text-primary font-medium">Just now</span>
+<span class="text-on-surface-variant text-[10px]">(12s ago)</span>
+</div>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<div class="font-medium text-on-surface">Summarize via Anthropic</div>
+<div class="text-[10px] text-outline font-mono-sm">GET /v1/messages</div>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap text-right font-medium text-primary tnum">
+                    $0.0100 USDC
+                  </td>
+<td class="py-3.5 px-4 whitespace-nowrap text-right text-on-surface-variant tnum">
+<del class="text-outline">$0.32</del>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap text-center">
+<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-primary-container/10 text-primary-container border border-primary-container/30">
+                      [SETTLED]
+                    </span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap text-right">
+<a class="inline-flex items-center gap-1 text-secondary hover:text-secondary-fixed transition-colors" href="#">
+<span class="tnum">3Kaa..2Lz</span>
+<span class="material-symbols-outlined text-[13px]" data-icon="north_east">north_east</span>
+</a>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container transition-colors">
+<td class="py-3.5 px-4 whitespace-nowrap text-on-surface-variant">
+<span>4m ago</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<div class="text-on-surface">Translate via AWS</div>
+<div class="text-[10px] text-outline font-mono-sm">POST /v2/translate</div>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap text-right text-on-surface tnum">
+                    $0.0020 USDC
+                  </td>
+<td class="py-3.5 px-4 whitespace-nowrap text-right text-on-surface-variant tnum">
+<del class="text-outline">$0.31</del>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap text-center">
+<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-primary-container/10 text-primary-container border border-primary-container/30">
+                      [SETTLED]
+                    </span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap text-right">
+<a class="inline-flex items-center gap-1 text-secondary hover:text-secondary-fixed transition-colors" href="#">
+<span class="tnum">8Vp2..9mX</span>
+<span class="material-symbols-outlined text-[13px]" data-icon="north_east">north_east</span>
+</a>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container transition-colors">
+<td class="py-3.5 px-4 whitespace-nowrap text-on-surface-variant">
+<span>18m ago</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<div class="text-on-surface">OCR via Azure</div>
+<div class="text-[10px] text-outline font-mono-sm">GET /ocr/analyze</div>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap text-right text-on-surface tnum">
+                    $0.0050 USDC
+                  </td>
+<td class="py-3.5 px-4 whitespace-nowrap text-right text-on-surface-variant tnum">
+<del class="text-outline">$0.32</del>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap text-center">
+<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-primary-container/10 text-primary-container border border-primary-container/30">
+                      [SETTLED]
+                    </span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap text-right">
+<a class="inline-flex items-center gap-1 text-secondary hover:text-secondary-fixed transition-colors" href="#">
+<span class="tnum">5Jtx..7kQ</span>
+<span class="material-symbols-outlined text-[13px]" data-icon="north_east">north_east</span>
+</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Bottom Bar -->
+<div class="p-3 bg-surface-container-lowest/80 border-t border-outline-variant flex items-center justify-between text-mono-sm text-[11px] text-on-surface-variant">
+<span>Protocol fee: 0.000005 SOL (Gas sponsored by relayer)</span>
+<a class="text-primary-container hover:underline" href="#">View all 1,280 payments ↗</a>
+</div>
+</div>
+</div>
+<!-- ================= RIGHT COLUMN (32% - col-span-4) ================= -->
+<div class="lg:col-span-4 flex flex-col gap-6">
+<!-- Card 1: Automated Revenue Splits -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-space-lg flex flex-col gap-4">
+<div>
+<div class="flex items-center justify-between">
+<h2 class="text-headline-sm font-headline-sm text-primary">Automated Revenue Splits</h2>
+<span class="px-1.5 py-0.5 rounded text-[10px] font-mono-sm bg-primary-container/10 text-primary-container border border-primary-container/30">
+                confirmed
+              </span>
+</div>
+<p class="text-mono-sm font-mono-sm text-on-surface-variant text-[11px] mt-0.5">Batch #12 · 3 payouts</p>
+</div>
+<!-- Split Visual Breakdown Bar -->
+<div class="w-full h-3 rounded bg-surface-container-highest overflow-hidden flex">
+<div class="h-full bg-primary-container" style="width: 85%;" title="Provider (85%)"></div>
+<div class="h-full bg-secondary-fixed-dim" style="width: 10%;" title="Platform (10%)"></div>
+<div class="h-full bg-tertiary-fixed-dim" style="width: 5%;" title="Integrator (5%)"></div>
+</div>
+<!-- Split Entities List -->
+<div class="flex flex-col gap-2.5 pt-1">
+<!-- Provider (85%) -->
+<div class="flex items-center justify-between p-2 rounded bg-surface-container border border-outline-variant font-mono-sm text-mono-sm">
+<div class="flex items-center gap-2">
+<span class="h-2 w-2 rounded-full bg-primary-container"></span>
+<div>
+<div class="text-on-surface font-medium">Provider (85%)</div>
+<div class="text-[10px] text-outline tnum">9zXk...81bA</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-primary font-medium tnum">$0.0144 USDC</div>
+<div class="text-[10px] text-primary-container">Auto-routed</div>
+</div>
+</div>
+<!-- Platform (10%) -->
+<div class="flex items-center justify-between p-2 rounded bg-surface-container border border-outline-variant font-mono-sm text-mono-sm">
+<div class="flex items-center gap-2">
+<span class="h-2 w-2 rounded-full bg-secondary-fixed-dim"></span>
+<div>
+<div class="text-on-surface font-medium">Platform (10%)</div>
+<div class="text-[10px] text-outline tnum">402Treasury...w8B</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-on-surface font-medium tnum">$0.0018 USDC</div>
+<div class="text-[10px] text-secondary">Protocol share</div>
+</div>
+</div>
+<!-- Integrator (5%) -->
+<div class="flex items-center justify-between p-2 rounded bg-surface-container border border-outline-variant font-mono-sm text-mono-sm">
+<div class="flex items-center gap-2">
+<span class="h-2 w-2 rounded-full bg-tertiary-fixed-dim"></span>
+<div>
+<div class="text-on-surface font-medium">Integrator (5%)</div>
+<div class="text-[10px] text-outline tnum">4vLm...29cQ</div>
+</div>
+</div>
+<div class="text-right">
+<div class="text-on-surface font-medium tnum">$0.0008 USDC</div>
+<div class="text-[10px] text-tertiary-fixed-dim">Referral hook</div>
+</div>
+</div>
+</div>
+<!-- Solscan Verification Link Footer -->
+<div class="pt-3 border-t border-outline-variant flex items-center justify-between text-[11px] font-mono-sm">
+<span class="text-on-surface-variant tnum">Settled in Solana slot #284,912,042</span>
+<a class="text-secondary hover:text-secondary-fixed transition-colors inline-flex items-center gap-1 font-medium" href="#">
+              Solscan batch proof ↗
+            </a>
+</div>
+</div>
+<!-- Card 2: Pair Your Phone -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-space-lg flex flex-col gap-4">
+<div class="flex items-start justify-between">
+<div>
+<h2 class="text-headline-sm font-headline-sm text-primary">Pair your phone</h2>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-1 leading-relaxed">
+                Scan with the 402Lab mobile app to approve threshold-exceeding transactions or receive instant push notifications on allowance drains.
+              </p>
+</div>
+</div>
+<div class="flex items-center gap-4 bg-surface-container-lowest p-3 rounded-lg border border-outline-variant">
+<!-- Vector QR Code (Clean, high-contrast, mathematical) -->
+<div class="bg-white p-2 rounded flex-shrink-0">
+<svg fill="none" height="78" viewbox="0 0 29 29" width="78">
+<rect fill="white" height="29" width="29"></rect>
+<!-- Corner 1 -->
+<path d="M2 2h7v7H2V2zm2 2v3h3V4H4zM2 20h7v7H2v-7zm2 2v3h3v-3H4zM20 2h7v7h-7V2zm2 2v3h3V4h-3z" fill="#0B0D10"></path>
+<!-- Matrix details -->
+<path d="M12 2h2v4h-2V2zm5 0h1v2h-1V2zm-3 7h3v2h-3V9zm-2 4h4v2h-4v-2zm8-2h3v3h-3v-3zm0 5h2v2h-2v-2zm-6 2h2v4h-2v-4zm-8-3h2v2H8v-2zm12 5h4v2h-4v-2zm2 3h3v2h-3v-2zm-10 0h2v2h-2v-2zm-4-4h2v5H8v-5zm6-5h2v2h-2v-2z" fill="#0B0D10"></path>
+</svg>
+</div>
+<!-- Pairing Specs -->
+<div class="flex flex-col gap-1.5 font-mono-sm text-[11px]">
+<div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-surface-container border border-outline-variant text-on-surface w-fit">
+<span class="material-symbols-outlined text-[14px] text-primary-container" data-icon="fingerprint">fingerprint</span>
+<span>FaceID / Passkey ready</span>
+</div>
+<div class="text-outline text-[10px]">ECDSA Secp256k1 enclave link</div>
+<div class="text-primary-container text-[11px] font-medium">Session: active_sync_99</div>
+</div>
+</div>
+<!-- Micro Quick Rule Config snippet -->
+<div class="p-2.5 rounded bg-surface-container border border-outline-variant font-mono-sm text-[11px] text-on-surface-variant flex items-start gap-2">
+<span class="material-symbols-outlined text-[15px] text-tertiary-fixed-dim mt-0.5" data-icon="shield">shield</span>
+<div>
+<span class="text-on-surface font-medium">Active Guardrail:</span>
+<span class="text-on-surface-variant"> Max $0.05/call, kill switch on 3 consecutive 5xx errors</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+</body></html>
