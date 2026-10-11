@@ -7,16 +7,23 @@
     "preview": {
       "distribution": "internal",
       "android": {
-        "buildType": "apk"
+        "buildType": "apk",
+        "image": "latest"
       },
       "env": {
-        "EXPO_NO_TELEMETRY": "1"
-      }
+        "EXPO_NO_TELEMETRY": "1",
+        "EXPO_PUBLIC_API_MOCKING": "enabled"
+      },
+      "channel": "preview",
+      "node": "24.19.0"
     },
     "production": {
       "android": {
-        "buildType": "app-bundle"
-      }
+        "buildType": "app-bundle",
+        "image": "latest"
+      },
+      "channel": "production",
+      "node": "24.19.0"
     }
   }
 }

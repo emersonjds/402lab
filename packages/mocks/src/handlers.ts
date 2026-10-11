@@ -15,15 +15,18 @@ import {
   authState,
   explorerTxUrl,
   maybeAdvanceLiveFeed,
+  MOCK_SERVICE_IDS,
   MOCK_SERVICES,
   payments,
+  recentSplitBatches,
   serviceOf,
   spentToday,
-  splitBatches,
   statementTotalsOf,
   type MockAllowance,
   type MockPayment,
 } from './fixtures.js';
+
+const LISTED_BATCHES = 50;
 
 const atomicToApi = (amount: AtomicAmount): string => amount.toString();
 
@@ -91,6 +94,20 @@ const serviceOutput = (id: ServiceId): string => {
       return '[mock] Translated: "Obrigado pela compra."';
     case 'summarize':
       return '[mock] Summary: the document describes a three-step onboarding flow.';
+    case 'vision':
+      return '[mock] A golden retriever sitting on grass.';
+    case 'chat':
+      return '[mock] Here is a concise answer to your prompt.';
+    case 'embed':
+      return '[mock] [0.013, -0.084, 0.251, …] (1536d)';
+    case 'image':
+      return 'https://demo.402lab.dev/image/sample.png';
+    case 'speech':
+      return 'https://demo.402lab.dev/speech/sample.mp3';
+    case 'transcribe':
+      return '[mock] This is a demo transcription.';
+    case 'bedrock':
+      return '[mock] Demo completion from a hosted foundation model.';
   }
 };
 
@@ -251,7 +268,7 @@ export const restHandlers = [
     }
 
     const { amount, cardEquivalent, monthPayments } = statementTotalsOf(allowance.id, month);
-    const byService = (['ocr', 'translate', 'summarize'] as const)
+    const byService = MOCK_SERVICE_IDS
       .map((serviceId) => {
         const forService = monthPayments.filter((payment) => payment.serviceId === serviceId);
 
@@ -333,14 +350,17 @@ export const restHandlers = [
     if (!authState.isSignedIn()) return unauthorized();
 
     return HttpResponse.json({
-      batches: splitBatches.map((batch) => ({
-        id: batch.id,
-        status: batch.status,
-        txSignature: batch.txSignature,
-        explorerUrl: explorerTxUrl(batch.txSignature),
-        createdAt: batch.createdAt,
-        payouts: batch.payouts.map(toApiPayout),
-      })),
+      batches: recentSplitBatches(LISTED_BATCHES)
+        .slice()
+        .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+        .map((batch) => ({
+          id: batch.id,
+          status: batch.status,
+          txSignature: batch.txSignature,
+          explorerUrl: explorerTxUrl(batch.txSignature),
+          createdAt: batch.createdAt,
+          payouts: batch.payouts.map(toApiPayout),
+        })),
     });
   }),
 
@@ -369,7 +389,5 @@ export const restHandlers = [
   }),
 
   // --- paid services (the playground never sees a real 402 in mock mode) ---
-  paidServiceHandler('ocr'),
-  paidServiceHandler('translate'),
-  paidServiceHandler('summarize'),
+  ...MOCK_SERVICE_IDS.map(paidServiceHandler),
 ];

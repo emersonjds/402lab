@@ -10,6 +10,13 @@ export const serviceInputSchemas: { [Id in ServiceId]: z.ZodType<ServiceInput[Id
     targetLanguage: z.string().min(2).max(5),
   }),
   summarize: z.object({ text: z.string().min(1).max(20_000) }),
+  vision: z.object({ imageUrl: z.url({ protocol: /^https?$/ }) }),
+  chat: z.object({ prompt: z.string().min(1).max(10_000) }),
+  embed: z.object({ text: z.string().min(1).max(10_000) }),
+  image: z.object({ prompt: z.string().min(1).max(2_000) }),
+  speech: z.object({ text: z.string().min(1).max(5_000) }),
+  transcribe: z.object({ audioUrl: z.url({ protocol: /^https?$/ }) }),
+  bedrock: z.object({ prompt: z.string().min(1).max(10_000) }),
 };
 
 export const serviceOutputSchema = z

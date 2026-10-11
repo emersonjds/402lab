@@ -20,8 +20,14 @@
       },
       "versionCode": 1,
       "permissions": [
-        "CAMERA"
-      ]
+        "CAMERA",
+        "android.permission.CAMERA",
+        "CAMERA",
+        "android.permission.CAMERA"
+      ],
+      "runtimeVersion": {
+        "policy": "appVersion"
+      }
     },
     "plugins": [
       "expo-router",
@@ -47,6 +53,19 @@
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#0B0D10"
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "d0a1ee16-7179-4aee-83a4-0bc1c219ee3d"
+      }
+    },
+    "owner": "emersonjdss",
+    "updates": {
+      "url": "https://u.expo.dev/d0a1ee16-7179-4aee-83a4-0bc1c219ee3d"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
     }
   }
 }

@@ -10,6 +10,7 @@ import { Card } from '@/components/ui/card';
 import { SolscanLink } from '@/components/ui/solscan-link';
 import { catalogServiceListSchema, type CatalogService } from '@/shared/api/schemas';
 import { useApiQuery } from '@/shared/api/use-api-query';
+import { serviceLabel } from '@/shared/catalog/service-info';
 import { shortAddress } from '@/shared/format/address';
 import { createBrowserPayingFetch } from '@/shared/wallet/paying-fetch';
 import { settlementSignatureOf } from '@/shared/wallet/payment-response';
@@ -18,12 +19,6 @@ import { loadOrCreateSessionSigner } from '@/shared/wallet/session-signer';
 
 const SAMPLE_IMAGE_URL =
   'https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Example.png/320px-Example.png';
-
-const SERVICE_LABEL: Record<ServiceId, string> = {
-  ocr: 'OCR',
-  translate: 'Translate',
-  summarize: 'Summarize',
-};
 
 const PIPELINE: { id: ServiceId; buildBody: (previousResult: string) => unknown }[] = [
   { id: 'ocr', buildBody: () => ({ imageUrl: SAMPLE_IMAGE_URL }) },
@@ -82,7 +77,7 @@ export const PlaygroundView = () => {
         });
 
         if (!response.ok) {
-          push({ kind: 'error', service: step.id, message: `${SERVICE_LABEL[step.id]} call failed.` });
+          push({ kind: 'error', service: step.id, message: `${serviceLabel(step.id)} call failed.` });
           break;
         }
 
@@ -98,7 +93,7 @@ export const PlaygroundView = () => {
         carry = outputSchema(body);
         push({ kind: 'result', service: step.id, text: carry || '(empty result)' });
       } catch {
-        push({ kind: 'error', service: step.id, message: `${SERVICE_LABEL[step.id]} call failed.` });
+        push({ kind: 'error', service: step.id, message: `${serviceLabel(step.id)} call failed.` });
         break;
       }
     }
@@ -156,20 +151,20 @@ export const PlaygroundView = () => {
                 <li key={entry.id} className="rounded-lg border border-line p-3">
                   {entry.kind === 'request' && (
                     <p className="font-mono text-xs text-warning-400">
-                      → 402 Payment Required · {SERVICE_LABEL[entry.service]}
+                      → 402 Payment Required · {serviceLabel(entry.service)}
                     </p>
                   )}
                   {entry.kind === 'paid' && (
                     <div className="flex items-center justify-between gap-2">
                       <p className="font-mono text-xs text-brand-400">
-                        ✓ Paid {formatUsd(parseAtomic(entry.amount))} · {SERVICE_LABEL[entry.service]}
+                        ✓ Paid {formatUsd(parseAtomic(entry.amount))} · {serviceLabel(entry.service)}
                       </p>
                       {entry.signature && <SolscanLink signature={entry.signature} />}
                     </div>
                   )}
                   {entry.kind === 'result' && (
                     <p className="mt-1 text-sm text-text">
-                      <span className="text-blue-light-400">{SERVICE_LABEL[entry.service]} result:</span>{' '}
+                      <span className="text-blue-light-400">{serviceLabel(entry.service)} result:</span>{' '}
                       {entry.text}
                     </p>
                   )}

@@ -23,6 +23,7 @@
     "expo-router": "~57.0.25",
     "expo-secure-store": "~57.0.4",
     "expo-status-bar": "~57.0.1",
+    "expo-updates": "~57.0.25",
     "fast-text-encoding": "^1.0.6",
     "msw": "^3.0.3",
     "react": "19.2.3",

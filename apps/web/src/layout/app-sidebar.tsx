@@ -1,6 +1,14 @@
 'use client';
 
-import { FileText, FlaskConical, Split, Wallet, Receipt, type LucideIcon } from 'lucide-react';
+import {
+  FileText,
+  FlaskConical,
+  LayoutDashboard,
+  Split,
+  Wallet,
+  Receipt,
+  type LucideIcon,
+} from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -9,15 +17,18 @@ import { Wordmark } from '@/components/ui/wordmark';
 import { useSidebar } from '@/context/sidebar-context';
 
 const NAV_ITEMS: ReadonlyArray<{ key: string; href: string; icon: LucideIcon }> = [
-  { key: 'allowances', href: '/app', icon: Wallet },
+  { key: 'overview', href: '/app', icon: LayoutDashboard },
+  { key: 'agents', href: '/app/agents', icon: Wallet },
   { key: 'payments', href: '/app/payments', icon: Receipt },
   { key: 'splits', href: '/app/splits', icon: Split },
   { key: 'statement', href: '/app/statement', icon: FileText },
   { key: 'playground', href: '/app/playground', icon: FlaskConical },
 ];
 
+// '/app' is a leaf (Overview), not a shared prefix: every other route also starts with
+// '/app/', so it only matches exactly, unlike the rest of the nav.
 const isCurrent = (pathname: string, href: string): boolean =>
-  pathname === href || pathname.startsWith(`${href}/`);
+  href === '/app' ? pathname === href : pathname === href || pathname.startsWith(`${href}/`);
 
 export const AppSidebar = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();

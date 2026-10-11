@@ -14,6 +14,9 @@ const ownerKeypairPath = process.env['OWNER_KEYPAIR_PATH'];
 const ocrImageUrl =
   process.env['OCR_IMAGE_URL'] ??
   'https://raw.githubusercontent.com/tesseract-ocr/tessdoc/main/images/eurotext.png';
+const transcribeAudioUrl =
+  process.env['TRANSCRIBE_AUDIO_URL'] ??
+  'https://upload.wikimedia.org/wikipedia/commons/c/c8/Example.ogg';
 
 const SPLIT_TIMEOUT_MS = 120_000;
 const SPLIT_POLL_MS = 5_000;
@@ -24,6 +27,13 @@ const inputs: Record<ServiceId, Record<string, string>> = {
   summarize: {
     text: 'An AI agent received an allowance from its owner, paid three APIs per call in USDC on Solana through HTTP 402, and every provider was paid its share by an automatic split thirty seconds later.',
   },
+  vision: { imageUrl: ocrImageUrl },
+  chat: { prompt: 'In one sentence, what is HTTP 402?' },
+  embed: { text: 'An AI agent paying for its own API calls, one call at a time.' },
+  image: { prompt: 'A pocket wallet made of circuitry, paying for itself' },
+  speech: { text: 'Your agent just settled a payment on Solana devnet.' },
+  transcribe: { audioUrl: transcribeAudioUrl },
+  bedrock: { prompt: 'In one sentence, what is a settlement split?' },
 };
 
 const servicesSchema = z.object({

@@ -11,10 +11,18 @@ import type { ServiceAdapters, ServiceOutput } from './types.js';
 
 const TIMEOUT_MILLISECONDS = 15_000;
 
+/** The seven newest services only ship demo adapters so far — no live upstream wired yet. */
 export const resolveModes = (config: Config): Record<ServiceId, ServiceOutput['mode']> => ({
   ocr: config.AZURE_VISION_ENDPOINT && config.AZURE_VISION_KEY ? 'live' : 'demo',
   translate: config.AWS_REGION && config.AWS_ACCESS_KEY_ID ? 'live' : 'demo',
   summarize: config.ANTHROPIC_API_KEY ? 'live' : 'demo',
+  vision: 'demo',
+  chat: 'demo',
+  embed: 'demo',
+  image: 'demo',
+  speech: 'demo',
+  transcribe: 'demo',
+  bedrock: 'demo',
 });
 
 /** AWS reads its credentials through the SDK default chain; the config only says whether they exist. */
@@ -47,5 +55,12 @@ export const resolveAdapters = (
           new Anthropic({ apiKey, timeout: TIMEOUT_MILLISECONDS, maxRetries: 1 }).messages,
         )
       : demoAdapters.summarize,
+    vision: demoAdapters.vision,
+    chat: demoAdapters.chat,
+    embed: demoAdapters.embed,
+    image: demoAdapters.image,
+    speech: demoAdapters.speech,
+    transcribe: demoAdapters.transcribe,
+    bedrock: demoAdapters.bedrock,
   };
 };
