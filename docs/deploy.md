@@ -11,9 +11,22 @@ Everything runs on Solana **devnet**, in one Railway project (`402lab`):
 | Mobile app | Expo Go / EAS Update (`apps/mobile`)                     | —                                               |
 
 Every service builds from the repository root; the variable `RAILWAY_DOCKERFILE_PATH` picks the
-Dockerfile, so no dashboard setting is needed. Redeploy from the laptop with
-`railway up --service <name> --detach`. The web services read `API_URL` and `NEXT_PUBLIC_*` as
-Docker build args, so changing them needs a redeploy, not only a restart.
+Dockerfile, so no dashboard setting is needed. The web services read `API_URL` and
+`NEXT_PUBLIC_*` as Docker build args, so changing them needs a redeploy, not only a restart.
+
+## CI/CD
+
+| Workflow                       | Runs on                                         | What it does                                                                                                |
+| ------------------------------ | ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `.github/workflows/ci.yml`     | every pull request, push to `developer`/`main`  | typecheck, lint, OpenAPI contract drift (`apps/api/openapi.json`), MCP bundle, and both Docker images build |
+| `.github/workflows/deploy.yml` | CI green on `main`, or **Run workflow** by hand | `railway up --ci` for `api`, then `web` and `web-demo` in parallel, then `npm run smoke` against production |
+
+A release is a merge of `developer` into `main`; it deploys itself once CI passes. The deploy
+needs one repository secret, `RAILWAY_TOKEN`: a **project token** for `402lab` / `production`
+(Railway dashboard, project **Settings → Tokens**), saved with `gh secret set RAILWAY_TOKEN`.
+
+`npm run smoke` also runs from the laptop; `API_URL`, `WEB_URL` and `DEMO_URL` point it at
+another stack. A hotfix without CI: `railway up --service <name> --detach`.
 
 The sections below describe each piece; section 2 (Vercel) is the alternative host for the web.
 

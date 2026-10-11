@@ -1,5 +1,6 @@
 # 402Lab
 
+[![CI](https://github.com/emersonjds/402lab/actions/workflows/ci.yml/badge.svg)](https://github.com/emersonjds/402lab/actions/workflows/ci.yml)
 [![Release v1.0.0](https://img.shields.io/badge/release-v1.0.0-B6F23A)](https://github.com/emersonjds/402lab/releases/tag/v1.0.0)
 [![Demo APK](https://img.shields.io/badge/demo-Android%20APK-3DDC84?logo=android&logoColor=white)](https://github.com/emersonjds/402lab/releases/download/v0.1.0-demo/402lab-demo.apk)
 
@@ -303,13 +304,15 @@ Every money and auth path went through an adversarial review before merging:
 
 ```sh
 npm run typecheck && npm run lint && npm run build -w @402lab/web
+npm run smoke               # production health: catalog, 402 paywall, web, proxy, demo
 npm run e2e:devnet          # real devnet payments + split (manual)
 ```
 
 ## Deploy
 
 API, web, demo web and Postgres on one Railway project (each service picks its Dockerfile),
-mobile through Expo Go and EAS — step by step in [`docs/deploy.md`](docs/deploy.md).
+mobile through Expo Go and EAS. CI runs on every pull request; a merge into `main` deploys
+all three services and smoke-tests production — step by step in [`docs/deploy.md`](docs/deploy.md).
 
 ## Roadmap
 

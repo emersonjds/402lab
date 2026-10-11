@@ -17,7 +17,8 @@
     "docker:mock": "docker compose --profile mock up --build -d web-mock",
     "docker:down": "docker compose --profile mock down",
     "dev": "concurrently -n api,web -c green,cyan \"npm run dev -w @402lab/api\" \"npm run dev -w @402lab/web\"",
-    "dev:mobile": "npm run start -w @402lab/mobile"
+    "dev:mobile": "npm run start -w @402lab/mobile",
+    "smoke": "node scripts/smoke.ts"
   },
   "devDependencies": {
     "@402lab/shared": "*",
@@ -28,14 +29,14 @@
     "@x402/core": "2.28.0",
     "@x402/fetch": "2.28.0",
     "@x402/svm": "2.28.0",
+    "concurrently": "^10.0.6",
     "eslint": "^10.10.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "prettier": "^3.9.6",
     "tsx": "^4.23.15",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.69.0",
-    "zod": "^4.6.5",
-    "concurrently": "^10.0.6"
+    "zod": "^4.6.5"
   },
   "workspaces": [
     "apps/*",
