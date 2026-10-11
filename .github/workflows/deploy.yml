@@ -1,0 +1,65 @@
+name: Deploy
+
+# Production is the Railway project `402lab`. Runs after CI passes on main, or by hand.
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+  RAILWAY_CLI_VERSION: 5.64.2
+  DEPLOY_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+jobs:
+  api:
+    name: Deploy api
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.DEPLOY_SHA }}
+      - run: npm install --global @railway/cli@${{ env.RAILWAY_CLI_VERSION }}
+      - run: railway up --service api --ci --message "${{ env.DEPLOY_SHA }}"
+
+  web:
+    name: Deploy ${{ matrix.service }}
+    needs: api
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: production
+    strategy:
+      matrix:
+        service: [web, web-demo]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.DEPLOY_SHA }}
+      - run: npm install --global @railway/cli@${{ env.RAILWAY_CLI_VERSION }}
+      - run: railway up --service ${{ matrix.service }} --ci --message "${{ env.DEPLOY_SHA }}"
+
+  smoke:
+    name: Smoke test production
+    needs: web
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.DEPLOY_SHA }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm run smoke
