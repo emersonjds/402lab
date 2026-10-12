@@ -12,6 +12,8 @@ export default defineConfig(
       '**/coverage',
       '**/node_modules',
       '.claude/**',
+      // Design-time generator for the brand SVGs, run by hand outside the workspaces.
+      'docs/design/brand/tools/**',
       '**/.next',
       '**/next-env.d.ts',
       // Vendored by `npx msw init` — not our source.
