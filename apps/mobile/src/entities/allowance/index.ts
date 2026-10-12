@@ -1,7 +1,9 @@
 import { atomicStringSchema, parseAtomic } from '@402lab/shared';
+import { skipToken, useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 
 import { request, type Connection } from '@/shared/api/client';
+import { useLivePolling } from '@/shared/lib/use-polling';
 
 const atomic = atomicStringSchema.transform(parseAtomic);
 
@@ -23,6 +25,15 @@ const listSchema = z.object({ allowances: z.array(allowanceSchema) });
 
 export const listAllowances = async (connection: Connection): Promise<Allowance[]> =>
   (await request(connection, '/allowances', listSchema)).allowances;
+
+export const ALLOWANCES_KEY = ['allowances'];
+
+export const useAllowances = (connection: Connection | null) =>
+  useQuery({
+    queryKey: ALLOWANCES_KEY,
+    queryFn: connection ? () => listAllowances(connection) : skipToken,
+    ...useLivePolling(),
+  });
 
 export const setAllowanceStatus = (
   connection: Connection,

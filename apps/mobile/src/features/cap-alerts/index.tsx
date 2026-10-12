@@ -33,7 +33,7 @@ const notify = (body: string): void => {
 // Allowance ids already alerted for the current cap event, shared by every screen that polls.
 const capped = new Set<string>();
 
-export const watchCaps = (allowances: Allowance[]): void => {
+const watchCaps = (allowances: Allowance[]): void => {
   for (const allowance of allowances) {
     if (!capReached(allowance)) {
       capped.delete(allowance.id);
@@ -49,6 +49,13 @@ export const watchCaps = (allowances: Allowance[]): void => {
       `${allowance.agentName} hit its daily cap (${formatUsd(allowance.dailyCap)}). Further calls are refused.`,
     );
   }
+};
+
+// Re-checks on every fresh list; the `capped` set keeps it to one alert per cap event.
+export const useCapAlerts = (allowances: Allowance[] | undefined): void => {
+  useEffect(() => {
+    if (allowances) watchCaps(allowances);
+  }, [allowances]);
 };
 
 export const notifyPausedFromPhone = (agentName: string): void => {

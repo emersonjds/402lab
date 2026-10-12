@@ -1,7 +1,9 @@
 import { atomicStringSchema, buildCatalog, parseAtomic, type Service } from '@402lab/shared';
+import { skipToken, useQuery, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod';
 
 import { request, type Connection } from '@/shared/api/client';
+import { useLivePolling } from '@/shared/lib/use-polling';
 
 const paymentSchema = z.object({
   id: z.string(),
@@ -30,6 +32,24 @@ export const mergeNewestFirst = (current: Payment[], page: Payment[]): Payment[]
   const known = new Set(current.map((payment) => payment.id));
   const fresh = page.filter((payment) => !known.has(payment.id)).reverse();
   return fresh.length === 0 ? current : [...fresh, ...current];
+};
+
+// Each poll asks only for payments after the newest one cached and appends them by id.
+export const usePayments = (connection: Connection | null, allowanceId: string) => {
+  const queryClient = useQueryClient();
+  const queryKey = ['payments', allowanceId];
+
+  return useQuery({
+    queryKey,
+    queryFn: connection
+      ? async () => {
+          const current = queryClient.getQueryData<Payment[]>(queryKey) ?? [];
+          const page = await listPayments(connection, allowanceId, current[0]?.id);
+          return mergeNewestFirst(current, page);
+        }
+      : skipToken,
+    ...useLivePolling(),
+  });
 };
 
 // Names, providers and split rules are the same for everyone; recipients are not needed here.

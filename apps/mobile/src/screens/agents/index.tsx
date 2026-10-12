@@ -1,13 +1,12 @@
 import { formatUsd } from '@402lab/shared';
 import { Redirect, router } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { FlatList, Pressable, RefreshControl, View } from 'react-native';
 
-import { listAllowances, spentPercent, type Allowance } from '@/entities/allowance';
+import { spentPercent, useAllowances, type Allowance } from '@/entities/allowance';
 import { useConnection } from '@/entities/session';
-import { AlertsPrompt, watchCaps } from '@/features/cap-alerts';
+import { AlertsPrompt, useCapAlerts } from '@/features/cap-alerts';
 import { theme } from '@/shared/config/theme';
-import { usePolling } from '@/shared/lib/use-polling';
 import { Body, Header, Mono, Muted, OfflineState, Screen, StatusPill } from '@/shared/ui';
 import { SpendRing } from '@/widgets/spend-ring';
 
@@ -57,25 +56,16 @@ const AgentCard = ({ allowance }: { allowance: Allowance }) => {
 };
 
 export const AgentsScreen = () => {
-  const { status, offline, run } = useConnection();
-  const [allowances, setAllowances] = useState<Allowance[] | null>(null);
+  const { status, connection } = useConnection();
+  const query = useAllowances(connection);
+  const allowances = query.data;
   const [refreshing, setRefreshing] = useState(false);
 
-  const load = useCallback(
-    () =>
-      run(async (connection) => {
-        const list = await listAllowances(connection);
-        setAllowances(list);
-        watchCaps(list);
-      }),
-    [run],
-  );
-
-  usePolling(load);
+  useCapAlerts(allowances);
 
   const refresh = async () => {
     setRefreshing(true);
-    await load();
+    await query.refetch();
     setRefreshing(false);
   };
 
@@ -88,10 +78,10 @@ export const AgentsScreen = () => {
       <Header title="Your agents" />
       {allowances && allowances.length > 0 && <FleetSummary allowances={allowances} />}
       <AlertsPrompt />
-      {offline && (
+      {query.isError && (
         <OfflineState
           onRetry={() => {
-            void load();
+            void query.refetch();
           }}
         />
       )}
