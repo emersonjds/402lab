@@ -6,6 +6,7 @@ const { colors, spacing, radius } = theme;
 
 export const styles = StyleSheet.create({
   topBar: { flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between' },
+  brandRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   brand: { color: colors.text, fontSize: 18 },
   observer: { color: colors.lime, fontSize: 11, letterSpacing: 1, marginTop: 2 },
   hero: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: spacing.md },
@@ -19,7 +20,6 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: spacing.lg,
   },
-  qrMark: { color: colors.lime, fontSize: 40 },
   center: { textAlign: 'center' },
   lead: { color: colors.muted },
   bullets: { gap: spacing.xs, marginTop: spacing.sm, alignSelf: 'stretch' },

@@ -6,6 +6,7 @@ import { Linking, Modal, View } from 'react-native';
 import { useSession } from '@/entities/session';
 import { DEMO_PAIRING, MOCKING_ENABLED } from '@/shared/mocks/is-enabled';
 import { Body, Button, DevnetBadge, Mono, Muted, Screen, Title } from '@/shared/ui';
+import { LogoMark } from '@/shared/ui/logo-mark';
 
 import { styles } from './styles';
 
@@ -64,14 +65,17 @@ export const PairScreen = () => {
     <Screen>
       <View style={styles.topBar}>
         <View>
-          <Mono style={styles.brand}>402Lab</Mono>
+          <View style={styles.brandRow}>
+            <LogoMark size={20} />
+            <Mono style={styles.brand}>402Lab</Mono>
+          </View>
           <Muted style={styles.observer}>OBSERVER MODE</Muted>
         </View>
         <DevnetBadge />
       </View>
       <View style={styles.hero}>
         <View style={styles.qrFrame}>
-          <Mono style={styles.qrMark}>402</Mono>
+          <LogoMark size={96} />
         </View>
         <Title style={styles.center}>Pair with your dashboard</Title>
         <Body style={[styles.center, styles.lead]}>
