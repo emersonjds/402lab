@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "402Lab API",
-    "version": "1.2.3",
+    "version": "1.2.4",
     "description": "Consumption account for AI agents: an owner sets an allowance (per-call and daily caps) and the agent pays per API call in USDC on Solana via HTTP 402 (x402), with automatic settlement splits to providers and a monthly statement."
   },
   "components": {
