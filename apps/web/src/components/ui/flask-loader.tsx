@@ -20,7 +20,7 @@ export const FlaskLoader = ({ label = 'Loading 402Lab' }: { label?: string }) =>
       </div>
       {/* eslint-disable-next-line @next/next/no-img-element -- static SVG, nothing for next/image to optimize */}
       <img
-        src="/logo-mark.svg"
+        src="/logo-flask.svg"
         alt=""
         width={96}
         height={96}
