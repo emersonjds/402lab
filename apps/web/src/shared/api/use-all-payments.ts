@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { skipToken, useQuery } from '@tanstack/react-query';
 
 import { apiRequest } from './client';
 import { allowanceListSchema, paymentListSchema, type Allowance, type Payment } from './schemas';
@@ -51,35 +51,25 @@ const fetchAllPaymentsFor = async (
  * pages are fetched in sequence since a later page's cursor depends on the one before it. */
 export const useAllPayments = (): AllPaymentsState => {
   const allowancesQuery = useApiQuery('/allowances', allowanceListSchema);
-  const [state, setState] = useState<AllPaymentsState>({ status: 'loading' });
-  // The query result is a new object every render; depend on its stable data, or this refetches forever.
   const allowances = allowancesQuery.status === 'ready' ? allowancesQuery.data.allowances : null;
-
-  useEffect(() => {
-    if (allowances === null) return undefined;
-
-    const controller = new AbortController();
-
-    Promise.all(allowances.map((allowance) => fetchAllPaymentsFor(allowance, controller.signal)))
-      .then((lists) => {
-        setState({
-          status: 'ready',
-          payments: lists.flat().sort((a, b) => b.settledAt.localeCompare(a.settledAt)),
-          allowances,
-        });
-      })
-      .catch(() => {
-        if (!controller.signal.aborted) {
-          setState({ status: 'error', message: 'Something went wrong loading payments.' });
-        }
-      });
-
-    return () => {
-      controller.abort();
-    };
-  }, [allowances]);
+  const paymentsQuery = useQuery({
+    queryKey: ['all-payments', allowances?.map((allowance) => allowance.id).sort()],
+    queryFn:
+      allowances === null
+        ? skipToken
+        : async ({ signal }) => {
+            const lists = await Promise.all(
+              allowances.map((allowance) => fetchAllPaymentsFor(allowance, signal)),
+            );
+            return lists.flat().sort((a, b) => b.settledAt.localeCompare(a.settledAt));
+          },
+    staleTime: 30_000,
+  });
 
   if (allowancesQuery.status === 'error')
     return { status: 'error', message: allowancesQuery.message };
-  return state;
+  if (paymentsQuery.status === 'error')
+    return { status: 'error', message: 'Something went wrong loading payments.' };
+  if (allowances === null || paymentsQuery.status !== 'success') return { status: 'loading' };
+  return { status: 'ready', payments: paymentsQuery.data, allowances };
 };
