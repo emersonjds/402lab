@@ -1,6 +1,7 @@
 import type { z } from 'zod';
 
 const API_BASE = '/api';
+const REQUEST_TIMEOUT_MS = 10_000;
 
 export const API_ERROR_MESSAGES = {
   network: "Can't reach 402Lab. Check your connection and try again.",
@@ -54,8 +55,12 @@ export const apiRequest = async <Schema extends z.ZodType>(
   path: string,
   { schema, method = 'GET', body, signal }: ApiRequestOptions<Schema>,
 ): Promise<z.infer<Schema>> => {
-  const init: RequestInit = { method, credentials: 'same-origin' };
-  if (signal) init.signal = signal;
+  const timeout = AbortSignal.timeout(REQUEST_TIMEOUT_MS);
+  const init: RequestInit = {
+    method,
+    credentials: 'same-origin',
+    signal: signal ? AbortSignal.any([signal, timeout]) : timeout,
+  };
   if (body !== undefined) {
     init.body = JSON.stringify(body);
     init.headers = { 'content-type': 'application/json' };

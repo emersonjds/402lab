@@ -1,49 +1,45 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
 
 import { SidebarProvider, useSidebar } from '@/context/sidebar-context';
 import { AppHeader } from '@/layout/app-header';
 import { AppSidebar } from '@/layout/app-sidebar';
 import { Backdrop } from '@/layout/backdrop';
 
-type SessionCheck = 'checking' | 'signed-in';
-
 /**
  * Every `/app/*` route needs a session. `GET /api/allowances` is the cheapest
  * authenticated probe already wired for this product — a 401 means the
- * httpOnly cookie is missing or expired, so we bounce to /connect before any
- * dashboard content renders.
+ * httpOnly cookie is missing or expired, so we bounce to /connect. The shell
+ * renders right away; the probe only redirects.
  */
-const useRequireSession = (): SessionCheck => {
+const useRequireSession = (): void => {
   const router = useRouter();
-  const [check, setCheck] = useState<SessionCheck>('checking');
 
   useEffect(() => {
-    let cancelled = false;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => {
+      controller.abort();
+    }, 8000);
 
-    fetch('/api/allowances', { credentials: 'same-origin' })
+    fetch('/api/allowances', { credentials: 'same-origin', signal: controller.signal })
       .then((response) => {
-        if (cancelled) return;
-        if (response.status === 401) {
-          router.replace('/connect');
-          return;
-        }
-        setCheck('signed-in');
+        if (response.status === 401) router.replace('/connect');
       })
       .catch(() => {
-        // Network hiccup: don't lock the owner out, let the page render and
-        // its own data fetches surface the error with fixed copy.
-        if (!cancelled) setCheck('signed-in');
+        // Network hiccup or timeout: keep the owner in, the page's own data
+        // fetches surface the error with fixed copy.
+      })
+      .finally(() => {
+        clearTimeout(timeout);
       });
 
     return () => {
-      cancelled = true;
+      clearTimeout(timeout);
+      controller.abort();
     };
   }, [router]);
-
-  return check;
 };
 
 const Content = ({ children }: { children: ReactNode }) => {
@@ -63,11 +59,7 @@ const Content = ({ children }: { children: ReactNode }) => {
 };
 
 export const AppShell = ({ children }: { children: ReactNode }) => {
-  const check = useRequireSession();
-
-  if (check === 'checking') {
-    return <div className="min-h-dvh bg-bg" aria-busy="true" aria-label="Checking session" />;
-  }
+  useRequireSession();
 
   return (
     <SidebarProvider>
