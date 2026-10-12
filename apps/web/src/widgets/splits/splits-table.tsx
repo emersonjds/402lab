@@ -11,6 +11,7 @@ import { Card } from '@/components/ui/card';
 import { SolscanLink } from '@/components/ui/solscan-link';
 import { splitBatchListSchema, type SplitBatch } from '@/shared/api/schemas';
 import { useApiQuery } from '@/shared/api/use-api-query';
+import { BRAND_ICON_PATHS } from '@/shared/ui/brand-icons';
 import { useAllPayments, type PaymentWithAgent } from '@/shared/api/use-all-payments';
 import { useLiveEvents } from '@/shared/api/use-live-events';
 import { PROVIDERS, serviceInfo } from '@/shared/catalog/service-info';
@@ -35,7 +36,17 @@ const ROLE_LABEL: Record<SplitBatch['payouts'][number]['role'], string> = {
 // integrator, 10% platform on every service. Only the recipient address is secret, not the
 // ratio — the web client never learns which address belongs to which provider.
 const PROVIDER_BPS = 8_500n;
-const PROVIDER_COLORS = ['#B6F23A', '#38D9F5', '#F5B83D', '#A78BFA', '#F472B6', '#2DD4BF', '#FB923C', '#60A5FA', '#34D399'];
+const PROVIDER_COLORS = [
+  '#B6F23A',
+  '#38D9F5',
+  '#F5B83D',
+  '#A78BFA',
+  '#F472B6',
+  '#2DD4BF',
+  '#FB923C',
+  '#60A5FA',
+  '#34D399',
+];
 
 const HOURS = 24;
 const MICRO_USDC = 1_000_000;
@@ -48,13 +59,28 @@ const Kpi = ({ label, value, hint }: { label: string; value: string; hint?: stri
   </Card>
 );
 
-const Monogram = ({ name, color }: { name: string; color: string }) => (
+// Simple Icons slug for each catalog provider.
+const PROVIDER_ICON: Record<Provider['id'], keyof typeof BRAND_ICON_PATHS> = {
+  aws: 'amazonwebservices',
+  azure: 'microsoftazure',
+  'google-cloud': 'googlecloud',
+  openai: 'openai',
+  anthropic: 'anthropic',
+  cloudflare: 'cloudflare',
+  replicate: 'replicate',
+  elevenlabs: 'elevenlabs',
+  deepgram: 'deepgram',
+};
+
+const Monogram = ({ provider, color }: { provider: Provider; color: string }) => (
   <span
     aria-hidden="true"
-    className="inline-flex size-8 shrink-0 items-center justify-center rounded-full font-display text-xs font-bold text-gray-950"
+    className="inline-flex size-8 shrink-0 items-center justify-center rounded-full text-gray-950"
     style={{ backgroundColor: color }}
   >
-    {name.slice(0, 2).toUpperCase()}
+    <svg viewBox="0 0 24 24" width={16} height={16} fill="currentColor">
+      <path d={BRAND_ICON_PATHS[PROVIDER_ICON[provider.id]]} />
+    </svg>
   </span>
 );
 
@@ -75,8 +101,13 @@ const computeProviderStats = (payments: PaymentWithAgent[]): ProviderStats[] =>
         (id) => serviceInfo(id).provider.id === provider.id,
       ),
     );
-    const theirPayments = payments.filter((payment) => serviceInfo(payment.serviceId).provider.id === provider.id);
-    const grossRevenue = theirPayments.reduce((sum, payment) => sum + parseAtomic(payment.amount), 0n);
+    const theirPayments = payments.filter(
+      (payment) => serviceInfo(payment.serviceId).provider.id === provider.id,
+    );
+    const grossRevenue = theirPayments.reduce(
+      (sum, payment) => sum + parseAtomic(payment.amount),
+      0n,
+    );
 
     return {
       provider,
@@ -117,7 +148,13 @@ const ShareByProviderChart = ({ stats }: { stats: ProviderStats[] }) => {
   );
 };
 
-const PayoutsPerHourChart = ({ payments, stats }: { payments: PaymentWithAgent[]; stats: ProviderStats[] }) => {
+const PayoutsPerHourChart = ({
+  payments,
+  stats,
+}: {
+  payments: PaymentWithAgent[];
+  stats: ProviderStats[];
+}) => {
   const [now] = useState(() => Date.now());
   const ranked = stats.filter((stat) => stat.grossRevenue > 0n);
 
@@ -159,7 +196,9 @@ const PayoutsPerHourChart = ({ payments, stats }: { payments: PaymentWithAgent[]
 
   return (
     <Card className="p-5">
-      <h2 className="font-display font-semibold text-text">Provider payouts (85% share) per hour</h2>
+      <h2 className="font-display font-semibold text-text">
+        Provider payouts (85% share) per hour
+      </h2>
       <div className="mt-4">
         <Chart options={options} series={series} type="bar" height={280} />
       </div>
@@ -176,13 +215,18 @@ const ProviderLeaderboard = ({ stats }: { stats: ProviderStats[] }) => (
         <li key={stat.provider.id} className="rounded-lg border border-line p-3">
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2">
-              <Monogram name={stat.provider.name} color={stat.color} />
+              <Monogram provider={stat.provider} color={stat.color} />
               <span className="text-sm text-text">{stat.provider.name}</span>
             </div>
-            <span className="font-mono text-sm text-brand-400">{formatUsd(stat.providerShare)}</span>
+            <span className="font-mono text-sm text-brand-400">
+              {formatUsd(stat.providerShare)}
+            </span>
           </div>
           <div className="mt-2 flex items-center justify-between text-xs text-muted">
-            <span>{stat.calls} calls · {stat.activeServices} service{stat.activeServices === 1 ? '' : 's'}</span>
+            <span>
+              {stat.calls} calls · {stat.activeServices} service
+              {stat.activeServices === 1 ? '' : 's'}
+            </span>
             <span className="font-mono">{formatUsd(stat.grossRevenue)} gross</span>
           </div>
           <p className="mt-1 text-xs text-muted">
@@ -209,7 +253,7 @@ const ProviderLeaderboard = ({ stats }: { stats: ProviderStats[] }) => (
             <tr key={stat.provider.id} className="border-b border-line/60">
               <td className="py-2.5">
                 <div className="flex items-center gap-2">
-                  <Monogram name={stat.provider.name} color={stat.color} />
+                  <Monogram provider={stat.provider} color={stat.color} />
                   <span className="text-text">{stat.provider.name}</span>
                 </div>
               </td>
@@ -231,7 +275,13 @@ const ProviderLeaderboard = ({ stats }: { stats: ProviderStats[] }) => (
 const batchTotal = (batch: SplitBatch): bigint =>
   batch.payouts.reduce((sum, payout) => sum + parseAtomic(payout.amount), 0n);
 
-const LiveBatchesFeed = ({ batches, onLiveEvent }: { batches: SplitBatch[]; onLiveEvent: (event: LiveEvent) => void }) => {
+const LiveBatchesFeed = ({
+  batches,
+  onLiveEvent,
+}: {
+  batches: SplitBatch[];
+  onLiveEvent: (event: LiveEvent) => void;
+}) => {
   useLiveEvents(onLiveEvent);
 
   return (
@@ -251,15 +301,23 @@ const LiveBatchesFeed = ({ batches, onLiveEvent }: { batches: SplitBatch[]; onLi
           .map((batch) => (
             <li key={batch.id} className="rounded-lg border border-line p-3">
               <div className="flex items-center justify-between gap-2">
-                <span className="font-mono text-xs text-muted">{new Date(batch.createdAt).toLocaleTimeString()}</span>
+                <span className="font-mono text-xs text-muted">
+                  {new Date(batch.createdAt).toLocaleTimeString()}
+                </span>
                 <Badge color={STATUS_BADGE[batch.status]}>{batch.status.toUpperCase()}</Badge>
               </div>
-              <p className="mt-1 font-mono text-sm font-bold text-text">{formatUsd(batchTotal(batch))}</p>
+              <p className="mt-1 font-mono text-sm font-bold text-text">
+                {formatUsd(batchTotal(batch))}
+              </p>
               <ul className="mt-2 grid gap-1 text-xs">
                 {batch.payouts.map((payout) => (
-                  <li key={`${payout.role}:${payout.recipient}`} className="flex justify-between text-muted">
+                  <li
+                    key={`${payout.role}:${payout.recipient}`}
+                    className="flex justify-between text-muted"
+                  >
                     <span>
-                      {ROLE_LABEL[payout.role]} · <span className="font-mono">{shortAddress(payout.recipient)}</span>
+                      {ROLE_LABEL[payout.role]} ·{' '}
+                      <span className="font-mono">{shortAddress(payout.recipient)}</span>
                     </span>
                     <span className="font-mono">{formatUsd(parseAtomic(payout.amount))}</span>
                   </li>
@@ -279,12 +337,12 @@ const HowSplitWorks = () => (
   <Card className="p-5">
     <h2 className="font-display font-semibold text-text">How the split works</h2>
     <p className="mt-2 text-sm text-muted">
-      Every HTTP 402 payment settles into one treasury transaction, then the split worker divides
-      it on-chain: <span className="text-text">85% to the provider</span>,{' '}
+      Every HTTP 402 payment settles into one treasury transaction, then the split worker divides it
+      on-chain: <span className="text-text">85% to the provider</span>,{' '}
       <span className="text-text">5% to the integrator</span>, and{' '}
       <span className="text-text">10% to the platform</span>. Provider and integrator shares are
-      floored to the atomic unit; the remainder always goes to the platform, so every batch
-      accounts for 100% of what was paid.
+      floored to the atomic unit; the remainder always goes to the platform, so every batch accounts
+      for 100% of what was paid.
     </p>
   </Card>
 );
@@ -293,7 +351,10 @@ export const SplitsTable = () => {
   const paymentsQuery = useAllPayments();
   const batchesQuery = useApiQuery('/splits', splitBatchListSchema);
 
-  const payments = useMemo(() => (paymentsQuery.status === 'ready' ? paymentsQuery.payments : []), [paymentsQuery]);
+  const payments = useMemo(
+    () => (paymentsQuery.status === 'ready' ? paymentsQuery.payments : []),
+    [paymentsQuery],
+  );
   const stats = useMemo(() => computeProviderStats(payments), [payments]);
 
   const effectiveBatches = batchesQuery.status === 'ready' ? batchesQuery.data.batches : [];
@@ -324,7 +385,9 @@ export const SplitsTable = () => {
 
   return (
     <div>
-      <h1 className="font-display text-title-sm font-bold tracking-tight text-text">Provider revenue splits</h1>
+      <h1 className="font-display text-title-sm font-bold tracking-tight text-text">
+        Provider revenue splits
+      </h1>
       <p className="mt-1 text-sm text-muted">
         Autonomous multi-hop revenue distribution: every settlement splits 85% to the provider, 5%
         to the integrator and 10% to the platform via HTTP 402.
@@ -339,8 +402,16 @@ export const SplitsTable = () => {
       )}
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Kpi label="Settled to providers" value={formatUsd(totalProviderPayouts)} hint="85% of gross revenue (24h)" />
-        <Kpi label="Split batches" value={String(effectiveBatches.length)} hint={`${String(effectiveBatches.filter((b) => b.status === 'confirmed').length)} confirmed`} />
+        <Kpi
+          label="Settled to providers"
+          value={formatUsd(totalProviderPayouts)}
+          hint="85% of gross revenue (24h)"
+        />
+        <Kpi
+          label="Split batches"
+          value={String(effectiveBatches.length)}
+          hint={`${String(effectiveBatches.filter((b) => b.status === 'confirmed').length)} confirmed`}
+        />
         <Kpi
           label="Providers paid"
           value={`${String(providersWithRevenue)} active`}
