@@ -14,7 +14,14 @@ import { useApiQuery } from '@/shared/api/use-api-query';
 import { serviceLabel } from '@/shared/catalog/service-info';
 import { shortAddress } from '@/shared/format/address';
 
-const ROLE_LABEL = { provider: 'Provider', integrator: 'Integrator', platform: 'Platform' } as const;
+const ROLE_LABEL = {
+  provider: 'Provider',
+  integrator: 'Integrator',
+  platform: 'Platform',
+} as const;
+
+// Listing thousands of rows freezes the tab; the totals still cover every payment.
+const STATEMENT_ROWS = 200;
 
 const currentMonth = (): string => new Date().toISOString().slice(0, 7);
 
@@ -46,14 +53,19 @@ export const StatementView = () => {
 
   const statementPath = allowanceId ? `/allowances/${allowanceId}/statement?month=${month}` : null;
   const statementQuery = useApiQuery(statementPath, statementSchema);
-  const allowanceName = allowances.find((allowance) => allowance.id === allowanceId)?.agentName ?? '';
+  const allowanceName =
+    allowances.find((allowance) => allowance.id === allowanceId)?.agentName ?? '';
 
   return (
     <div>
       <div className="flex flex-wrap items-end justify-between gap-4 print:hidden">
         <div>
-          <h1 className="font-display text-title-sm font-bold tracking-tight text-text">Statement</h1>
-          <p className="mt-1 text-sm text-muted">Monthly spend by agent, with the card-cost comparison.</p>
+          <h1 className="font-display text-title-sm font-bold tracking-tight text-text">
+            Statement
+          </h1>
+          <p className="mt-1 text-sm text-muted">
+            Monthly spend by agent, with the card-cost comparison.
+          </p>
         </div>
         <Button
           variant="secondary"
@@ -142,7 +154,10 @@ export const StatementView = () => {
             <h3 className="text-sm font-semibold text-text print:text-black">By service</h3>
             <ul className="mt-2 grid gap-1 text-sm">
               {statementQuery.data.totals.byService.map((row) => (
-                <li key={row.serviceId} className="flex justify-between text-muted print:text-gray-700">
+                <li
+                  key={row.serviceId}
+                  className="flex justify-between text-muted print:text-gray-700"
+                >
                   <span>
                     {serviceLabel(row.serviceId)} ({row.count})
                   </span>
@@ -163,7 +178,8 @@ export const StatementView = () => {
                   className="flex justify-between text-muted print:text-gray-700"
                 >
                   <span>
-                    {ROLE_LABEL[row.role]} · <span className="font-mono">{shortAddress(row.recipient)}</span>
+                    {ROLE_LABEL[row.role]} ·{' '}
+                    <span className="font-mono">{shortAddress(row.recipient)}</span>
                   </span>
                   <span className="font-mono text-text print:text-black">
                     {formatUsd(parseAtomic(row.amount))}
@@ -175,14 +191,21 @@ export const StatementView = () => {
 
           <div>
             <h3 className="text-sm font-semibold text-text print:text-black">Payments</h3>
+            {statementQuery.data.payments.length > STATEMENT_ROWS && (
+              <p className="mt-1 text-xs text-muted">
+                Latest {STATEMENT_ROWS} of {statementQuery.data.payments.length} payments; the
+                totals above include all of them.
+              </p>
+            )}
             <ul className="mt-2 grid gap-1 text-sm">
-              {statementQuery.data.payments.map((payment) => (
+              {statementQuery.data.payments.slice(0, STATEMENT_ROWS).map((payment) => (
                 <li
                   key={payment.id}
                   className="flex items-center justify-between text-muted print:text-gray-700"
                 >
                   <span>
-                    {serviceLabel(payment.serviceId)} · {new Date(payment.settledAt).toLocaleDateString()}
+                    {serviceLabel(payment.serviceId)} ·{' '}
+                    {new Date(payment.settledAt).toLocaleDateString()}
                   </span>
                   <span className="flex items-center gap-2">
                     <span className="font-mono text-text print:text-black">
