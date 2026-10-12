@@ -2,6 +2,8 @@
 
 import { useEffect, useState, type ReactNode } from 'react';
 
+import { FlaskLoader } from '@/components/ui/flask-loader';
+
 import { MOCKING_ENABLED } from './is-enabled';
 
 /**
@@ -14,13 +16,15 @@ export const MockBoundary = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (!MOCKING_ENABLED) return;
 
-    void import('./browser').then(({ startMockWorker }) => startMockWorker()).then(() => {
-      setReady(true);
-    });
+    void import('./browser')
+      .then(({ startMockWorker }) => startMockWorker())
+      .then(() => {
+        setReady(true);
+      });
   }, []);
 
   if (!ready) {
-    return <div className="min-h-dvh bg-bg" aria-busy="true" aria-label="Loading" />;
+    return <FlaskLoader />;
   }
 
   return children;
