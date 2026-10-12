@@ -1,12 +1,13 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/design/brand/logo-lockup-dark.png">
-    <img src="docs/design/brand/logo-lockup-light.png" alt="402Lab" width="320">
+    <source media="(prefers-color-scheme: dark)" srcset="docs/design/brand/logo-stacked-dark.png">
+    <img src="docs/design/brand/logo-stacked-light.png" alt="402Lab" width="320">
   </picture>
 </p>
 
-<p align="center"><b>Pocket money for AI agents.</b><br>
-Agents pay for any API, one call at a time, in USDC on Solana, always inside the limits a human sets.</p>
+<p align="center"><b>The spending account for AI agents.</b><br>
+Your agents pay for any API, one call at a time, in USDC on Solana.<br>
+You set the limits, watch every payment live and stop them with one tap.</p>
 
 <p align="center">
   <a href="https://web-production-1b5d1.up.railway.app"><b>Live app</b></a> ·
@@ -87,7 +88,7 @@ Agents pay for any API, one call at a time, in USDC on Solana, always inside the
 
 # 402Lab
 
-**Pocket money for AI agents.** A human gives an agent an allowance, with a cap per call and a cap
+**The spending account for AI agents.** A human gives an agent an allowance, with a cap per call and a cap
 per day, and the agent pays every API call by itself in USDC on Solana through HTTP 402
 ([x402](https://x402.org)). Providers get their share by an automatic split, and the human
 watches, pauses and gets one monthly statement.

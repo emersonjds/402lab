@@ -8,7 +8,7 @@ export const WaitlistSection = () => (
           Limited Devnet Cohort
         </span>
         <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-text sm:text-4xl">
-          Give your agents pocket money today.
+          Give your agents a spending account today.
         </h2>
         <p className="mx-auto mt-3 max-w-lg text-muted">
           Join 1,400+ protocol engineers and autonomous agent developers stress-testing HTTP 402
