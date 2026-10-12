@@ -3,7 +3,7 @@
 </p>
 
 <p align="center"><b>Pocket money for AI agents.</b><br>
-Agents pay any API per call in USDC on Solana — inside limits a human sets.</p>
+Agents pay for any API, one call at a time, in USDC on Solana, always inside the limits a human sets.</p>
 
 <p align="center">
   <a href="https://web-production-1b5d1.up.railway.app"><b>Live app</b></a> ·
@@ -13,42 +13,68 @@ Agents pay any API per call in USDC on Solana — inside limits a human sets.</p
   <a href="https://github.com/emersonjds/402lab/releases/download/v0.1.0-demo/402lab-demo.apk"><b>Android APK</b></a>
 </p>
 
-<p align="center">
-  <a href="https://github.com/emersonjds/402lab/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/emersonjds/402lab/actions/workflows/ci.yml/badge.svg"></a>
-  <a href="https://github.com/emersonjds/402lab/tags"><img alt="Version" src="https://img.shields.io/github/v/tag/emersonjds/402lab?sort=semver&label=version&color=B6F23A"></a>
-  <a href="https://github.com/emersonjds/402lab/releases/download/v0.1.0-demo/402lab-demo.apk"><img alt="Demo APK" src="https://img.shields.io/badge/demo-Android%20APK-3DDC84?logo=android&logoColor=white"></a>
-  <br>
-  <a href="https://nodejs.org"><img alt="Node 24" src="https://img.shields.io/badge/Node-24-5FA04E?logo=nodedotjs&logoColor=white"></a>
-  <a href="https://www.typescriptlang.org"><img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white"></a>
-  <a href="https://docs.npmjs.com/cli/using-npm/workspaces"><img alt="npm workspaces" src="https://img.shields.io/badge/npm-workspaces-CB3837?logo=npm&logoColor=white"></a>
-  <a href="https://eslint.org"><img alt="ESLint" src="https://img.shields.io/badge/ESLint-4B32C3?logo=eslint&logoColor=white"></a>
-  <a href="https://prettier.io"><img alt="Prettier" src="https://img.shields.io/badge/Prettier-F7B93E?logo=prettier&logoColor=black"></a>
-  <a href="https://docs.docker.com/compose/"><img alt="Docker" src="https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white"></a>
-  <br>
-  <a href="https://fastify.dev"><img alt="Fastify" src="https://img.shields.io/badge/Fastify-5-000000?logo=fastify&logoColor=white"></a>
-  <a href="https://orm.drizzle.team"><img alt="Drizzle" src="https://img.shields.io/badge/Drizzle-ORM-C5F74F?logo=drizzle&logoColor=black"></a>
-  <a href="https://www.postgresql.org"><img alt="PostgreSQL" src="https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white"></a>
-  <a href="https://zod.dev"><img alt="Zod" src="https://img.shields.io/badge/Zod-4-3E67B1?logo=zod&logoColor=white"></a>
-  <br>
-  <a href="https://nextjs.org"><img alt="Next.js 16" src="https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs&logoColor=white"></a>
-  <a href="https://react.dev"><img alt="React 19" src="https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black"></a>
-  <a href="https://tailwindcss.com"><img alt="Tailwind CSS 4" src="https://img.shields.io/badge/Tailwind%20CSS-4-06B6D4?logo=tailwindcss&logoColor=white"></a>
-  <a href="https://tailadmin.com"><img alt="TailAdmin" src="https://img.shields.io/badge/TailAdmin-dashboard-465FFF"></a>
-  <a href="https://apexcharts.com"><img alt="ApexCharts" src="https://img.shields.io/badge/ApexCharts-charts-008FFB"></a>
-  <a href="https://mswjs.io"><img alt="MSW" src="https://img.shields.io/badge/MSW-mocks-FF6A33?logo=mockserviceworker&logoColor=white"></a>
-  <br>
-  <a href="https://docs.expo.dev"><img alt="Expo SDK 57" src="https://img.shields.io/badge/Expo-SDK%2057-000020?logo=expo&logoColor=white"></a>
-  <a href="https://reactnative.dev"><img alt="React Native" src="https://img.shields.io/badge/React%20Native-61DAFB?logo=react&logoColor=black"></a>
-  <br>
-  <a href="https://solana.com/docs"><img alt="Solana" src="https://img.shields.io/badge/Solana-devnet-9945FF?logo=solana&logoColor=white"></a>
-  <a href="https://www.circle.com/usdc"><img alt="USDC" src="https://img.shields.io/badge/USDC-2775CA?logo=circle&logoColor=white"></a>
-  <a href="https://x402.org"><img alt="x402" src="https://img.shields.io/badge/x402-HTTP%20402-111111"></a>
-  <a href="https://modelcontextprotocol.io"><img alt="MCP" src="https://img.shields.io/badge/MCP-server-000000?logo=modelcontextprotocol&logoColor=white"></a>
-  <br>
-  <a href="https://stitch.withgoogle.com"><img alt="Google Stitch" src="https://img.shields.io/badge/Google%20Stitch-design-4285F4?logo=google&logoColor=white"></a>
-  <a href="https://docs.expo.dev/eas/"><img alt="Expo EAS" src="https://img.shields.io/badge/Expo%20EAS-build%20%26%20updates-000020?logo=expo&logoColor=white"></a>
-  <a href="https://railway.com"><img alt="Railway" src="https://img.shields.io/badge/Railway-API%20%2B%20web%20%2B%20Postgres-0B0D0E?logo=railway&logoColor=white"></a>
-</p>
+<div align="center">
+<table>
+  <tr>
+    <td align="right"><b>Status</b></td>
+    <td>
+      <a href="https://github.com/emersonjds/402lab/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/emersonjds/402lab/actions/workflows/ci.yml/badge.svg"></a>
+      <a href="https://github.com/emersonjds/402lab/tags"><img alt="Version" src="https://img.shields.io/github/v/tag/emersonjds/402lab?sort=semver&label=version&color=B6F23A"></a>
+      <a href="https://github.com/emersonjds/402lab/releases/download/v0.1.0-demo/402lab-demo.apk"><img alt="Android APK" src="https://img.shields.io/badge/app-Android%20APK-3DDC84?logo=android&logoColor=white"></a>
+    </td>
+  </tr>
+  <tr>
+    <td align="right"><b>Solana</b></td>
+    <td>
+      <a href="https://solana.com/docs"><img alt="Solana" src="https://img.shields.io/badge/Solana-devnet-9945FF?logo=solana&logoColor=white"></a>
+      <a href="https://www.circle.com/usdc"><img alt="USDC" src="https://img.shields.io/badge/USDC-2775CA?logo=circle&logoColor=white"></a>
+      <a href="https://x402.org"><img alt="x402" src="https://img.shields.io/badge/x402-HTTP%20402-111111"></a>
+      <a href="https://modelcontextprotocol.io"><img alt="MCP" src="https://img.shields.io/badge/MCP-server-000000?logo=modelcontextprotocol&logoColor=white"></a>
+    </td>
+  </tr>
+  <tr>
+    <td align="right"><b>API</b></td>
+    <td>
+      <a href="https://nodejs.org"><img alt="Node 24" src="https://img.shields.io/badge/Node-24-5FA04E?logo=nodedotjs&logoColor=white"></a>
+      <a href="https://www.typescriptlang.org"><img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white"></a>
+      <a href="https://fastify.dev"><img alt="Fastify" src="https://img.shields.io/badge/Fastify-5-000000?logo=fastify&logoColor=white"></a>
+      <a href="https://orm.drizzle.team"><img alt="Drizzle" src="https://img.shields.io/badge/Drizzle-ORM-C5F74F?logo=drizzle&logoColor=black"></a>
+      <a href="https://www.postgresql.org"><img alt="PostgreSQL" src="https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white"></a>
+      <a href="https://zod.dev"><img alt="Zod" src="https://img.shields.io/badge/Zod-4-3E67B1?logo=zod&logoColor=white"></a>
+    </td>
+  </tr>
+  <tr>
+    <td align="right"><b>Web</b></td>
+    <td>
+      <a href="https://nextjs.org"><img alt="Next.js 16" src="https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs&logoColor=white"></a>
+      <a href="https://react.dev"><img alt="React 19" src="https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black"></a>
+      <a href="https://tailwindcss.com"><img alt="Tailwind CSS 4" src="https://img.shields.io/badge/Tailwind%20CSS-4-06B6D4?logo=tailwindcss&logoColor=white"></a>
+      <a href="https://tailadmin.com"><img alt="TailAdmin" src="https://img.shields.io/badge/TailAdmin-dashboard-465FFF"></a>
+      <a href="https://apexcharts.com"><img alt="ApexCharts" src="https://img.shields.io/badge/ApexCharts-charts-008FFB"></a>
+      <a href="https://mswjs.io"><img alt="MSW" src="https://img.shields.io/badge/MSW-mocks-FF6A33?logo=mockserviceworker&logoColor=white"></a>
+    </td>
+  </tr>
+  <tr>
+    <td align="right"><b>Mobile</b></td>
+    <td>
+      <a href="https://docs.expo.dev"><img alt="Expo SDK 57" src="https://img.shields.io/badge/Expo-SDK%2057-000020?logo=expo&logoColor=white"></a>
+      <a href="https://reactnative.dev"><img alt="React Native" src="https://img.shields.io/badge/React%20Native-61DAFB?logo=react&logoColor=black"></a>
+      <a href="https://docs.expo.dev/eas/"><img alt="Expo EAS" src="https://img.shields.io/badge/Expo%20EAS-build%20%26%20updates-000020?logo=expo&logoColor=white"></a>
+    </td>
+  </tr>
+  <tr>
+    <td align="right"><b>Tooling</b></td>
+    <td>
+      <a href="https://docs.npmjs.com/cli/using-npm/workspaces"><img alt="npm workspaces" src="https://img.shields.io/badge/npm-workspaces-CB3837?logo=npm&logoColor=white"></a>
+      <a href="https://eslint.org"><img alt="ESLint" src="https://img.shields.io/badge/ESLint-4B32C3?logo=eslint&logoColor=white"></a>
+      <a href="https://prettier.io"><img alt="Prettier" src="https://img.shields.io/badge/Prettier-F7B93E?logo=prettier&logoColor=black"></a>
+      <a href="https://docs.docker.com/compose/"><img alt="Docker" src="https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white"></a>
+      <a href="https://railway.com"><img alt="Railway" src="https://img.shields.io/badge/Railway-API%20%2B%20web%20%2B%20Postgres-0B0D0E?logo=railway&logoColor=white"></a>
+      <a href="https://stitch.withgoogle.com"><img alt="Google Stitch" src="https://img.shields.io/badge/Google%20Stitch-design-4285F4?logo=google&logoColor=white"></a>
+    </td>
+  </tr>
+</table>
+</div>
 
 <p align="center">
   <img src="docs/design/screens/allowance-detail-1440.png" alt="Allowance dashboard: spend today, live payments with Solscan links, revenue split batch" width="70%">
@@ -58,8 +84,8 @@ Agents pay any API per call in USDC on Solana — inside limits a human sets.</p
 
 # 402Lab
 
-**Pocket money for AI agents.** A human gives an agent an allowance — a cap per call and a cap
-per day — and the agent pays every API call by itself in USDC on Solana through HTTP 402
+**Pocket money for AI agents.** A human gives an agent an allowance, with a cap per call and a cap
+per day, and the agent pays every API call by itself in USDC on Solana through HTTP 402
 ([x402](https://x402.org)). Providers get their share by an automatic split, and the human
 watches, pauses and gets one monthly statement.
 
@@ -74,7 +100,7 @@ Built for the Colosseum Crypto World's Fair (Solana track). Runs on **devnet**.
 ## The problem
 
 An agent that needs a paid API (OCR, translation, an LLM) hits a flow built for humans: sign
-up, type a card, buy prepaid credit, copy a key — once per provider.
+up, type a card, buy prepaid credit, copy a key, and do it all again for every provider.
 
 - **Cards cannot charge cents.** 2.9% + US$0.30 on a US$0.01 request is a **3,003%** fee; the
   card fee only drops below 10% at about US$4.23 per ticket.
@@ -95,9 +121,9 @@ end of the month. Sources in [`docs/research/`](docs/research/).
    "research-bot": US$0.02 per call, US$1 per day.
 2. In Claude (through the 402Lab MCP server) they ask: _"extract the text from this image,
    translate it to English and summarize it"_.
-3. The agent discovers the services, gets a 402, and pays three providers on its own — no
+3. The agent discovers the services, gets a 402, and pays three providers on its own, with no
    popup. Dashboard and phone show each payment live, with its Solscan signature.
-4. 30 s later one split transaction pays providers, integrator and platform — Solscan link.
+4. 30 s later one split transaction pays providers, integrator and platform, with a Solscan link.
 5. On the phone the human taps **Pause**. The agent's next call is refused.
 6. Counter: _"3 calls, US$0.017 paid; by card + IOF they would cost US$0.95"_.
 
@@ -107,13 +133,13 @@ end of the month. Sources in [`docs/research/`](docs/research/).
 service through HTTP 402, and the split worker paid providers, integrator and platform in one
 transaction.
 
-| Payment                                                        | Price  | Transaction                                                                                                                                |
-| -------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| OCR · Azure                                                    | $0.005 | [29GrHm3Q…](https://solscan.io/tx/29GrHm3QiHvcysghDZgTowmaHm22sUjo5qunewsDsF9wKdQaUPdnxU3Xw1ReXUydn5dNXGQNPtGaqZ4zudWsh4co?cluster=devnet) |
-| Translate · AWS                                                | $0.002 | [3MZ6XPM7…](https://solscan.io/tx/3MZ6XPM7LWc5JLPrN2pCHbMaNaRwQ1Dc5r3LBDpApJER2L98tcRHJLoLpSgaNfJdhhzXKGXTQcZxofdzDYUmzz4B?cluster=devnet) |
-| Chat · OpenAI                                                  | $0.008 | [5NoGgg5y…](https://solscan.io/tx/5NoGgg5yuQtdRYFkPQejDJ8jJShq7a779khG8aUr1YxcecKKHBC65q4JTaCZMqDYyc9LVXrZACFcTupddKcnBmzm?cluster=devnet) |
-| Speech · ElevenLabs                                            | $0.006 | [298CYBjv…](https://solscan.io/tx/298CYBjvv44x5EAtcUs91RZ92A3KdjeaLcrYXTQGugKwiwh92n2CiVpta6kqwrAg4DHHygvTSui8Qy7hERPAXPVM?cluster=devnet) |
-| **Split batch** — providers 85% · integrator 5% · platform 10% |        | [36LqwABG…](https://solscan.io/tx/36LqwABGFN2ZJ7BFEr3BUR9pBkNbjD9kcfYV9nXHdgaUKYDxvc7umyzgXxxanjvf6VFazhky4km6LzrotevYQ8Rn?cluster=devnet) |
+| Payment                                                       | Price  | Transaction                                                                                                                                |
+| ------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| OCR · Azure                                                   | $0.005 | [29GrHm3Q…](https://solscan.io/tx/29GrHm3QiHvcysghDZgTowmaHm22sUjo5qunewsDsF9wKdQaUPdnxU3Xw1ReXUydn5dNXGQNPtGaqZ4zudWsh4co?cluster=devnet) |
+| Translate · AWS                                               | $0.002 | [3MZ6XPM7…](https://solscan.io/tx/3MZ6XPM7LWc5JLPrN2pCHbMaNaRwQ1Dc5r3LBDpApJER2L98tcRHJLoLpSgaNfJdhhzXKGXTQcZxofdzDYUmzz4B?cluster=devnet) |
+| Chat · OpenAI                                                 | $0.008 | [5NoGgg5y…](https://solscan.io/tx/5NoGgg5yuQtdRYFkPQejDJ8jJShq7a779khG8aUr1YxcecKKHBC65q4JTaCZMqDYyc9LVXrZACFcTupddKcnBmzm?cluster=devnet) |
+| Speech · ElevenLabs                                           | $0.006 | [298CYBjv…](https://solscan.io/tx/298CYBjvv44x5EAtcUs91RZ92A3KdjeaLcrYXTQGugKwiwh92n2CiVpta6kqwrAg4DHHygvTSui8Qy7hERPAXPVM?cluster=devnet) |
+| **Split batch**: providers 85% · integrator 5% · platform 10% |        | [36LqwABG…](https://solscan.io/tx/36LqwABGFN2ZJ7BFEr3BUR9pBkNbjD9kcfYV9nXHdgaUKYDxvc7umyzgXxxanjvf6VFazhky4km6LzrotevYQ8Rn?cluster=devnet) |
 
 ## Screens
 
@@ -129,18 +155,18 @@ transaction.
 402lab/
 ├── apps/
 │   ├── api/          Fastify 5 + @x402/fastify + Drizzle/Postgres  (port 8080, Swagger at /docs)
-│   ├── web/          Next.js 16 — landing page (/) and owner panel (/app) in one app  (port 3000)
-│   └── mobile/       Expo SDK 57 — owner app: live payments, pause, pairing
+│   ├── web/          Next.js 16: landing page (/) and owner panel (/app) in one app  (port 3000)
+│   └── mobile/       Expo SDK 57: owner app: live payments, pause, pairing
 ├── packages/
-│   ├── shared/       @402lab/shared — Zod schemas, money (bigint USDC), split, policy, catalog
-│   ├── mcp/          @402lab/mcp — MCP server that lets an agent pay with x402
-│   └── mocks/        @402lab/mocks — MSW fixtures for web and mobile demo mode
+│   ├── shared/       @402lab/shared: Zod schemas, money (bigint USDC), split, policy, catalog
+│   ├── mcp/          @402lab/mcp: MCP server that lets an agent pay with x402
+│   └── mocks/        @402lab/mocks: MSW fixtures for web and mobile demo mode
 ├── compose.yaml      postgres + api + web (+ web-mock profile)
 └── package.json      "workspaces": ["apps/*", "packages/*"]
 ```
 
-It is a plain [npm workspaces](https://docs.npmjs.com/cli/using-npm/workspaces) monorepo — no
-Turborepo, no Nx:
+It is a plain [npm workspaces](https://docs.npmjs.com/cli/using-npm/workspaces) monorepo, with no
+Turborepo and no Nx:
 
 - **One `npm install` at the root** reads `workspaces` from the root `package.json`, installs
   the dependencies of every package into one shared, hoisted `node_modules` at the root, and
@@ -198,7 +224,7 @@ cp .env.example apps/api/.env
 The web reads [`apps/web/.env.example`](apps/web/.env.example) (`API_URL`, `NEXT_PUBLIC_*`) and
 the mobile app [`apps/mobile/.env.example`](apps/mobile/.env.example).
 
-### A. Docker — the whole stack
+### A. Docker: the whole stack
 
 Requirements: Docker with Compose v2, and `apps/api/.env` filled as above.
 
@@ -223,11 +249,11 @@ WEB_PORT=13000 API_PORT=18080 POSTGRES_PORT=15432 npm run docker:up
 ```
 
 The web image inlines its config at build time: `API_URL` (the `/api` rewrite) and every
-`NEXT_PUBLIC_*` value are Docker **build args**, not runtime env — change one and rebuild
+`NEXT_PUBLIC_*` value are Docker **build args**, not runtime env, so change one and rebuild
 (`docker:up` always passes `--build`). To pair a phone with the Docker stack, build with the
 API's LAN address: `API_PUBLIC_URL=http://192.168.1.20:8080 npm run docker:up`.
 
-### B. Docker — web on mock data
+### B. Docker: web on demo data
 
 Requirements: Docker. No `.env`, no API, no Postgres, no devnet USDC.
 
@@ -240,8 +266,8 @@ mock wallet so **Connect wallet** works without a browser extension. Port: `WEB_
 
 ### C. Local, without Docker for the apps
 
-Requirements: Node 24, npm 11, and Postgres 16 — `npm run db:up` gives you one in Docker, or
-point `DATABASE_URL` at your own.
+Requirements: Node 24, npm 11, and Postgres 16 (`npm run db:up` gives you one in Docker, or
+point `DATABASE_URL` at your own).
 
 ```sh
 npm install
@@ -257,7 +283,7 @@ Web on mock data, no API: `NEXT_PUBLIC_API_MOCKING=enabled npm run dev -w @402la
 Expo does not run usefully in Docker: the phone needs the Metro dev server on your local network
 (or an installed build), so the mobile app runs from the host.
 
-**Expo Go** — requirements: Node 24, the [Expo Go](https://expo.dev/go) app, phone and computer
+**Expo Go.** Requirements: Node 24, the [Expo Go](https://expo.dev/go) app, phone and computer
 on the same Wi-Fi.
 
 ```sh
@@ -268,10 +294,10 @@ EXPO_PUBLIC_API_MOCKING=enabled npm run dev:mobile   # demo data, no API needed
 
 To pair with a real API, the phone must reach it by the computer's LAN IP: set
 `NEXT_PUBLIC_API_PUBLIC_URL=http://<your-lan-ip>:8080` for the web (or `API_PUBLIC_URL` for
-Docker) and scan the **Pair your phone** QR on an allowance page. With mock data, tap **Try the
-demo** on the pairing screen; an amber "DEMO DATA" badge marks every screen.
+Docker) and scan the **Pair your phone** QR on an allowance page. On demo data, tap **Explore the
+app** on the pairing screen.
 
-**Demo APK** — Android, runs on built-in demo data (tap **Try the demo**). It is the EAS
+**Android APK.** Pair it with your dashboard, or tap **Explore the app** to look around. It is the EAS
 `preview` build, so it also receives over-the-air updates (below):
 
 - GitHub release: [download `402lab-demo.apk`](https://github.com/emersonjds/402lab/releases/download/v0.1.0-demo/402lab-demo.apk), or scan:
@@ -281,7 +307,7 @@ demo** on the pairing screen; an amber "DEMO DATA" badge marks every screen.
 - Expo install page with its own QR:
   [expo.dev build `7318f4c8`](https://expo.dev/accounts/emersonjdss/projects/402lab/builds/7318f4c8-1cc2-4484-b41a-ae066c8f8e80)
 
-**EAS preview channel** — EAS project `@emersonjdss/402lab`. Builds on the `preview` profile
+**EAS preview channel.** EAS project `@emersonjdss/402lab`. Builds on the `preview` profile
 (Node 24.19.0, Android image `latest`, see [`apps/mobile/eas.json`](apps/mobile/eas.json)) ship
 `expo-updates` on the `preview` channel: the installed app downloads the latest JavaScript when
 it opens, with no reinstall.
@@ -333,14 +359,14 @@ split worker (every 30 s) ── unbatched payments ── sum per recipient ─
 
 Every money and auth path went through an adversarial review before merging:
 
-- **Concurrent daily cap** — spend is reserved per allowance between verify and settle, under a
+- **Concurrent daily cap.** Spend is reserved per allowance between verify and settle, under a
   per-allowance lock, and released if settlement is aborted.
-- **Idempotent split** — batch, payouts and payment links are written in one DB transaction;
+- **Idempotent split.** Batch, payouts and payment links are written in one DB transaction;
   the signature is stored _before_ sending and checked before any retry, so a crash cannot pay
   a provider twice.
-- **Lagging RPC nodes** — a batch is retried only after its blockhash expiry is stable; RPC
+- **Lagging RPC nodes.** A batch is retried only after its blockhash expiry is stable; RPC
   calls time out and pin commitment, so a stale node cannot trigger a double payout.
-- **Auth** — Sign-In With Solana with single-use, expiring nonces; session JWT in an httpOnly
+- **Auth.** Sign-In With Solana with single-use, expiring nonces; session JWT in an httpOnly
   cookie served first-party through the web proxy; another owner's allowance answers 404,
   never 403; facilitator and upstream error text never reaches clients.
 - Keys (treasury, JWT, upstreams) come only from environment variables and are never logged.
@@ -357,11 +383,11 @@ npm run e2e:devnet          # real devnet payments + split (manual)
 
 API, web, demo web and Postgres on one Railway project (each service picks its Dockerfile),
 mobile through Expo Go and EAS. CI runs on every pull request; a merge into `main` deploys
-all three services and smoke-tests production — step by step in [`docs/deploy.md`](docs/deploy.md).
+all three services and smoke-tests production. Step by step in [`docs/deploy.md`](docs/deploy.md).
 
 ## Roadmap
 
-- **Mainnet** with real money — holding treasury funds for ~30 s requires BCB authorization
+- **Mainnet** with real money. Holding treasury funds for ~30 s requires BCB authorization
   (Res. 519/520) or a licensed PSAV partner.
 - **Real Pix** on-ramp (simulated and labeled in the demo) and **NFS-e** invoices from the
   monthly statement.
