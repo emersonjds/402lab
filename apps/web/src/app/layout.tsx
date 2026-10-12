@@ -3,7 +3,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { Inter, JetBrains_Mono, Space_Grotesk } from 'next/font/google';
 import type { ReactNode } from 'react';
 
-import { SessionProvider } from '@/shared/auth/session-context';
+import { QueryProvider } from '@/shared/api/query-provider';
 import { MockBoundary } from '@/shared/mocks/mock-boundary';
 
 import messages from '../messages/en.json';
@@ -59,9 +59,9 @@ const RootLayout = ({ children }: RootLayoutProps) => (
         Skip to content
       </a>
       <NextIntlClientProvider locale="en" messages={messages}>
-        <SessionProvider>
-          <MockBoundary>{children}</MockBoundary>
-        </SessionProvider>
+        <MockBoundary>
+          <QueryProvider>{children}</QueryProvider>
+        </MockBoundary>
       </NextIntlClientProvider>
     </body>
   </html>
