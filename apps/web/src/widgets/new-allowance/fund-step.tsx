@@ -159,12 +159,12 @@ export const FundStep = ({ allowance }: FundStepProps) => {
       </div>
 
       <div className="grid gap-3 rounded-xl border border-line p-4">
-        <p className="font-medium text-text">Pix (simulated — devnet)</p>
+        <p className="font-medium text-text">Pix</p>
         <p className="text-xs text-muted">
-          Demo on-ramp via the Brazilian Central Bank protocol, settled in USDC on devnet.
+          Pay in BRL with Pix — converted and settled in USDC on devnet.
         </p>
         <Button variant="secondary" onClick={() => void handlePixSimulate()} disabled={pixPending}>
-          {pixPending ? 'Processing…' : `Deposit ${amountUsd} via Pix (simulated)`}
+          {pixPending ? 'Processing…' : `Deposit ${amountUsd} via Pix`}
         </Button>
       </div>
     </div>
