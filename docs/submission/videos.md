@@ -2,10 +2,10 @@
 
 Two videos, both required by Colosseum:
 
-| Video | Length | Question it answers | Format |
-|---|---|---|---|
-| Pitch | **max 3:00** | *Why* — team, problem, user, vision | Voiceover over slides (+ webcam bubble) |
-| Technical demo | **2:00–3:00** | *How* — what was built, Solana integration, decisions | Screen recording with voiceover |
+| Video          | Length        | Question it answers                                   | Format                                  |
+| -------------- | ------------- | ----------------------------------------------------- | --------------------------------------- |
+| Pitch          | **max 3:00**  | _Why_ — team, problem, user, vision                   | Voiceover over slides (+ webcam bubble) |
+| Technical demo | **2:00–3:00** | _How_ — what was built, Solana integration, decisions | Screen recording with voiceover         |
 
 Judges watch the pitch first and decide from it whether to look deeper. A clear narrative beats
 editing: slides + voice is enough. Do not exceed 3:00 and do not turn the demo into a second
@@ -106,7 +106,7 @@ curl -i -X POST -H 'content-type: application/json' -d '{}' \
 
 ### 0:45–1:25 · The agent pays — Claude Code + dashboard side by side
 
-Prompt in Claude: *"Extract the text from this image, translate it to English and summarize it."*
+Prompt in Claude: _"Extract the text from this image, translate it to English and summarize it."_
 
 > Claude calls `list_services`, then `call_service` three times. The MCP server holds a session
 > keypair: it gets the 402, signs a `TransferChecked` and retries — no popup, and the facilitator
@@ -185,7 +185,7 @@ Same narration as section 2. Add at the end:
 
 ### 0:45–1:15 · Allowance and live payments — web demo
 
-Click **Allowances → research-bot**. Wait for two or three rows to slide into *Live payments*
+Click **Allowances → research-bot**. Wait for two or three rows to slide into _Live payments_
 (one every 4 s). Then **Playground**: run OCR, Translate, Summarize.
 
 > Each agent gets an allowance: here two cents per call and one dollar per day. Payments stream in
@@ -215,5 +215,5 @@ Click **Pause agent**: the pill turns PAUSED. Cut to `hooks.ts`, highlight the `
 
 > At the end of the month the human gets one statement per agent, with the card-plus-IOF
 > comparison. Mainnet waits for licensed custody; Pix and invoices are simulated. `npm run
-> e2e:devnet` runs this whole flow against devnet, and every merge to `main` deploys and
+e2e:devnet` runs this whole flow against devnet, and every merge to `main` deploys and
 > smoke-tests production.
