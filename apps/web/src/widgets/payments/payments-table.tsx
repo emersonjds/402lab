@@ -1,16 +1,24 @@
 'use client';
 
 import { formatUsd, parseAtomic } from '@402lab/shared';
+import { useState } from 'react';
 
 import { Alert } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { SolscanLink } from '@/components/ui/solscan-link';
 import { useAllPayments } from '@/shared/api/use-all-payments';
-import { serviceLabel } from '@/shared/catalog/service-info';
+import { serviceInfo, serviceLabel } from '@/shared/catalog/service-info';
+import { ProviderIcon } from '@/shared/ui/provider-icon';
+
+// Rendering tens of thousands of rows at once freezes the tab; the full list still feeds the totals.
+const ROWS_PER_PAGE = 100;
 
 export const PaymentsTable = () => {
   const query = useAllPayments();
-  const rows = query.status === 'ready' ? query.payments : null;
+  const [shown, setShown] = useState(ROWS_PER_PAGE);
+  const all = query.status === 'ready' ? query.payments : null;
+  const rows = all?.slice(0, shown) ?? null;
 
   return (
     <div>
@@ -23,8 +31,17 @@ export const PaymentsTable = () => {
             {query.message}
           </Alert>
         )}
-        {rows === null && query.status === 'loading' && <p className="text-sm text-muted">Loading…</p>}
-        {rows !== null && rows.length === 0 && <p className="text-sm text-muted">No payments yet.</p>}
+        {rows === null && query.status === 'loading' && (
+          <p className="text-sm text-muted">Loading…</p>
+        )}
+        {rows !== null && rows.length === 0 && (
+          <p className="text-sm text-muted">No payments yet.</p>
+        )}
+        {all !== null && all.length > 0 && (
+          <p className="mb-3 text-xs text-muted">
+            Showing the latest {rows?.length ?? 0} of {all.length} payments.
+          </p>
+        )}
 
         {rows !== null && rows.length > 0 && (
           <>
@@ -33,10 +50,15 @@ export const PaymentsTable = () => {
                 <li key={row.id} className="rounded-lg border border-line p-3">
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-text">{row.agentName}</span>
-                    <span className="font-mono text-sm text-text">{formatUsd(parseAtomic(row.amount))}</span>
+                    <span className="font-mono text-sm text-text">
+                      {formatUsd(parseAtomic(row.amount))}
+                    </span>
                   </div>
                   <div className="mt-1 flex items-center justify-between text-xs text-muted">
-                    <span>{serviceLabel(row.serviceId)}</span>
+                    <span className="inline-flex items-center gap-1.5">
+                      <ProviderIcon provider={serviceInfo(row.serviceId).provider} size={12} />
+                      {serviceLabel(row.serviceId)}
+                    </span>
                     <span>{new Date(row.settledAt).toLocaleString()}</span>
                   </div>
                   <div className="mt-1">
@@ -61,9 +83,20 @@ export const PaymentsTable = () => {
                   {rows.map((row) => (
                     <tr key={row.id} className="border-b border-line/60">
                       <td className="py-2.5 text-text">{row.agentName}</td>
-                      <td className="py-2.5 text-text">{serviceLabel(row.serviceId)}</td>
-                      <td className="py-2.5 font-mono text-text">{formatUsd(parseAtomic(row.amount))}</td>
-                      <td className="py-2.5 text-muted">{new Date(row.settledAt).toLocaleString()}</td>
+                      <td className="py-2.5 text-text">
+                        <span className="inline-flex items-center gap-2">
+                          <span className="inline-flex size-7 items-center justify-center rounded-full bg-raised text-text">
+                            <ProviderIcon provider={serviceInfo(row.serviceId).provider} />
+                          </span>
+                          {serviceLabel(row.serviceId)}
+                        </span>
+                      </td>
+                      <td className="py-2.5 font-mono text-text">
+                        {formatUsd(parseAtomic(row.amount))}
+                      </td>
+                      <td className="py-2.5 text-muted">
+                        {new Date(row.settledAt).toLocaleString()}
+                      </td>
                       <td className="py-2.5">
                         <SolscanLink signature={row.txSignature} />
                       </td>
@@ -72,6 +105,18 @@ export const PaymentsTable = () => {
                 </tbody>
               </table>
             </div>
+            {all !== null && shown < all.length && (
+              <div className="mt-4 flex justify-center">
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    setShown((count) => count + ROWS_PER_PAGE);
+                  }}
+                >
+                  Show more
+                </Button>
+              </div>
+            )}
           </>
         )}
       </Card>
