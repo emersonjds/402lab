@@ -26,6 +26,7 @@ jobs:
       - run: npm ci
       - run: npm run typecheck
       - run: npm run lint
+      - run: npm test -w @402lab/web
       - name: OpenAPI contract is up to date
         run: |
           npm run openapi -w @402lab/api
