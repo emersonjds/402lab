@@ -150,8 +150,8 @@ transaction.
 | Landing                                                                             | Owner overview                                                                                              | Revenue splits                                                                                         |
 | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
 | <img src="docs/design/screens/landing-1440.png" alt="Landing page" width="300">     | <img src="docs/design/screens/overview-1440.png" alt="Owner overview with spend across agents" width="300"> | <img src="docs/design/screens/provider-splits-1440.png" alt="Revenue splits per provider" width="300"> |
-| **Payments**                                                                        | **Monthly statement**                                                                                       | **On a phone**                                                                                      |
-| <img src="docs/design/screens/payments-1440.png" alt="Payments ledger" width="300"> | <img src="docs/design/screens/statement-1440.png" alt="Printable monthly statement" width="300">            | <img src="docs/design/screens/overview-375.png" alt="Owner overview on a phone" width="140">                |
+| **Payments**                                                                        | **Monthly statement**                                                                                       | **On a phone**                                                                                         |
+| <img src="docs/design/screens/payments-1440.png" alt="Payments ledger" width="300"> | <img src="docs/design/screens/statement-1440.png" alt="Printable monthly statement" width="300">            | <img src="docs/design/screens/overview-375.png" alt="Owner overview on a phone" width="140">           |
 
 ## How the monorepo works
 
