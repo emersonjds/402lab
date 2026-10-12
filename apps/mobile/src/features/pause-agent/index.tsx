@@ -1,8 +1,14 @@
-import { useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { View } from 'react-native';
 
-import { setAllowanceStatus, type Allowance, type AllowanceStatus } from '@/entities/allowance';
+import {
+  ALLOWANCES_KEY,
+  setAllowanceStatus,
+  type Allowance,
+  type AllowanceStatus,
+} from '@/entities/allowance';
 import { useConnection } from '@/entities/session';
+import { UnreachableError } from '@/shared/api/client';
 import { Body, Button, Muted } from '@/shared/ui';
 
 import { styles } from './styles';
@@ -18,25 +24,41 @@ type PauseControlProps = {
 };
 
 export const PauseControl = ({ allowance, onUpdated }: PauseControlProps) => {
-  const { run } = useConnection();
-  const [optimistic, setOptimistic] = useState<AllowanceStatus | null>(null);
-  const [failure, setFailure] = useState<string | null>(null);
-  const status = optimistic ?? allowance.status;
+  const { connection } = useConnection();
+  const queryClient = useQueryClient();
 
-  const toggle = async () => {
-    const next: AllowanceStatus = status === 'active' ? 'paused' : 'active';
-    setOptimistic(next);
-    setFailure(null);
+  const replace = (list: Allowance[] | undefined, next: Allowance) =>
+    list?.map((candidate) => (candidate.id === next.id ? next : candidate));
 
-    const saved = await run(async (connection) => {
-      onUpdated(await setAllowanceStatus(connection, allowance.id, next));
-    });
+  const mutation = useMutation({
+    mutationFn: (next: AllowanceStatus) =>
+      connection
+        ? setAllowanceStatus(connection, allowance.id, next)
+        : Promise.reject(new UnreachableError()),
+    onMutate: async (next) => {
+      await queryClient.cancelQueries({ queryKey: ALLOWANCES_KEY });
+      const previous = queryClient.getQueryData<Allowance[]>(ALLOWANCES_KEY);
+      queryClient.setQueryData<Allowance[]>(ALLOWANCES_KEY, (list) =>
+        replace(list, { ...allowance, status: next }),
+      );
+      return { previous };
+    },
+    onError: (_error, _next, context) => {
+      queryClient.setQueryData(ALLOWANCES_KEY, context?.previous);
+    },
+    onSuccess: (updated) => {
+      queryClient.setQueryData<Allowance[]>(ALLOWANCES_KEY, (list) => replace(list, updated));
+      onUpdated(updated);
+    },
+    onSettled: () => queryClient.invalidateQueries({ queryKey: ALLOWANCES_KEY }),
+  });
 
-    setOptimistic(null);
+  // A poll landing mid-PATCH must not flip the button back.
+  const status = mutation.isPending ? mutation.variables : allowance.status;
+  const failure = mutation.isError ? FAILURE_COPY[mutation.variables] : null;
 
-    if (!saved) {
-      setFailure(FAILURE_COPY[next]);
-    }
+  const toggle = () => {
+    mutation.mutate(status === 'active' ? 'paused' : 'active');
   };
 
   return (
@@ -44,10 +66,10 @@ export const PauseControl = ({ allowance, onUpdated }: PauseControlProps) => {
       {status === 'paused' ? (
         <>
           <Body style={styles.paused}>Agent paused. Payments will be refused.</Body>
-          <Button title="Resume" large onPress={() => void toggle()} />
+          <Button title="Resume" large onPress={toggle} />
         </>
       ) : (
-        <Button title="Pause agent" variant="warning" large onPress={() => void toggle()} />
+        <Button title="Pause agent" variant="warning" large onPress={toggle} />
       )}
       {failure && (
         <Muted style={styles.failure} accessibilityLiveRegion="assertive">

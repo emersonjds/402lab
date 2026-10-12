@@ -1,16 +1,15 @@
 import { formatUsd } from '@402lab/shared';
 import { Redirect, router, useLocalSearchParams } from 'expo-router';
-import { useCallback, useRef, useState } from 'react';
+import { useState } from 'react';
 import { FlatList, Pressable, RefreshControl, Text, View } from 'react-native';
 
-import { listAllowances, type Allowance } from '@/entities/allowance';
-import { listPayments, mergeNewestFirst, serviceName, type Payment } from '@/entities/payment';
+import { useAllowances } from '@/entities/allowance';
+import { serviceName, usePayments, type Payment } from '@/entities/payment';
 import { useConnection } from '@/entities/session';
-import { notifyPausedFromPhone, watchCaps } from '@/features/cap-alerts';
+import { notifyPausedFromPhone, useCapAlerts } from '@/features/cap-alerts';
 import { PauseControl } from '@/features/pause-agent';
 import { theme } from '@/shared/config/theme';
 import { resetsInLabel, timeAgo } from '@/shared/lib/time-ago';
-import { usePolling } from '@/shared/lib/use-polling';
 import { Body, DevnetBadge, Mono, Muted, OfflineState, Screen, Title } from '@/shared/ui';
 import { PaymentSheet } from '@/widgets/payment-sheet';
 import { SpendRing } from '@/widgets/spend-ring';
@@ -47,29 +46,17 @@ const FeedRow = ({ payment, onPress }: { payment: Payment; onPress: () => void }
 
 export const AgentDetailScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { status, offline, run } = useConnection();
-  const [allowance, setAllowance] = useState<Allowance | null>(null);
-  const [payments, setPayments] = useState<Payment[]>([]);
+  const { status, connection } = useConnection();
+  const allowancesQuery = useAllowances(connection);
+  const paymentsQuery = usePayments(connection, id);
+  const allowance = allowancesQuery.data?.find((candidate) => candidate.id === id) ?? null;
+  const payments = paymentsQuery.data ?? [];
   const [selected, setSelected] = useState<Payment | null>(null);
   const [refreshing, setRefreshing] = useState(false);
-  const cursor = useRef<string | undefined>(undefined);
 
-  const poll = useCallback(
-    () =>
-      run(async (connection) => {
-        const [allowances, page] = await Promise.all([
-          listAllowances(connection),
-          listPayments(connection, id, cursor.current),
-        ]);
-        setAllowance(allowances.find((candidate) => candidate.id === id) ?? null);
-        watchCaps(allowances);
-        cursor.current = page.at(-1)?.id ?? cursor.current;
-        setPayments((current) => mergeNewestFirst(current, page));
-      }),
-    [run, id],
-  );
+  useCapAlerts(allowancesQuery.data);
 
-  usePolling(poll);
+  const poll = () => Promise.all([allowancesQuery.refetch(), paymentsQuery.refetch()]);
 
   const refresh = async () => {
     setRefreshing(true);
@@ -99,7 +86,7 @@ export const AgentDetailScreen = () => {
         </Title>
         <DevnetBadge />
       </View>
-      {offline && (
+      {(allowancesQuery.isError || paymentsQuery.isError) && (
         <OfflineState
           onRetry={() => {
             void poll();
@@ -141,7 +128,6 @@ export const AgentDetailScreen = () => {
               <PauseControl
                 allowance={allowance}
                 onUpdated={(updated) => {
-                  setAllowance(updated);
                   if (updated.status === 'paused') {
                     notifyPausedFromPhone(updated.agentName);
                   }

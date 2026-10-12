@@ -1,20 +1,10 @@
-import { useFocusEffect } from 'expo-router';
-import { useCallback } from 'react';
+import { useIsFocused } from 'expo-router';
 
 export const POLL_INTERVAL_MS = 3_000;
 
-// Runs `task` now and every interval while the screen is focused; blur or unmount clears it.
-export const usePolling = (task: () => Promise<unknown>, intervalMs = POLL_INTERVAL_MS): void => {
-  useFocusEffect(
-    useCallback(() => {
-      void task();
-      const timer = setInterval(() => {
-        void task();
-      }, intervalMs);
-
-      return () => {
-        clearInterval(timer);
-      };
-    }, [task, intervalMs]),
-  );
-};
+// Spread into `useQuery`: polls every interval while the screen is focused; a blurred screen
+// unsubscribes, which stops its timer. Background pauses via `focusManager` (see app layout).
+export const useLivePolling = () => ({
+  refetchInterval: POLL_INTERVAL_MS,
+  subscribed: useIsFocused(),
+});
