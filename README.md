@@ -1,7 +1,7 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/design/brand/logo-stacked-dark.png">
-    <img src="docs/design/brand/logo-stacked-light.png" alt="402Lab" width="320">
+    <source media="(prefers-color-scheme: dark)" srcset="docs/design/brand/logo-horizontal-dark.png">
+    <img src="docs/design/brand/logo-horizontal-light.png" alt="402Lab" width="440">
   </picture>
 </p>
 

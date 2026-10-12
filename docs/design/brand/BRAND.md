@@ -1,5 +1,7 @@
 # 402Lab brand
 
+![Every 402Lab logo variant on dark and light backgrounds](brand-sheet.png)
+
 The logo is a lab flask holding lime liquid, next to the wordmark "[402] Lab". The "402" sits in a thin rounded box, a nod to HTTP 402 Payment Required. Every file here is a vector master with the text converted to paths, so no font install is needed.
 
 ## Variants
