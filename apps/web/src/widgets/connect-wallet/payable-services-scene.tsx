@@ -152,7 +152,7 @@ export const PayableServicesScene = () => (
       className="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-4"
     >
       {/* eslint-disable-next-line @next/next/no-img-element -- static SVG, nothing for next/image to optimize */}
-      <img src="/logo-mark.svg" alt="" width={120} height={120} />
+      <img src="/logo-flask.svg" alt="" width={120} height={120} />
       <div className="flex items-center gap-2">
         <span className="rounded-[8px] border border-brand-500/60 px-2 py-0.5 font-mono text-2xl font-semibold text-brand-500">
           402
