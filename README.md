@@ -107,21 +107,21 @@ end of the month. Sources in [`docs/research/`](docs/research/).
 service through HTTP 402, and the split worker paid providers, integrator and platform in one
 transaction.
 
-| Payment | Price | Transaction |
-| --- | --- | --- |
-| OCR · Azure | $0.005 | [29GrHm3Q…](https://solscan.io/tx/29GrHm3QiHvcysghDZgTowmaHm22sUjo5qunewsDsF9wKdQaUPdnxU3Xw1ReXUydn5dNXGQNPtGaqZ4zudWsh4co?cluster=devnet) |
-| Translate · AWS | $0.002 | [3MZ6XPM7…](https://solscan.io/tx/3MZ6XPM7LWc5JLPrN2pCHbMaNaRwQ1Dc5r3LBDpApJER2L98tcRHJLoLpSgaNfJdhhzXKGXTQcZxofdzDYUmzz4B?cluster=devnet) |
-| Chat · OpenAI | $0.008 | [5NoGgg5y…](https://solscan.io/tx/5NoGgg5yuQtdRYFkPQejDJ8jJShq7a779khG8aUr1YxcecKKHBC65q4JTaCZMqDYyc9LVXrZACFcTupddKcnBmzm?cluster=devnet) |
-| Speech · ElevenLabs | $0.006 | [298CYBjv…](https://solscan.io/tx/298CYBjvv44x5EAtcUs91RZ92A3KdjeaLcrYXTQGugKwiwh92n2CiVpta6kqwrAg4DHHygvTSui8Qy7hERPAXPVM?cluster=devnet) |
-| **Split batch** — providers 85% · integrator 5% · platform 10% | | [36LqwABG…](https://solscan.io/tx/36LqwABGFN2ZJ7BFEr3BUR9pBkNbjD9kcfYV9nXHdgaUKYDxvc7umyzgXxxanjvf6VFazhky4km6LzrotevYQ8Rn?cluster=devnet) |
+| Payment                                                        | Price  | Transaction                                                                                                                                |
+| -------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| OCR · Azure                                                    | $0.005 | [29GrHm3Q…](https://solscan.io/tx/29GrHm3QiHvcysghDZgTowmaHm22sUjo5qunewsDsF9wKdQaUPdnxU3Xw1ReXUydn5dNXGQNPtGaqZ4zudWsh4co?cluster=devnet) |
+| Translate · AWS                                                | $0.002 | [3MZ6XPM7…](https://solscan.io/tx/3MZ6XPM7LWc5JLPrN2pCHbMaNaRwQ1Dc5r3LBDpApJER2L98tcRHJLoLpSgaNfJdhhzXKGXTQcZxofdzDYUmzz4B?cluster=devnet) |
+| Chat · OpenAI                                                  | $0.008 | [5NoGgg5y…](https://solscan.io/tx/5NoGgg5yuQtdRYFkPQejDJ8jJShq7a779khG8aUr1YxcecKKHBC65q4JTaCZMqDYyc9LVXrZACFcTupddKcnBmzm?cluster=devnet) |
+| Speech · ElevenLabs                                            | $0.006 | [298CYBjv…](https://solscan.io/tx/298CYBjvv44x5EAtcUs91RZ92A3KdjeaLcrYXTQGugKwiwh92n2CiVpta6kqwrAg4DHHygvTSui8Qy7hERPAXPVM?cluster=devnet) |
+| **Split batch** — providers 85% · integrator 5% · platform 10% |        | [36LqwABG…](https://solscan.io/tx/36LqwABGFN2ZJ7BFEr3BUR9pBkNbjD9kcfYV9nXHdgaUKYDxvc7umyzgXxxanjvf6VFazhky4km6LzrotevYQ8Rn?cluster=devnet) |
 
 ## Screens
 
-| Landing | Owner overview | Revenue splits |
-| --- | --- | --- |
-| <img src="docs/design/screens/landing-1440.png" alt="Landing page" width="300"> | <img src="docs/design/screens/overview-1440.png" alt="Owner overview with spend across agents" width="300"> | <img src="docs/design/screens/provider-splits-1440.png" alt="Revenue splits per provider" width="300"> |
-| **Payments** | **Monthly statement** | **Phone pairing** |
-| <img src="docs/design/screens/payments-1440.png" alt="Payments ledger" width="300"> | <img src="docs/design/screens/statement-1440.png" alt="Printable monthly statement" width="300"> | <img src="docs/design/screens/mobile/pair.png" alt="Mobile pairing screen" width="140"> |
+| Landing                                                                             | Owner overview                                                                                              | Revenue splits                                                                                         |
+| ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| <img src="docs/design/screens/landing-1440.png" alt="Landing page" width="300">     | <img src="docs/design/screens/overview-1440.png" alt="Owner overview with spend across agents" width="300"> | <img src="docs/design/screens/provider-splits-1440.png" alt="Revenue splits per provider" width="300"> |
+| **Payments**                                                                        | **Monthly statement**                                                                                       | **Phone pairing**                                                                                      |
+| <img src="docs/design/screens/payments-1440.png" alt="Payments ledger" width="300"> | <img src="docs/design/screens/statement-1440.png" alt="Printable monthly statement" width="300">            | <img src="docs/design/screens/mobile/pair.png" alt="Mobile pairing screen" width="140">                |
 
 ## How the monorepo works
 
