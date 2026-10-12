@@ -1,7 +1,7 @@
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/design/brand/logo-lockup-dark.png">
-    <img src="docs/design/brand/logo-lockup-light.png" alt="402Lab" width="420">
+    <img src="docs/design/brand/logo-lockup-light.png" alt="402Lab" width="320">
   </picture>
 </p>
 
