@@ -1,6 +1,7 @@
 'use client';
 
 import { formatUsd, parseAtomic } from '@402lab/shared';
+import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import { Badge, type BadgeColor } from '@/components/ui/badge';
@@ -17,6 +18,7 @@ interface StatusHeaderProps {
 }
 
 export const StatusHeader = ({ allowance, onUpdate }: StatusHeaderProps) => {
+  const queryClient = useQueryClient();
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -34,6 +36,8 @@ export const StatusHeader = ({ allowance, onUpdate }: StatusHeaderProps) => {
         schema: allowanceSchema,
       });
       onUpdate(updated);
+      void queryClient.invalidateQueries({ queryKey: ['api', '/allowances'] });
+      void queryClient.invalidateQueries({ queryKey: ['api', `/allowances/${allowance.id}`] });
     } catch (caught) {
       onUpdate(previous);
       setError(caught instanceof ApiError ? caught.message : 'Something went wrong.');
