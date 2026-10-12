@@ -20,7 +20,10 @@ import { avgPaymentToPayoutSeconds } from '@/shared/metrics/payment-to-payout';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
-const STATUS_BADGE: Record<'active' | 'paused', BadgeColor> = { active: 'success', paused: 'warning' };
+const STATUS_BADGE: Record<'active' | 'paused', BadgeColor> = {
+  active: 'success',
+  paused: 'warning',
+};
 
 const HOURS = 24;
 const MICRO_USDC = 1_000_000;
@@ -44,7 +47,9 @@ const pctChange = (current: number, previous: number): string => {
 
 /** Splits a timestamp list at the 12h mark so every KPI can show a "vs. prior 12h" delta
  * without fabricating data the fixtures never generated. */
-const splitAtHalfWindow = (payments: PaymentWithAgent[]): { recent: PaymentWithAgent[]; prior: PaymentWithAgent[] } => {
+const splitAtHalfWindow = (
+  payments: PaymentWithAgent[],
+): { recent: PaymentWithAgent[]; prior: PaymentWithAgent[] } => {
   const cutoff = Date.now() - HALF_WINDOW_MS;
   const recent: PaymentWithAgent[] = [];
   const prior: PaymentWithAgent[] = [];
@@ -56,11 +61,19 @@ const splitAtHalfWindow = (payments: PaymentWithAgent[]): { recent: PaymentWithA
   return { recent, prior };
 };
 
-const AgentSpendChart = ({ payments, agentNames }: { payments: PaymentWithAgent[]; agentNames: string[] }) => {
+const AgentSpendChart = ({
+  payments,
+  agentNames,
+}: {
+  payments: PaymentWithAgent[];
+  agentNames: string[];
+}) => {
   const [now] = useState(() => Date.now());
 
   const { categories, series } = useMemo(() => {
-    const byAgent = new Map(agentNames.map((name) => [name, Array.from({ length: HOURS }, () => 0)]));
+    const byAgent = new Map(
+      agentNames.map((name) => [name, Array.from({ length: HOURS }, () => 0)]),
+    );
 
     for (const payment of payments) {
       const ageMs = now - new Date(payment.settledAt).getTime();
@@ -117,10 +130,15 @@ const CallsByProvider = ({ payments }: { payments: PaymentWithAgent[] }) => {
       counts.set(name, (counts.get(name) ?? 0) + 1);
     }
 
-    const ranked = PROVIDERS.map((provider) => ({ name: provider.name, count: counts.get(provider.name) ?? 0 }))
-      .sort((a, b) => b.count - a.count);
+    const ranked = PROVIDERS.map((provider) => ({
+      name: provider.name,
+      count: counts.get(provider.name) ?? 0,
+    })).sort((a, b) => b.count - a.count);
 
-    return { categories: ranked.map((row) => row.name), series: [{ name: 'Calls', data: ranked.map((row) => row.count) }] };
+    return {
+      categories: ranked.map((row) => row.name),
+      series: [{ name: 'Calls', data: ranked.map((row) => row.count) }],
+    };
   }, [payments]);
 
   const options: ApexOptions = {
@@ -128,7 +146,12 @@ const CallsByProvider = ({ payments }: { payments: PaymentWithAgent[] }) => {
     colors: ['#B6F23A'],
     plotOptions: { bar: { horizontal: true, borderRadius: 4, barHeight: '55%' } },
     dataLabels: { enabled: false },
-    grid: { borderColor: '#262B33', strokeDashArray: 4, xaxis: { lines: { show: true } }, yaxis: { lines: { show: false } } },
+    grid: {
+      borderColor: '#262B33',
+      strokeDashArray: 4,
+      xaxis: { lines: { show: true } },
+      yaxis: { lines: { show: false } },
+    },
     xaxis: { categories, axisBorder: { show: false }, axisTicks: { show: false } },
     tooltip: { theme: 'dark' },
   };
@@ -183,7 +206,8 @@ const AgentAllowancesTable = ({ rows }: { rows: AgentRow[] }) => (
               </span>
             </div>
             <p className="mt-1 text-xs text-muted">
-              Last activity: {row.lastActivity ? new Date(row.lastActivity).toLocaleTimeString() : '—'}
+              Last activity:{' '}
+              {row.lastActivity ? new Date(row.lastActivity).toLocaleTimeString() : '—'}
             </p>
           </li>
         );
@@ -284,7 +308,9 @@ const LiveStream = ({ payments }: { payments: PaymentWithAgent[] }) => {
             </span>
             <span className="text-text">{payment.agentName}</span>
             <span className="text-muted">{serviceLabel(payment.serviceId)}</span>
-            <span className="font-mono text-brand-400">{formatUsd(parseAtomic(payment.amount))}</span>
+            <span className="font-mono text-brand-400">
+              {formatUsd(parseAtomic(payment.amount))}
+            </span>
             <SolscanLink signature={payment.txSignature} />
           </li>
         ))}
@@ -309,10 +335,14 @@ export const OverviewView = () => {
   const successRate =
     payments.length === 0
       ? 100
-      : Math.round((payments.filter((p) => p.upstreamStatus === '200').length / payments.length) * 100);
+      : Math.round(
+          (payments.filter((p) => p.upstreamStatus !== 'failed').length / payments.length) * 100,
+        );
 
   const avgPaymentToPayout =
-    batchesQuery.status === 'ready' ? avgPaymentToPayoutSeconds(payments, batchesQuery.data.batches) : null;
+    batchesQuery.status === 'ready'
+      ? avgPaymentToPayoutSeconds(payments, batchesQuery.data.batches)
+      : null;
 
   const agentRows: AgentRow[] = allowances.map((allowance) => {
     const theirs = payments.filter((payment) => payment.allowanceId === allowance.id);
@@ -333,7 +363,9 @@ export const OverviewView = () => {
     <div>
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="font-display text-title-sm font-bold tracking-tight text-text">Protocol overview</h1>
+          <h1 className="font-display text-title-sm font-bold tracking-tight text-text">
+            Protocol overview
+          </h1>
           <p className="mt-1 text-sm text-muted">
             Deterministic cryptographic allowances and real-time HTTP 402 micro-settlements across
             autonomous agents.
@@ -353,8 +385,16 @@ export const OverviewView = () => {
       )}
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Kpi label="Total registered agents" value={String(allowances.length)} hint={`${String(allowances.filter((a) => a.status === 'active').length)} active`} />
-        <Kpi label="Spend (24h)" value={formatUsd(totalSpend)} hint={pctChange(Number(recentSpend), Number(priorSpend))} />
+        <Kpi
+          label="Total registered agents"
+          value={String(allowances.length)}
+          hint={`${String(allowances.filter((a) => a.status === 'active').length)} active`}
+        />
+        <Kpi
+          label="Spend (24h)"
+          value={formatUsd(totalSpend)}
+          hint={pctChange(Number(recentSpend), Number(priorSpend))}
+        />
         <Kpi
           label="API calls (24h)"
           value={String(payments.length)}
