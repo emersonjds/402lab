@@ -1,39 +1,62 @@
+<p align="center">
+  <img src="docs/design/brand/logo-lockup.png" alt="402Lab" width="520">
+</p>
+
+<p align="center"><b>Pocket money for AI agents.</b><br>
+Agents pay any API per call in USDC on Solana — inside limits a human sets.</p>
+
+<p align="center">
+  <a href="https://web-production-1b5d1.up.railway.app"><b>Live app</b></a> ·
+  <a href="https://web-demo-production-0d9a.up.railway.app/app"><b>Demo panel</b></a> ·
+  <a href="https://api-production-570e4.up.railway.app/docs"><b>API docs</b></a> ·
+  <a href="#on-chain-proof-devnet"><b>On-chain proof</b></a> ·
+  <a href="https://github.com/emersonjds/402lab/releases/download/v0.1.0-demo/402lab-demo.apk"><b>Android APK</b></a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/emersonjds/402lab/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/emersonjds/402lab/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="https://github.com/emersonjds/402lab/tags"><img alt="Version" src="https://img.shields.io/github/v/tag/emersonjds/402lab?sort=semver&label=version&color=B6F23A"></a>
+  <a href="https://github.com/emersonjds/402lab/releases/download/v0.1.0-demo/402lab-demo.apk"><img alt="Demo APK" src="https://img.shields.io/badge/demo-Android%20APK-3DDC84?logo=android&logoColor=white"></a>
+  <br>
+  <a href="https://nodejs.org"><img alt="Node 24" src="https://img.shields.io/badge/Node-24-5FA04E?logo=nodedotjs&logoColor=white"></a>
+  <a href="https://www.typescriptlang.org"><img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white"></a>
+  <a href="https://docs.npmjs.com/cli/using-npm/workspaces"><img alt="npm workspaces" src="https://img.shields.io/badge/npm-workspaces-CB3837?logo=npm&logoColor=white"></a>
+  <a href="https://eslint.org"><img alt="ESLint" src="https://img.shields.io/badge/ESLint-4B32C3?logo=eslint&logoColor=white"></a>
+  <a href="https://prettier.io"><img alt="Prettier" src="https://img.shields.io/badge/Prettier-F7B93E?logo=prettier&logoColor=black"></a>
+  <a href="https://docs.docker.com/compose/"><img alt="Docker" src="https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white"></a>
+  <br>
+  <a href="https://fastify.dev"><img alt="Fastify" src="https://img.shields.io/badge/Fastify-5-000000?logo=fastify&logoColor=white"></a>
+  <a href="https://orm.drizzle.team"><img alt="Drizzle" src="https://img.shields.io/badge/Drizzle-ORM-C5F74F?logo=drizzle&logoColor=black"></a>
+  <a href="https://www.postgresql.org"><img alt="PostgreSQL" src="https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white"></a>
+  <a href="https://zod.dev"><img alt="Zod" src="https://img.shields.io/badge/Zod-4-3E67B1?logo=zod&logoColor=white"></a>
+  <br>
+  <a href="https://nextjs.org"><img alt="Next.js 16" src="https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs&logoColor=white"></a>
+  <a href="https://react.dev"><img alt="React 19" src="https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black"></a>
+  <a href="https://tailwindcss.com"><img alt="Tailwind CSS 4" src="https://img.shields.io/badge/Tailwind%20CSS-4-06B6D4?logo=tailwindcss&logoColor=white"></a>
+  <a href="https://tailadmin.com"><img alt="TailAdmin" src="https://img.shields.io/badge/TailAdmin-dashboard-465FFF"></a>
+  <a href="https://apexcharts.com"><img alt="ApexCharts" src="https://img.shields.io/badge/ApexCharts-charts-008FFB"></a>
+  <a href="https://mswjs.io"><img alt="MSW" src="https://img.shields.io/badge/MSW-mocks-FF6A33?logo=mockserviceworker&logoColor=white"></a>
+  <br>
+  <a href="https://docs.expo.dev"><img alt="Expo SDK 57" src="https://img.shields.io/badge/Expo-SDK%2057-000020?logo=expo&logoColor=white"></a>
+  <a href="https://reactnative.dev"><img alt="React Native" src="https://img.shields.io/badge/React%20Native-61DAFB?logo=react&logoColor=black"></a>
+  <br>
+  <a href="https://solana.com/docs"><img alt="Solana" src="https://img.shields.io/badge/Solana-devnet-9945FF?logo=solana&logoColor=white"></a>
+  <a href="https://www.circle.com/usdc"><img alt="USDC" src="https://img.shields.io/badge/USDC-2775CA?logo=circle&logoColor=white"></a>
+  <a href="https://x402.org"><img alt="x402" src="https://img.shields.io/badge/x402-HTTP%20402-111111"></a>
+  <a href="https://modelcontextprotocol.io"><img alt="MCP" src="https://img.shields.io/badge/MCP-server-000000?logo=modelcontextprotocol&logoColor=white"></a>
+  <br>
+  <a href="https://stitch.withgoogle.com"><img alt="Google Stitch" src="https://img.shields.io/badge/Google%20Stitch-design-4285F4?logo=google&logoColor=white"></a>
+  <a href="https://docs.expo.dev/eas/"><img alt="Expo EAS" src="https://img.shields.io/badge/Expo%20EAS-build%20%26%20updates-000020?logo=expo&logoColor=white"></a>
+  <a href="https://railway.com"><img alt="Railway" src="https://img.shields.io/badge/Railway-API%20%2B%20web%20%2B%20Postgres-0B0D0E?logo=railway&logoColor=white"></a>
+</p>
+
+<p align="center">
+  <img src="docs/design/screens/allowance-detail-1440.png" alt="Allowance dashboard: spend today, live payments with Solscan links, revenue split batch" width="70%">
+  &nbsp;
+  <img src="docs/design/screens/mobile/agent-detail.png" alt="Mobile app: today's allowance ring, Pause agent button, live payment stream" width="22%">
+</p>
+
 # 402Lab
-
-[![CI](https://github.com/emersonjds/402lab/actions/workflows/ci.yml/badge.svg)](https://github.com/emersonjds/402lab/actions/workflows/ci.yml)
-[![Release v1.0.0](https://img.shields.io/badge/release-v1.0.0-B6F23A)](https://github.com/emersonjds/402lab/releases/tag/v1.0.0)
-[![Demo APK](https://img.shields.io/badge/demo-Android%20APK-3DDC84?logo=android&logoColor=white)](https://github.com/emersonjds/402lab/releases/download/v0.1.0-demo/402lab-demo.apk)
-
-[![Node 24](https://img.shields.io/badge/Node-24-5FA04E?logo=nodedotjs&logoColor=white)](https://nodejs.org)
-[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
-[![npm workspaces](https://img.shields.io/badge/npm-workspaces-CB3837?logo=npm&logoColor=white)](https://docs.npmjs.com/cli/using-npm/workspaces)
-[![ESLint](https://img.shields.io/badge/ESLint-4B32C3?logo=eslint&logoColor=white)](https://eslint.org)
-[![Prettier](https://img.shields.io/badge/Prettier-F7B93E?logo=prettier&logoColor=black)](https://prettier.io)
-[![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)](https://docs.docker.com/compose/)
-
-[![Fastify](https://img.shields.io/badge/Fastify-5-000000?logo=fastify&logoColor=white)](https://fastify.dev)
-[![Drizzle](https://img.shields.io/badge/Drizzle-ORM-C5F74F?logo=drizzle&logoColor=black)](https://orm.drizzle.team)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)](https://www.postgresql.org)
-[![Zod](https://img.shields.io/badge/Zod-4-3E67B1?logo=zod&logoColor=white)](https://zod.dev)
-
-[![Next.js 16](https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs&logoColor=white)](https://nextjs.org)
-[![React 19](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev)
-[![Tailwind CSS 4](https://img.shields.io/badge/Tailwind%20CSS-4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
-[![TailAdmin](https://img.shields.io/badge/TailAdmin-dashboard-465FFF)](https://tailadmin.com)
-[![ApexCharts](https://img.shields.io/badge/ApexCharts-charts-008FFB)](https://apexcharts.com)
-[![MSW](https://img.shields.io/badge/MSW-mocks-FF6A33?logo=mockserviceworker&logoColor=white)](https://mswjs.io)
-
-[![Expo SDK 57](https://img.shields.io/badge/Expo-SDK%2057-000020?logo=expo&logoColor=white)](https://docs.expo.dev)
-[![React Native](https://img.shields.io/badge/React%20Native-61DAFB?logo=react&logoColor=black)](https://reactnative.dev)
-
-[![Solana](https://img.shields.io/badge/Solana-devnet-9945FF?logo=solana&logoColor=white)](https://solana.com/docs)
-[![USDC](https://img.shields.io/badge/USDC-2775CA?logo=circle&logoColor=white)](https://www.circle.com/usdc)
-[![x402](https://img.shields.io/badge/x402-HTTP%20402-111111)](https://x402.org)
-[![MCP](https://img.shields.io/badge/MCP-server-000000?logo=modelcontextprotocol&logoColor=white)](https://modelcontextprotocol.io)
-
-[![Google Stitch](https://img.shields.io/badge/Google%20Stitch-design-4285F4?logo=google&logoColor=white)](https://stitch.withgoogle.com)
-[![Expo EAS](https://img.shields.io/badge/Expo%20EAS-build%20%26%20updates-000020?logo=expo&logoColor=white)](https://docs.expo.dev/eas/)
-[![Railway](https://img.shields.io/badge/Railway-API%20%2B%20web%20%2B%20Postgres-0B0D0E?logo=railway&logoColor=white)](https://railway.com)
 
 **Pocket money for AI agents.** A human gives an agent an allowance — a cap per call and a cap
 per day — and the agent pays every API call by itself in USDC on Solana through HTTP 402
@@ -77,6 +100,28 @@ end of the month. Sources in [`docs/research/`](docs/research/).
 4. 30 s later one split transaction pays providers, integrator and platform — Solscan link.
 5. On the phone the human taps **Pause**. The agent's next call is refused.
 6. Counter: _"3 calls, US$0.017 paid; by card + IOF they would cost US$0.95"_.
+
+## On-chain proof (devnet)
+
+`npm run e2e:devnet` against the production API on 2026-10-12: an agent session wallet paid each
+service through HTTP 402, and the split worker paid providers, integrator and platform in one
+transaction.
+
+| Payment                                                        | Price  | Transaction                                                                                                                                |
+| -------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| OCR · Azure                                                    | $0.005 | [29GrHm3Q…](https://solscan.io/tx/29GrHm3QiHvcysghDZgTowmaHm22sUjo5qunewsDsF9wKdQaUPdnxU3Xw1ReXUydn5dNXGQNPtGaqZ4zudWsh4co?cluster=devnet) |
+| Translate · AWS                                                | $0.002 | [3MZ6XPM7…](https://solscan.io/tx/3MZ6XPM7LWc5JLPrN2pCHbMaNaRwQ1Dc5r3LBDpApJER2L98tcRHJLoLpSgaNfJdhhzXKGXTQcZxofdzDYUmzz4B?cluster=devnet) |
+| Chat · OpenAI                                                  | $0.008 | [5NoGgg5y…](https://solscan.io/tx/5NoGgg5yuQtdRYFkPQejDJ8jJShq7a779khG8aUr1YxcecKKHBC65q4JTaCZMqDYyc9LVXrZACFcTupddKcnBmzm?cluster=devnet) |
+| Speech · ElevenLabs                                            | $0.006 | [298CYBjv…](https://solscan.io/tx/298CYBjvv44x5EAtcUs91RZ92A3KdjeaLcrYXTQGugKwiwh92n2CiVpta6kqwrAg4DHHygvTSui8Qy7hERPAXPVM?cluster=devnet) |
+| **Split batch** — providers 85% · integrator 5% · platform 10% |        | [36LqwABG…](https://solscan.io/tx/36LqwABGFN2ZJ7BFEr3BUR9pBkNbjD9kcfYV9nXHdgaUKYDxvc7umyzgXxxanjvf6VFazhky4km6LzrotevYQ8Rn?cluster=devnet) |
+
+## Screens
+
+| Landing                                                                             | Owner overview                                                                                              | Revenue splits                                                                                         |
+| ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| <img src="docs/design/screens/landing-1440.png" alt="Landing page" width="300">     | <img src="docs/design/screens/overview-1440.png" alt="Owner overview with spend across agents" width="300"> | <img src="docs/design/screens/provider-splits-1440.png" alt="Revenue splits per provider" width="300"> |
+| **Payments**                                                                        | **Monthly statement**                                                                                       | **Phone pairing**                                                                                      |
+| <img src="docs/design/screens/payments-1440.png" alt="Payments ledger" width="300"> | <img src="docs/design/screens/statement-1440.png" alt="Printable monthly statement" width="300">            | <img src="docs/design/screens/mobile/pair.png" alt="Mobile pairing screen" width="140">                |
 
 ## How the monorepo works
 
