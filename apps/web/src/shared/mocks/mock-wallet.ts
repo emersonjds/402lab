@@ -7,7 +7,7 @@ import { getWallets } from '@wallet-standard/app';
 import type { Wallet, WalletAccount } from '@wallet-standard/base';
 
 const ICON = `data:image/svg+xml;base64,${btoa(
-  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="8 8.5 48 48"><defs><clipPath id="f"><path d="M27 13V27L15.5 47.5A4 4 0 0 0 19 53.5H45A4 4 0 0 0 48.5 47.5L37 27V13Z"/></clipPath></defs><rect x="8" y="8.5" width="48" height="48" fill="#0B0D10"/><g clip-path="url(#f)"><path d="M0 39Q8 36 16 39T32 39T48 39T64 39V64H0Z" fill="#B6F23A"/></g><circle cx="34" cy="31" r="2.2" fill="#B6F23A"/><path d="M27 13V27L15.5 47.5A4 4 0 0 0 19 53.5H45A4 4 0 0 0 48.5 47.5L37 27V13" fill="none" stroke="#E8EAED" stroke-width="3.5" stroke-linejoin="round"/><path d="M23 12.5H41" stroke="#E8EAED" stroke-width="3.5" stroke-linecap="round"/></svg>',
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="8 8.5 48 48"><defs><clipPath id="f"><path d="M27 13V27L15.5 47.5A4 4 0 0 0 19 53.5H45A4 4 0 0 0 48.5 47.5L37 27V13Z"/></clipPath></defs><g clip-path="url(#f)"><path d="M0 39Q8 36 16 39T32 39T48 39T64 39V64H0Z" fill="#B6F23A"/></g><circle cx="34" cy="31" r="2.2" fill="#B6F23A"/><path d="M27 13V27L15.5 47.5A4 4 0 0 0 19 53.5H45A4 4 0 0 0 48.5 47.5L37 27V13" fill="none" stroke="#E8EAED" stroke-width="3.5" stroke-linejoin="round"/><path d="M23 12.5H41" stroke="#E8EAED" stroke-width="3.5" stroke-linecap="round"/></svg>',
 )}` as const;
 
 const account: WalletAccount = {
