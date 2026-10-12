@@ -24,12 +24,14 @@ facts only — cut them rather than invent.
 > paid API — OCR, translation, an LLM — it hits a wall built for humans: sign up, type a card,
 > buy prepaid credits, copy an API key. Once per provider.
 
-### 0:15–0:30 · Team — slide: photo, name, one line of background
+### 0:15–0:35 · Team — slide: photo, name, background
 
-> I'm Emerson Silva, a software engineer from Brazil. [Years of experience and the most relevant
-> thing you built — payments, fintech, APIs.] I built 402Lab during the Crypto World's Fair.
+> I'm Emerson Silva, tech lead at Porto Seguro in São Paulo. For ten years I've built web
+> interfaces for money — including Santander's FX portal on Ripple, which moved cross-border
+> transfers from days to minutes. Today I'm focused on AI: I'm finishing a postgraduate degree in
+> Applied AI Engineering. I built 402Lab during the Crypto World's Fair.
 
-### 0:30–1:00 · Problem — slide: three stat cards
+### 0:35–1:00 · Problem — slide: three stat cards
 
 > Cards can't charge cents: 2.9% plus 30 cents on a one-cent API call is a **3,003%** fee.
 > Prepaid credit is locked per vendor — OpenAI asks five dollars minimum, and it expires in a
@@ -149,7 +151,69 @@ Tap **Pause** on the phone, ask Claude for one more call.
 - [ ] Upload: YouTube **unlisted** (or Loom), open the link in a private window to confirm access
 - [ ] Both under the time limit (pitch ≤ 3:00, demo 2:00–3:00)
 
-**Fallback if devnet is not funded in time:** record the demo on
-https://web-demo-production-0d9a.up.railway.app/app and say on camera that the data is simulated;
-show the real path with `curl` (the 402 is live in production) and the code. Weaker — fund devnet
-first.
+---
+
+## 3. Technical demo — mock version (no devnet funds needed)
+
+Use this when the devnet wallets are not funded. Everything shown is honest: the 402 comes from
+the real production API, the UI runs on the demo build with its amber "Mock data" banner, and the
+on-chain parts are shown in code. Judges can open the same link and see the same thing.
+
+Tabs to open before recording:
+
+1. Terminal with the `curl` below
+2. https://web-demo-production-0d9a.up.railway.app/app (click **Connect wallet**: the demo wallet
+   connects without an extension)
+3. VS Code with `apps/api/src/features/ledger/hooks.ts` and
+   `apps/api/src/features/splits/worker.ts`
+4. Optional: the phone with the demo APK, **Try the demo**, opened on `research-bot`
+
+### 0:00–0:20 · Architecture — same as section 2
+
+### 0:20–0:45 · The real 402 — terminal
+
+```sh
+curl -i -X POST -H 'content-type: application/json' -d '{}' \
+  https://api-production-570e4.up.railway.app/svc/translate
+```
+
+Same narration as section 2. Add at the end:
+
+> That 402 is our live production API. For the rest of the walkthrough I'm on the demo build — it
+> runs the same UI on simulated data, labelled on screen, so anyone can open it without devnet
+> USDC.
+
+### 0:45–1:15 · Allowance and live payments — web demo
+
+Click **Allowances → research-bot**. Wait for two or three rows to slide into *Live payments*
+(one every 4 s). Then **Playground**: run OCR, Translate, Summarize.
+
+> Each agent gets an allowance: here two cents per call and one dollar per day. Payments stream in
+> live over server-sent events, each with its service, provider, amount and Solscan link. In the
+> playground I call three paid services — each returns its result plus the x402 payment response.
+> The real path is the same through our MCP server: Claude gets the 402, the session keypair
+> signs a `TransferChecked`, the facilitator pays the fee.
+
+### 1:15–1:45 · Pause and the policy — web (or phone) + `hooks.ts`
+
+Click **Pause agent**: the pill turns PAUSED. Cut to `hooks.ts`, highlight the `abort` lines.
+
+> One tap pauses the agent. On the server the policy — paused, per-call cap, daily cap — runs in
+> the x402 `onAfterVerify` hook, after the signature is verified and before settle. A refusal
+> aborts the payment: it never reaches the facilitator, so no USDC moves. Even a throwing hook
+> aborts, because x402 would otherwise let the payment through.
+
+### 1:45–2:15 · Split — `/app/splits` + `worker.ts`
+
+> x402's `exact` scheme pays one recipient, so payments land in the treasury and a worker splits
+> them every 30 seconds: payouts summed per recipient, one Solana transaction with up to eight
+> `TransferChecked`. Provider and integrator are floored, the platform keeps the remainder, so
+> value is conserved. The signature is saved before sending and reconciled against the last valid
+> block height — a crash can't pay twice.
+
+### 2:15–2:45 · Statement + decisions — `/app/statement`
+
+> At the end of the month the human gets one statement per agent, with the card-plus-IOF
+> comparison. Mainnet waits for licensed custody; Pix and invoices are simulated. `npm run
+> e2e:devnet` runs this whole flow against devnet, and every merge to `main` deploys and
+> smoke-tests production.
