@@ -27,7 +27,7 @@ const randomSignature = (): Uint8Array => crypto.getRandomValues(new Uint8Array(
 export const registerMockWallet = (): void => {
   const wallet: Wallet = {
     version: '1.0.0',
-    name: '402Lab Wallet',
+    name: '402Lab',
     icon: ICON,
     chains: [SOLANA_DEVNET],
     accounts: [account],
