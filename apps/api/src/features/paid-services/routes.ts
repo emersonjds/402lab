@@ -81,6 +81,9 @@ export const paidServiceRoutes: FastifyPluginCallback<PaidServiceOptions> = (
       `/svc/${id}`,
       {
         config: { public: true },
+        // `serve` answers the per-field 400 that the response schema documents; Fastify's own
+        // validation error carries no `issues` and failed response serialization as a 500.
+        attachValidation: true,
         schema: {
           tags: ['paid-services'],
           summary: `Pay-per-call ${name} (${formatUsd(price)} USDC via x402)`,
