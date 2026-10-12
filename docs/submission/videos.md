@@ -67,7 +67,7 @@ facts only — cut them rather than invent.
 > [Real validation only: "I showed it to N developers / API providers and they said …". Cut if
 > none.]
 > Next: mainnet with a licensed custody partner, Pix on-ramp for Brazilians without a card, and
-> an on-chain splitter program. 402Lab — pocket money for AI agents.
+> an on-chain splitter program. 402Lab: the spending account for AI agents.
 
 ### Slides (7)
 

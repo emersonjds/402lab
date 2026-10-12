@@ -25,7 +25,7 @@ const jetbrainsMono = JetBrains_Mono({
   variable: '--font-jetbrains-mono',
 });
 
-const title = '402Lab — Pocket money for AI agents';
+const title = '402Lab · The spending account for AI agents';
 const description =
   'Give your agent a budget. It pays any API per call in USDC on Solana — no cards, no signups, no surprise bills.';
 

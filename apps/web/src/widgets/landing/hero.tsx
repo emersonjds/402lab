@@ -117,12 +117,12 @@ export const Hero = () => (
           </span>
         </div>
         <h1 className="mt-6 max-w-2xl font-display text-4xl leading-[1.05] font-semibold tracking-tight text-text sm:text-5xl lg:text-6xl">
-          Pocket money for{' '}
+          The spending account for{' '}
           <span className="font-mono text-brand-500 tracking-tighter">&lt;AI agents/&gt;</span>
         </h1>
         <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
-          Give your agent an on-chain budget cap. It pays any API per call in USDC on Solana —
-          zero credit cards, zero signup forms, zero surprise monthly invoices.
+          Give your agent an on-chain budget cap. It pays any API per call in USDC on Solana. No
+          credit cards, no signup forms, no surprise monthly invoices.
         </p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
           <a href="#waitlist" className={buttonStyles()}>
@@ -133,7 +133,9 @@ export const Hero = () => (
           </a>
         </div>
         <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-line/60 pt-4 font-mono text-xs text-muted">
-          <span className="flex items-center gap-1.5 text-brand-400">⚡ Instant settlement (~400ms)</span>
+          <span className="flex items-center gap-1.5 text-brand-400">
+            ⚡ Instant settlement (~400ms)
+          </span>
           <span className="text-line">·</span>
           <span>Zero card interchange</span>
           <span className="text-line">·</span>
