@@ -1,7 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { skipToken, useQuery } from '@tanstack/react-query';
 import type { z } from 'zod';
 
 import { apiRequest, ApiError } from './client';
@@ -13,60 +12,33 @@ export type ApiQueryState<Data> =
 
 export type ApiQueryResult<Data> = ApiQueryState<Data> & { refetch: () => void };
 
-type Settled<Data> =
-  | { key: string; status: 'error'; message: string }
-  | { key: string; status: 'ready'; data: Data };
-
 /**
- * Fetches `path` on mount and whenever it changes, parsing the response with
- * `schema`. A 401 sends the caller back to `/app` to reconnect, per the
- * contract that every route's unauthorized response means "sign in again".
- * Pass `null` as `path` to skip the request (e.g. while a dependency loads).
+ * Cached GET of `path`, parsed with `schema`. Pass `null` as `path` to skip the request
+ * (e.g. while a dependency loads). A 401 redirects to `/app` from the QueryClient, so here it
+ * just stays loading.
  */
 export const useApiQuery = <Schema extends z.ZodType>(
   path: string | null,
   schema: Schema,
 ): ApiQueryResult<z.infer<Schema>> => {
-  const router = useRouter();
-  const [tick, setTick] = useState(0);
-  const [settled, setSettled] = useState<Settled<z.infer<Schema>> | null>(null);
-  const key = `${path ?? ''}:${String(tick)}`;
-
-  useEffect(() => {
-    if (path === null) return undefined;
-
-    const controller = new AbortController();
-
-    apiRequest(path, { schema, signal: controller.signal })
-      .then((data) => {
-        setSettled({ key, status: 'ready', data });
-      })
-      .catch((error: unknown) => {
-        if (controller.signal.aborted) return;
-
-        if (error instanceof ApiError && error.kind === 'unauthorized') {
-          router.replace('/app');
-          return;
-        }
-
-        setSettled({
-          key,
-          status: 'error',
-          message: error instanceof ApiError ? error.message : 'Something went wrong.',
-        });
-      });
-
-    return () => {
-      controller.abort();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- `key` already encodes path and tick
-  }, [path, key, router]);
-
+  const query = useQuery({
+    queryKey: ['api', path],
+    queryFn:
+      path === null
+        ? skipToken
+        : ({ signal }): Promise<z.infer<Schema>> => apiRequest(path, { schema, signal }),
+  });
   const refetch = () => {
-    setTick((value) => value + 1);
+    void query.refetch();
   };
 
-  if (settled === null || settled.key !== key) return { status: 'loading', refetch };
-
-  return { ...settled, refetch };
+  if (query.status === 'success') return { status: 'ready', data: query.data, refetch };
+  if (query.status === 'error' && !(query.error instanceof ApiError && query.error.kind === 'unauthorized')) {
+    return {
+      status: 'error',
+      message: query.error instanceof ApiError ? query.error.message : 'Something went wrong.',
+      refetch,
+    };
+  }
+  return { status: 'loading', refetch };
 };

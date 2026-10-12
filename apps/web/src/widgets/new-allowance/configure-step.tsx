@@ -2,6 +2,7 @@
 
 import { usdToAtomic } from '@402lab/shared';
 import { address } from '@solana/kit';
+import { useQueryClient } from '@tanstack/react-query';
 import { useState, type SubmitEvent } from 'react';
 
 import { Alert } from '@/components/ui/alert';
@@ -58,6 +59,7 @@ const validate = (
 };
 
 export const ConfigureStep = ({ initialSessionAddress, onCreated }: ConfigureStepProps) => {
+  const queryClient = useQueryClient();
   const [agentName, setAgentName] = useState('');
   const [sessionAddress, setSessionAddress] = useState(initialSessionAddress);
   const [perCallCap, setPerCallCap] = useState('0.05');
@@ -85,6 +87,8 @@ export const ConfigureStep = ({ initialSessionAddress, onCreated }: ConfigureSte
         },
         schema: allowanceSchema,
       });
+      void queryClient.invalidateQueries({ queryKey: ['api', '/allowances'] });
+      void queryClient.invalidateQueries({ queryKey: ['all-payments'] });
       onCreated(created);
     } catch (caught) {
       setSubmitError(caught instanceof ApiError ? caught.message : 'Something went wrong.');

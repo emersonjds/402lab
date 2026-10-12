@@ -2,6 +2,7 @@
 
 import { formatUsd, parseAtomic } from '@402lab/shared';
 import Link from 'next/link';
+import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import { Badge, type BadgeColor } from '@/components/ui/badge';
@@ -20,6 +21,7 @@ interface AllowanceCardProps {
 
 export const AllowanceCard = ({ allowance: initial }: AllowanceCardProps) => {
   const [allowance, setAllowance] = useState(initial);
+  const queryClient = useQueryClient();
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const sessionBalance = useSessionUsdcBalance(allowance.sessionAddress);
@@ -42,6 +44,8 @@ export const AllowanceCard = ({ allowance: initial }: AllowanceCardProps) => {
         schema: allowanceSchema,
       });
       setAllowance(updated);
+      void queryClient.invalidateQueries({ queryKey: ['api', '/allowances'] });
+      void queryClient.invalidateQueries({ queryKey: ['api', `/allowances/${allowance.id}`] });
     } catch (caught) {
       setAllowance(previous);
       setError(caught instanceof ApiError ? caught.message : 'Something went wrong.');
