@@ -33,6 +33,36 @@ jobs:
       - name: MCP server bundles
         run: npm run build -w @402lab/mcp
 
+  tests:
+    name: Shared and API integration tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: lab
+          POSTGRES_PASSWORD: lab
+          POSTGRES_DB: lab402
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U lab -d lab402"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      TEST_DATABASE_URL: postgres://lab:lab@localhost:5432/lab402_test
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run test:coverage -w @402lab/shared
+      - run: npm run test:coverage -w @402lab/api
+
   images:
     name: Docker image (${{ matrix.service }})
     runs-on: ubuntu-latest
