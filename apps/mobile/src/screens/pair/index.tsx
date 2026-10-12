@@ -90,7 +90,7 @@ export const PairScreen = () => {
       <View style={styles.footer}>
         <Button title="Scan QR code" large onPress={startScan} />
         {MOCKING_ENABLED && (
-          <Button title="Try the demo" variant="ghost" onPress={() => void enterDemo()} />
+          <Button title="Explore the app" variant="ghost" onPress={() => void enterDemo()} />
         )}
         <Muted style={styles.footCaption}>Solana Devnet · HTTP 402</Muted>
       </View>

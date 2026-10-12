@@ -4,15 +4,6 @@ import { useEffect, useState, type ReactNode } from 'react';
 
 import { MOCKING_ENABLED } from './is-enabled';
 
-const MockBanner = () => (
-  <div
-    role="status"
-    className="flex min-h-8 items-center justify-center bg-warning-500/15 px-3 py-1 text-center font-mono text-xs text-warning-400"
-  >
-    Mock data — every response here is simulated, no devnet balance required.
-  </div>
-);
-
 /**
  * Gates the first render on the MSW worker being active so no page ever fetches before the
  * mocks are in place. A no-op passthrough when `NEXT_PUBLIC_API_MOCKING` isn't "enabled".
@@ -29,13 +20,8 @@ export const MockBoundary = ({ children }: { children: ReactNode }) => {
   }, []);
 
   if (!ready) {
-    return <div className="min-h-dvh bg-bg" aria-busy="true" aria-label="Starting mock data" />;
+    return <div className="min-h-dvh bg-bg" aria-busy="true" aria-label="Loading" />;
   }
 
-  return (
-    <>
-      {MOCKING_ENABLED && <MockBanner />}
-      {children}
-    </>
-  );
+  return children;
 };

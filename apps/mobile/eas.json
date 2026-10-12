@@ -24,6 +24,18 @@
       },
       "channel": "production",
       "node": "24.19.0"
+    },
+    "live": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk",
+        "image": "latest"
+      },
+      "env": {
+        "EXPO_NO_TELEMETRY": "1"
+      },
+      "channel": "live",
+      "node": "24.19.0"
     }
   }
 }

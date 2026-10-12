@@ -6,11 +6,11 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import { Alert } from '@/components/ui/alert';
-import { Wordmark } from '@/components/ui/wordmark';
 import { useSession } from '@/shared/auth/session-context';
 import { useSolanaWallets } from '@/shared/wallet/solana-wallets';
 import { WalletOption } from '@/shared/wallet/wallet-option';
 
+import { PayableServicesScene } from './payable-services-scene';
 import { SignInStep } from './sign-in-step';
 
 const NoWalletsFound = () => (
@@ -63,6 +63,7 @@ export const ConnectWallet = () => {
           >
             ← Back to 402Lab
           </Link>
+          <p className="mb-2 font-mono text-xs text-cyan">USDC · pay-per-call · Solana</p>
           <h1 className="font-display text-title-sm font-bold tracking-tight text-text">
             Connect wallet
           </h1>
@@ -101,15 +102,7 @@ export const ConnectWallet = () => {
           )}
         </div>
       </div>
-      <div className="relative hidden w-1/2 items-center justify-center bg-gray-900 lg:flex">
-        <div aria-hidden="true" className="bg-ledger-grid absolute inset-0 opacity-60" />
-        <div className="relative z-10 flex flex-col items-center gap-4 text-center">
-          <Wordmark />
-          <p className="max-w-xs text-sm text-muted">
-            Pocket money for AI agents. Devnet sandbox — no seed phrase leaves your wallet.
-          </p>
-        </div>
-      </div>
+      <PayableServicesScene />
     </div>
   );
 };
