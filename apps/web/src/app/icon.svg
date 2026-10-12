@@ -1,16 +1,3 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="402Lab">
-  <defs>
-    <clipPath id="flask-inside">
-      <path d="M27 13V27L15.5 47.5A4 4 0 0 0 19 53.5H45A4 4 0 0 0 48.5 47.5L37 27V13Z"/>
-    </clipPath>
-  </defs>
-  <rect x="1" y="1" width="62" height="62" rx="14" fill="#14171C" stroke="#262B33" stroke-width="2"/>
-  <g clip-path="url(#flask-inside)">
-    <path d="M0 39Q8 36 16 39T32 39T48 39T64 39V64H0Z" fill="#B6F23A"/>
-    <circle cx="28" cy="47" r="2.4" fill="#14171C"/>
-    <circle cx="36" cy="43.5" r="1.5" fill="#14171C"/>
-  </g>
-  <circle cx="34" cy="31" r="2.2" fill="#B6F23A"/>
-  <path d="M27 13V27L15.5 47.5A4 4 0 0 0 19 53.5H45A4 4 0 0 0 48.5 47.5L37 27V13" fill="none" stroke="#E8EAED" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
-  <path d="M23 12.5H41" stroke="#E8EAED" stroke-width="3.5" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="402Lab">
+<rect x="1" y="1" width="62" height="62" rx="14" fill="#14171C" stroke="#262B33" stroke-width="2"/><g transform="translate(-3.84 -4.96) scale(1.12)"><defs><clipPath id="flask-inside-8"><path d="M27 13V27L15.5 47.5A4 4 0 0 0 19 53.5H45A4 4 0 0 0 48.5 47.5L37 27V13Z"/></clipPath></defs><g clip-path="url(#flask-inside-8)"><path d="M0 39Q8 36 16 39T32 39T48 39T64 39V64H0Z" fill="#B6F23A"/></g><path d="M27 13V27L15.5 47.5A4 4 0 0 0 19 53.5H45A4 4 0 0 0 48.5 47.5L37 27V13" fill="none" stroke="#E8EAED" stroke-width="5.5" stroke-linejoin="round" stroke-linecap="round"/><path d="M23 12.5H41" stroke="#E8EAED" stroke-width="5.5" stroke-linecap="round"/></g>
 </svg>
