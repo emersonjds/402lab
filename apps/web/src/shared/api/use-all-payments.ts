@@ -63,7 +63,8 @@ export const useAllPayments = (): AllPaymentsState => {
             );
             return lists.flat().sort((a, b) => b.settledAt.localeCompare(a.settledAt));
           },
-    staleTime: 30_000,
+    // A full history pages through every allowance; live events keep the views current in between.
+    staleTime: 5 * 60_000,
   });
 
   if (allowancesQuery.status === 'error')
