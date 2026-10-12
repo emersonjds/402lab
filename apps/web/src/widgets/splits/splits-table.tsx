@@ -11,7 +11,7 @@ import { Card } from '@/components/ui/card';
 import { SolscanLink } from '@/components/ui/solscan-link';
 import { splitBatchListSchema, type SplitBatch } from '@/shared/api/schemas';
 import { useApiQuery } from '@/shared/api/use-api-query';
-import { BRAND_ICON_PATHS } from '@/shared/ui/brand-icons';
+import { ProviderIcon } from '@/shared/ui/provider-icon';
 import { useAllPayments, type PaymentWithAgent } from '@/shared/api/use-all-payments';
 import { useLiveEvents } from '@/shared/api/use-live-events';
 import { PROVIDERS, serviceInfo } from '@/shared/catalog/service-info';
@@ -59,28 +59,13 @@ const Kpi = ({ label, value, hint }: { label: string; value: string; hint?: stri
   </Card>
 );
 
-// Simple Icons slug for each catalog provider.
-const PROVIDER_ICON: Record<Provider['id'], keyof typeof BRAND_ICON_PATHS> = {
-  aws: 'amazonwebservices',
-  azure: 'microsoftazure',
-  'google-cloud': 'googlecloud',
-  openai: 'openai',
-  anthropic: 'anthropic',
-  cloudflare: 'cloudflare',
-  replicate: 'replicate',
-  elevenlabs: 'elevenlabs',
-  deepgram: 'deepgram',
-};
-
 const Monogram = ({ provider, color }: { provider: Provider; color: string }) => (
   <span
     aria-hidden="true"
     className="inline-flex size-8 shrink-0 items-center justify-center rounded-full text-gray-950"
     style={{ backgroundColor: color }}
   >
-    <svg viewBox="0 0 24 24" width={16} height={16} fill="currentColor">
-      <path d={BRAND_ICON_PATHS[PROVIDER_ICON[provider.id]]} />
-    </svg>
+    <ProviderIcon provider={provider} />
   </span>
 );
 

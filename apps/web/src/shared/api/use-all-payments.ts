@@ -52,12 +52,13 @@ const fetchAllPaymentsFor = async (
 export const useAllPayments = (): AllPaymentsState => {
   const allowancesQuery = useApiQuery('/allowances', allowanceListSchema);
   const [state, setState] = useState<AllPaymentsState>({ status: 'loading' });
+  // The query result is a new object every render; depend on its stable data, or this refetches forever.
+  const allowances = allowancesQuery.status === 'ready' ? allowancesQuery.data.allowances : null;
 
   useEffect(() => {
-    if (allowancesQuery.status !== 'ready') return undefined;
+    if (allowances === null) return undefined;
 
     const controller = new AbortController();
-    const { allowances } = allowancesQuery.data;
 
     Promise.all(allowances.map((allowance) => fetchAllPaymentsFor(allowance, controller.signal)))
       .then((lists) => {
@@ -76,8 +77,9 @@ export const useAllPayments = (): AllPaymentsState => {
     return () => {
       controller.abort();
     };
-  }, [allowancesQuery]);
+  }, [allowances]);
 
-  if (allowancesQuery.status === 'error') return { status: 'error', message: allowancesQuery.message };
+  if (allowancesQuery.status === 'error')
+    return { status: 'error', message: allowancesQuery.message };
   return state;
 };
