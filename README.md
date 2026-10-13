@@ -151,11 +151,39 @@ transaction.
 
 ## Screens
 
-| Landing                                                                             | Owner overview                                                                                              | Revenue splits                                                                                         |
-| ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| <img src="docs/design/screens/landing-1440.png" alt="Landing page" width="300">     | <img src="docs/design/screens/overview-1440.png" alt="Owner overview with spend across agents" width="300"> | <img src="docs/design/screens/provider-splits-1440.png" alt="Revenue splits per provider" width="300"> |
-| **Payments**                                                                        | **Monthly statement**                                                                                       | **On a phone**                                                                                         |
-| <img src="docs/design/screens/payments-1440.png" alt="Payments ledger" width="300"> | <img src="docs/design/screens/statement-1440.png" alt="Printable monthly statement" width="300">            | <img src="docs/design/screens/overview-375.png" alt="Owner overview on a phone" width="140">           |
+### Web dashboard
+
+**Landing.** What 402Lab is in one screen: agents pay any API per call in USDC on Solana, with a live log of 402 payments settling.
+
+<img src="docs/design/screens/readme/landing.png" alt="Landing" width="100%">
+
+**Owner overview.** Everything the owner needs at a glance: total spend, calls, spend per agent over 24 hours, calls per provider and every allowance with its budget.
+
+<img src="docs/design/screens/readme/overview.png" alt="Owner overview" width="100%">
+
+**Payments.** Every call an agent paid for, with the service, the amount and a link to the transaction on Solscan.
+
+<img src="docs/design/screens/readme/payments.png" alt="Payments" width="100%">
+
+**Revenue splits.** How the money is shared: every settlement pays 85% to the provider, 5% to the integrator and 10% to the platform, batched into Solana transactions.
+
+<img src="docs/design/screens/readme/provider-splits.png" alt="Revenue splits" width="100%">
+
+**Monthly statement.** One statement per agent per month: total spent, what the same calls would cost on a card, and the breakdown by service and recipient. Prints to PDF.
+
+<img src="docs/design/screens/readme/statement.png" alt="Monthly statement" width="100%">
+
+### Android app
+
+The owner's phone: see what each agent spent today, follow the live payment stream and pause an agent with one tap. It pairs with the dashboard by scanning a QR code.
+
+<table>
+  <tr>
+    <td align="center" width="33%"><img src="docs/design/screens/readme/mobile-agents.png" alt="Your agents" width="240"><br><b>Your agents</b><br><sub>Spend and status of every agent</sub></td>
+    <td align="center" width="33%"><img src="docs/design/screens/readme/mobile-agent-detail.png" alt="Agent detail" width="240"><br><b>Agent detail</b><br><sub>Today's allowance, live payments and the pause button</sub></td>
+    <td align="center" width="33%"><img src="docs/design/screens/readme/mobile-pair.png" alt="Pairing" width="240"><br><b>Pairing</b><br><sub>Scan the QR on the dashboard, no keys on the phone</sub></td>
+  </tr>
+</table>
 
 ## How the monorepo works
 
@@ -209,7 +237,7 @@ Root scripts:
 
 ## Run it
 
-Four ways, from "everything" to "just the phone". All of them run on Solana devnet.
+Three ways, from "one command" to "just the phone". All of them run on Solana devnet.
 
 ### Environment
 
@@ -232,47 +260,54 @@ cp .env.example apps/api/.env
 The web reads [`apps/web/.env.example`](apps/web/.env.example) (`API_URL`, `NEXT_PUBLIC_*`) and
 the mobile app [`apps/mobile/.env.example`](apps/mobile/.env.example).
 
-### A. Docker: the whole stack
+### A. Docker
 
-Requirements: Docker with Compose v2, and `apps/api/.env` filled as above.
+All you need is Docker (OrbStack or Docker Desktop). There are two environments.
 
-```sh
-npm run docker:up        # docker compose up --build -d postgres api web
-npm run docker:down      # stop it (the Postgres volume is kept)
-```
-
-| URL                           | What                                          |
-| ----------------------------- | --------------------------------------------- |
-| http://localhost:3000         | landing page                                  |
-| http://localhost:3000/connect | connect a wallet, then the panel at `/app`    |
-| http://localhost:3000/api/... | same-origin proxy to the API (session cookie) |
-| http://localhost:8080/docs    | API Swagger UI                                |
-| `localhost:5432`              | Postgres (`lab` / `lab`, database `lab402`)   |
-
-Compose overrides `DATABASE_URL` to reach the `postgres` container and applies migrations when
-the API boots. Busy ports? Every host port is a variable:
+**1. Demo, zero setup.** No `.env`, no wallet, no USDC.
 
 ```sh
-WEB_PORT=13000 API_PORT=18080 POSTGRES_PORT=15432 npm run docker:up
+npm run docker:mock
 ```
 
-The web image inlines its config at build time: `API_URL` (the `/api` rewrite) and every
-`NEXT_PUBLIC_*` value are Docker **build args**, not runtime env, so change one and rebuild
-(`docker:up` always passes `--build`). To pair a phone with the Docker stack, build with the
+Open http://localhost:3001/app. The dashboard runs on built-in demo data and **Connect wallet**
+works without a browser extension.
+
+**2. Full stack on Solana devnet.** API, web and Postgres, with real devnet payments.
+
+```sh
+cp .env.example apps/api/.env   # fill the devnet addresses and JWT_SECRET (see Environment)
+npm run docker:up
+```
+
+| URL                           | What                                        |
+| ----------------------------- | ------------------------------------------- |
+| http://localhost:3000         | landing page                                |
+| http://localhost:3000/connect | connect a wallet, then the dashboard `/app` |
+| http://localhost:8080/docs    | API Swagger UI                              |
+| `localhost:5432`              | Postgres (`lab` / `lab`, database `lab402`) |
+
+Database migrations run when the API boots.
+
+**Stop everything** (the Postgres data is kept):
+
+```sh
+npm run docker:down
+```
+
+<details>
+<summary>Busy ports, build args and pairing a phone</summary>
+
+Every host port is a variable:
+`WEB_PORT=13000 API_PORT=18080 POSTGRES_PORT=15432 npm run docker:up` (demo port: `WEB_MOCK_PORT`).
+
+The web image reads `API_URL` and every `NEXT_PUBLIC_*` value at build time, so change one and
+run `docker:up` again (it always rebuilds). To pair a phone with the Docker stack, build with the
 API's LAN address: `API_PUBLIC_URL=http://192.168.1.20:8080 npm run docker:up`.
 
-### B. Docker: web on demo data
+</details>
 
-Requirements: Docker. No `.env`, no API, no Postgres, no devnet USDC.
-
-```sh
-npm run docker:mock      # docker compose --profile mock up --build -d web-mock
-```
-
-Open http://localhost:3001/app. The panel runs on `@402lab/mocks` (MSW) fixtures, including a
-mock wallet so **Connect wallet** works without a browser extension. Port: `WEB_MOCK_PORT`.
-
-### C. Local, without Docker for the apps
+### B. Local, without Docker for the apps
 
 Requirements: Node 24, npm 11, and Postgres 16 (`npm run db:up` gives you one in Docker, or
 point `DATABASE_URL` at your own).
@@ -286,7 +321,7 @@ npm run dev                            # api on :8080 + web on :3000, hot reload
 
 Web on mock data, no API: `NEXT_PUBLIC_API_MOCKING=enabled npm run dev -w @402lab/web`.
 
-### D. Mobile
+### C. Mobile
 
 Expo does not run usefully in Docker: the phone needs the Metro dev server on your local network
 (or an installed build), so the mobile app runs from the host.
@@ -327,17 +362,51 @@ eas build -p android --profile preview                     # cloud APK build, pr
 eas update --channel preview --environment preview         # ship new JS to installed preview builds
 ```
 
-### Let Claude pay
+### Let Claude pay (MCP server)
+
+`packages/mcp` is an MCP server that gives any agent (Claude Code, Claude Desktop, other MCP
+clients) a wallet that pays 402Lab services inside its allowance. The steps below use the live
+devnet deployment, so you do not need to run the API locally.
+
+**1. Build it**
 
 ```sh
+npm install
 npm run build -w @402lab/mcp
-node packages/mcp/dist/cli.js init            # creates ~/.402lab/session.json, prints the allowance link
-claude mcp add 402lab -e API_URL=http://localhost:8080 -- node "$PWD/packages/mcp/dist/cli.js"
 ```
 
-Fund the session wallet with devnet USDC (https://faucet.circle.com), create its allowance on
-the dashboard, and ask Claude to use the `list_services`, `call_service` and `get_allowance`
-tools.
+**2. Create the agent's wallet**
+
+```sh
+WEB_URL=https://web-production-1b5d1.up.railway.app node packages/mcp/dist/cli.js init
+```
+
+It prints the wallet address and a link to give it an allowance. The key stays on your machine
+in `~/.402lab/session.json`.
+
+**3. Fund it and set its limits**
+
+- Send devnet USDC to that address from https://faucet.circle.com (network: Solana Devnet). The
+  agent never needs SOL.
+- Open the printed link, connect your wallet and set the cap per call and per day.
+
+**4. Add it to Claude Code**
+
+```sh
+claude mcp add 402lab -e API_URL=https://api-production-570e4.up.railway.app -- node "$PWD/packages/mcp/dist/cli.js"
+```
+
+**5. Ask Claude to use it**, for example: _"List the 402Lab services, then translate 'good
+morning' to Portuguese."_ Each call is paid in USDC and shows up live on the dashboard.
+
+| Tool            | What it does                                                   |
+| --------------- | -------------------------------------------------------------- |
+| `list_services` | lists the paid APIs and their price per call                   |
+| `call_service`  | calls one service and pays for it, refused above the allowance |
+| `get_allowance` | shows the allowance status, caps, spent today and USDC balance |
+
+Running the stack locally instead? Drop `WEB_URL` and `API_URL`: they default to
+`http://localhost:3000` and `http://localhost:8080`.
 
 ## Architecture
 
