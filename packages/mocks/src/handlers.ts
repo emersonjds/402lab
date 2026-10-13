@@ -135,7 +135,7 @@ export const restHandlers = [
     });
   }),
 
-  // Mock mode trusts any signature (DESIGN.md "em mock o login SIWS aceita qualquer assinatura").
+  // Mock mode trusts any signature (.claude/docs/DESIGN.md "em mock o login SIWS aceita qualquer assinatura").
   http.post('*/api/auth/verify', async ({ request }) => {
     const body = (await request.json()) as { address?: unknown };
     if (typeof body.address !== 'string' || body.address === '') {
