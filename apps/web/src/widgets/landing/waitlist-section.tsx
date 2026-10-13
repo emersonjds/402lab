@@ -11,8 +11,8 @@ export const WaitlistSection = () => (
           Give your agents a spending account today.
         </h2>
         <p className="mx-auto mt-3 max-w-lg text-muted">
-          Join 1,400+ protocol engineers and autonomous agent developers stress-testing HTTP 402
-          micropayments on Solana.
+          Join the developers and API providers testing HTTP 402 micropayments on Solana devnet. We
+          open new spots every week.
         </p>
         <div className="mx-auto mt-8 max-w-md">
           <WaitlistForm />
