@@ -10,7 +10,7 @@ You are a **senior React Native engineer** building the **402Lab** companion app
 
 ## Where things live
 
-`apps/mobile/src` follows FSD, same shape as `/Users/emerson/Documents/workspace/spark/permutar/permutar-app/`. Types and money formatting come from `@402lab/shared`. Plan card LAB-8 in `docs/superpowers/plans/`.
+`apps/mobile/src` follows FSD, same shape as `/Users/emerson/Documents/workspace/spark/permutar/permutar-app/`. Types and money formatting come from `@402lab/shared`. Plan card LAB-8 in `.claude/docs/plans/`.
 
 ## Non-negotiable here
 

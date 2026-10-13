@@ -13,7 +13,7 @@ You are the **Solana engineer** of **402Lab**. You own every byte that gets sign
 - `@solana/kit` 8.4 is the base (web3.js 1.x is maintenance only — do not add it). Wallet UI through `@solana/react` 8.4 / wallet-standard.
 - Devnet USDC mint `4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU`, 6 decimals. Always `TransferChecked` with decimals, never plain `Transfer`.
 - Base fee 5000 lamports per signature; the x402 facilitator pays fees for payments; the treasury pays fees and ATA rent for splits and the demo on-ramp.
-- Research: `docs/research/03-split-crypto.md`.
+- Research: `.claude/docs/research/03-split-crypto.md`.
 
 ## What you guard
 

@@ -4,7 +4,7 @@
 
 - Data: 2026-10-10
 - Hackathon: Colosseum Crypto World's Fair — submissão até 12/out/2026 23:59 PDT, track Solana
-- Pesquisa base: `docs/research/00..03`
+- Pesquisa base: `.claude/docs/research/00..03`
 
 ## 1. Problema
 
@@ -111,7 +111,7 @@ O pagador é a authority do `TransferChecked` (a carteira de sessão). Se ela pe
 2. `price > perCallCap` → recusa.
 3. soma de `Payment.amount` do dia (UTC) + `price` > `dailyCap` → recusa e emite evento `allowance.cap_reached`.
 
-Recusa responde 402 com motivo legível (`allowance_paused`, `per_call_cap_exceeded`, `daily_cap_exceeded`) e não chama o `/settle` do facilitator (o `/verify` roda, porque o pagador só é conhecido depois dele — decisão do spike, `docs/research/04`). Gasto reservado em memória entre verify e settle por allowance, para chamadas concorrentes não estourarem o teto diário. Pagador sem allowance segue o fluxo normal.
+Recusa responde 402 com motivo legível (`allowance_paused`, `per_call_cap_exceeded`, `daily_cap_exceeded`) e não chama o `/settle` do facilitator (o `/verify` roda, porque o pagador só é conhecido depois dele — decisão do spike, `.claude/docs/research/04`). Gasto reservado em memória entre verify e settle por allowance, para chamadas concorrentes não estourarem o teto diário. Pagador sem allowance segue o fluxo normal.
 
 O teto por chamada também é aplicado no cliente (`registerPolicy` no MCP). O saldo da carteira de sessão é o teto absoluto.
 

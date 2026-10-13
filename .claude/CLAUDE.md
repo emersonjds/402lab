@@ -37,7 +37,7 @@ Modelos: **opus** para tudo que vira código no repo — `api-fastify`, `web-nex
 ## Contexto operacional
 
 - Briefing e guia de SDD: `.claude/docs/BRIEFING.md`, `.claude/docs/SDD.md` (com cópia da spec e do plano em `.claude/docs/`)
-- Spec: `docs/specs/2026-10-10-402lab-allowance-design.md` · Plano: `docs/superpowers/plans/2026-10-10-402lab-mvp.md` · Pesquisa: `docs/research/`
+- Spec: `.claude/docs/specs/2026-10-10-402lab-allowance-design.md` · Plano: `.claude/docs/plans/2026-10-10-402lab-mvp.md` · Pesquisa: `.claude/docs/research/`
 - Jira: projeto `LAB` em emersonsilvan.atlassian.net (cards = cards do plano)
 - Repo: github.com/emersonjds/402lab. Gitflow global (branch por card a partir de `developer`, merge `--no-ff` em `developer`, micro commits sem rastro de LLM). **Push liberado em qualquer branch neste projeto, inclusive `main` e `developer`** (decisão do Emerson, 2026-10-10).
 - Nota do vault: `second-brain/Projects/402lab.md`

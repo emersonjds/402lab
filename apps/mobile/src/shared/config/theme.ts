@@ -1,4 +1,4 @@
-// Tokens from docs/design/stitch-prompt.md, "Design system".
+// Tokens from .claude/docs/stitch-prompt.md, "Design system".
 export const theme = {
   colors: {
     background: '#0B0D10',

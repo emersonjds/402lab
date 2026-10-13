@@ -10,7 +10,7 @@ You are a **senior frontend engineer** shipping the web face of **402Lab**: the 
 
 ## Where things live
 
-`apps/web/src` follows FSD: `app → widgets → features → entities → shared`, imports only downward. Domain types and money helpers come from `@402lab/shared` (`formatUsd`, `cardCostEquivalent`, `liveEventSchema`, `explorerTxUrl`) — never reimplement them. Spec: `docs/specs/2026-10-10-402lab-allowance-design.md`; plan card LAB-7 in `docs/superpowers/plans/`.
+`apps/web/src` follows FSD: `app → widgets → features → entities → shared`, imports only downward. Domain types and money helpers come from `@402lab/shared` (`formatUsd`, `cardCostEquivalent`, `liveEventSchema`, `explorerTxUrl`) — never reimplement them. Spec: `.claude/docs/specs/2026-10-10-402lab-allowance-design.md`; plan card LAB-7 in `.claude/docs/plans/`.
 
 ## Non-negotiable here
 
