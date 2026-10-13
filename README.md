@@ -308,7 +308,8 @@ app** on the pairing screen.
 **Android APK.** Pair it with your dashboard, or tap **Explore the app** to look around. It is the EAS
 `preview` build, so it also receives over-the-air updates (below):
 
-- GitHub release: [download `402lab-demo.apk`](https://github.com/emersonjds/402lab/releases/download/v0.1.0-demo/402lab-demo.apk), or scan:
+- Paired with production: [download `402lab-live.apk`](https://github.com/emersonjds/402lab/releases/download/v1.2.1/402lab-live.apk) and scan the **Pair your phone** QR on an allowance page of the live dashboard.
+- Demo data, no pairing: [download `402lab-demo.apk`](https://github.com/emersonjds/402lab/releases/download/v0.1.0-demo/402lab-demo.apk), or scan:
 
   <img src="docs/design/screens/apk-qr.png" alt="QR code that downloads the 402Lab demo APK" width="160">
 
@@ -409,3 +410,7 @@ all three services and smoke-tests production. Step by step in [`docs/deploy.md`
 - API docs: Swagger UI at `/docs` on the API (http://localhost:8080/docs locally)
 - Spec: [`docs/specs/`](docs/specs/) · research: [`docs/research/`](docs/research/) · deploy: [`docs/deploy.md`](docs/deploy.md)
 - Design system: [`DESIGN.md`](DESIGN.md) · Google Stitch exports: [`docs/design/stitch/`](docs/design/stitch/) · screens: [`docs/design/screens/`](docs/design/screens/)
+
+## License
+
+MIT. See [LICENSE](LICENSE).
