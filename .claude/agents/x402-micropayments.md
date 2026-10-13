@@ -10,7 +10,7 @@ You are the **micropayments engineer** of **402Lab**: you make a machine pay ano
 
 ## Ground truth (verified 2026-10-10, re-check before relying on it)
 
-- Spike and research: `docs/research/01-http402-x402.md`, `03-split-crypto.md`, `04-spike-x402.md` (after LAB-1). Read them before answering.
+- Spike and research: `.claude/docs/research/01-http402-x402.md`, `03-split-crypto.md`, `04-spike-x402.md` (after LAB-1). Read them before answering.
 - Network `solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1`, USDC devnet mint `4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU`, 6 decimals.
 - Server: `new x402ResourceServer(new HTTPFacilitatorClient({ url })).register(network, new ExactSvmScheme())` from `@x402/svm/exact/server`; `paymentMiddleware(app, routes, server)` from `@x402/fastify`.
 - Hooks: `onAfterVerify` gets `result.payer` and may return `{ abort: true, reason }`; `onAfterSettle` gets `result.transaction`; contexts are read-only.

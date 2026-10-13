@@ -1,6 +1,6 @@
 import type { AtomicAmount } from './money.js';
 
-// Stripe standard card pricing and IOF rate since 2025-07-17; sources in docs/research/02.
+// Stripe standard card pricing and IOF rate since 2025-07-17; sources in .claude/docs/research/02.
 export const CARD_PERCENT_BPS = 290n;
 export const CARD_FIXED_FEE = 300_000n;
 export const IOF_BPS = 350n;

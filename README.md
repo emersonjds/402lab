@@ -1,372 +1,169 @@
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/design/brand/logo-horizontal-dark.png">
-    <img src="docs/design/brand/logo-horizontal-light.png" alt="402Lab" width="440">
+    <img src="docs/design/brand/logo-horizontal-light.png" alt="402Lab" width="420">
   </picture>
 </p>
 
 <p align="center"><b>The spending account for AI agents.</b><br>
-Your agents pay for any API, one call at a time, in USDC on Solana.<br>
+Agents pay for any API, one call at a time, in USDC on Solana.<br>
 You set the limits, watch every payment live and stop them with one tap.</p>
 
 <p align="center">
-  <a href="https://youtu.be/-d2uFvVrVgs"><b>Pitch video</b></a> ·
-  <a href="https://youtu.be/QJJrjnDbFy8"><b>Technical demo</b></a> ·
+  <a href="https://youtu.be/-d2uFvVrVgs"><b>Pitch</b></a> ·
+  <a href="https://youtu.be/QJJrjnDbFy8"><b>Demo video</b></a> ·
   <a href="https://web-production-1b5d1.up.railway.app"><b>Live app</b></a> ·
-  <a href="https://web-demo-production-0d9a.up.railway.app/app"><b>Demo panel</b></a> ·
+  <a href="https://web-demo-production-0d9a.up.railway.app/app"><b>Try it without a wallet</b></a> ·
   <a href="https://api-production-570e4.up.railway.app/docs"><b>API docs</b></a> ·
-  <a href="#on-chain-proof-devnet"><b>On-chain proof</b></a> ·
-  <a href="https://github.com/emersonjds/402lab/releases/download/v0.1.0-demo/402lab-demo.apk"><b>Android APK</b></a>
+  <a href="https://github.com/emersonjds/402lab/releases/download/v1.2.1/402lab-live.apk"><b>Android app</b></a>
 </p>
-
-<div align="center">
-<table>
-  <tr>
-    <td align="right"><b>Status</b></td>
-    <td>
-      <a href="https://github.com/emersonjds/402lab/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/emersonjds/402lab/actions/workflows/ci.yml/badge.svg"></a>
-      <a href="https://github.com/emersonjds/402lab/tags"><img alt="Version" src="https://img.shields.io/github/v/tag/emersonjds/402lab?sort=semver&label=version&color=B6F23A"></a>
-      <a href="https://github.com/emersonjds/402lab/releases/download/v0.1.0-demo/402lab-demo.apk"><img alt="Android APK" src="https://img.shields.io/badge/app-Android%20APK-3DDC84?logo=android&logoColor=white"></a>
-    </td>
-  </tr>
-  <tr>
-    <td align="right"><b>Solana</b></td>
-    <td>
-      <a href="https://solana.com/docs"><img alt="Solana" src="https://img.shields.io/badge/Solana-devnet-9945FF?logo=solana&logoColor=white"></a>
-      <a href="https://www.circle.com/usdc"><img alt="USDC" src="https://img.shields.io/badge/USDC-2775CA?logo=circle&logoColor=white"></a>
-      <a href="https://x402.org"><img alt="x402" src="https://img.shields.io/badge/x402-HTTP%20402-111111"></a>
-      <a href="https://modelcontextprotocol.io"><img alt="MCP" src="https://img.shields.io/badge/MCP-server-000000?logo=modelcontextprotocol&logoColor=white"></a>
-    </td>
-  </tr>
-  <tr>
-    <td align="right"><b>API</b></td>
-    <td>
-      <a href="https://nodejs.org"><img alt="Node 24" src="https://img.shields.io/badge/Node-24-5FA04E?logo=nodedotjs&logoColor=white"></a>
-      <a href="https://www.typescriptlang.org"><img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white"></a>
-      <a href="https://fastify.dev"><img alt="Fastify" src="https://img.shields.io/badge/Fastify-5-000000?logo=fastify&logoColor=white"></a>
-      <a href="https://orm.drizzle.team"><img alt="Drizzle" src="https://img.shields.io/badge/Drizzle-ORM-C5F74F?logo=drizzle&logoColor=black"></a>
-      <a href="https://www.postgresql.org"><img alt="PostgreSQL" src="https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white"></a>
-      <a href="https://zod.dev"><img alt="Zod" src="https://img.shields.io/badge/Zod-4-3E67B1?logo=zod&logoColor=white"></a>
-    </td>
-  </tr>
-  <tr>
-    <td align="right"><b>Web</b></td>
-    <td>
-      <a href="https://nextjs.org"><img alt="Next.js 16" src="https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs&logoColor=white"></a>
-      <a href="https://react.dev"><img alt="React 19" src="https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black"></a>
-      <a href="https://tailwindcss.com"><img alt="Tailwind CSS 4" src="https://img.shields.io/badge/Tailwind%20CSS-4-06B6D4?logo=tailwindcss&logoColor=white"></a>
-      <a href="https://tailadmin.com"><img alt="TailAdmin" src="https://img.shields.io/badge/TailAdmin-dashboard-465FFF"></a>
-      <a href="https://apexcharts.com"><img alt="ApexCharts" src="https://img.shields.io/badge/ApexCharts-charts-008FFB"></a>
-      <a href="https://mswjs.io"><img alt="MSW" src="https://img.shields.io/badge/MSW-mocks-FF6A33?logo=mockserviceworker&logoColor=white"></a>
-    </td>
-  </tr>
-  <tr>
-    <td align="right"><b>Mobile</b></td>
-    <td>
-      <a href="https://docs.expo.dev"><img alt="Expo SDK 57" src="https://img.shields.io/badge/Expo-SDK%2057-000020?logo=expo&logoColor=white"></a>
-      <a href="https://reactnative.dev"><img alt="React Native" src="https://img.shields.io/badge/React%20Native-61DAFB?logo=react&logoColor=black"></a>
-      <a href="https://docs.expo.dev/eas/"><img alt="Expo EAS" src="https://img.shields.io/badge/Expo%20EAS-build%20%26%20updates-000020?logo=expo&logoColor=white"></a>
-    </td>
-  </tr>
-  <tr>
-    <td align="right"><b>Tooling</b></td>
-    <td>
-      <a href="https://docs.npmjs.com/cli/using-npm/workspaces"><img alt="npm workspaces" src="https://img.shields.io/badge/npm-workspaces-CB3837?logo=npm&logoColor=white"></a>
-      <a href="https://eslint.org"><img alt="ESLint" src="https://img.shields.io/badge/ESLint-4B32C3?logo=eslint&logoColor=white"></a>
-      <a href="https://prettier.io"><img alt="Prettier" src="https://img.shields.io/badge/Prettier-F7B93E?logo=prettier&logoColor=black"></a>
-      <a href="https://docs.docker.com/compose/"><img alt="Docker" src="https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white"></a>
-      <a href="https://railway.com"><img alt="Railway" src="https://img.shields.io/badge/Railway-API%20%2B%20web%20%2B%20Postgres-0B0D0E?logo=railway&logoColor=white"></a>
-      <a href="https://stitch.withgoogle.com"><img alt="Google Stitch" src="https://img.shields.io/badge/Google%20Stitch-design-4285F4?logo=google&logoColor=white"></a>
-    </td>
-  </tr>
-</table>
-</div>
 
 <p align="center">
-  <img src="docs/design/screens/allowance-detail-1440.png" alt="Allowance dashboard: spend today, live payments with Solscan links, revenue split batch" width="70%">
-  &nbsp;
-  <img src="docs/design/screens/allowance-detail-375.png" alt="Allowance dashboard on a phone: spend today, live payments, pause" width="22%">
+  <a href="https://github.com/emersonjds/402lab/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/emersonjds/402lab/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="https://solana.com/docs"><img alt="Solana devnet" src="https://img.shields.io/badge/Solana-devnet-9945FF?logo=solana&logoColor=white"></a>
+  <a href="https://www.circle.com/usdc"><img alt="USDC" src="https://img.shields.io/badge/USDC-2775CA?logo=circle&logoColor=white"></a>
+  <a href="https://x402.org"><img alt="x402" src="https://img.shields.io/badge/x402-HTTP%20402-111111"></a>
+  <a href="https://modelcontextprotocol.io"><img alt="MCP" src="https://img.shields.io/badge/MCP-server-000000"></a>
+  <a href="https://www.typescriptlang.org"><img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white"></a>
+  <a href="LICENSE"><img alt="MIT" src="https://img.shields.io/badge/license-MIT-B6F23A"></a>
 </p>
 
-# 402Lab
+<p align="center">
+  <img src="docs/screens/overview.png" alt="402Lab owner dashboard: spend per agent, calls per provider and every allowance with its budget" width="100%">
+</p>
 
-**The spending account for AI agents.** A human gives an agent an allowance, with a cap per call and a cap
-per day, and the agent pays every API call by itself in USDC on Solana through HTTP 402
-([x402](https://x402.org)). Providers get their share by an automatic split, and the human
-watches, pauses and gets one monthly statement.
+## What it is
 
-Built for the Colosseum Crypto World's Fair (Solana track). Runs on **devnet**.
+402Lab gives every AI agent an **allowance**: a cap per call and a cap per day, set by a human.
+Inside that allowance the agent pays for any API by itself, per call, in USDC on Solana, using
+the [HTTP 402 / x402](#the-protocol-http-402-and-x402) protocol. No signup, no card, no API key
+per vendor, no SOL for gas. Providers are paid automatically, and the human sees every payment
+live, can pause an agent from the phone and gets one statement a month.
 
-**Live**
+Built for the Colosseum Crypto World's Fair (Solana track). Runs on **Solana devnet**.
 
-- Landing and panel (devnet): https://web-production-1b5d1.up.railway.app
-- Panel on demo data (no wallet needed): https://web-demo-production-0d9a.up.railway.app/app
-- API and Swagger: https://api-production-570e4.up.railway.app/docs
-- Pitch video: https://youtu.be/-d2uFvVrVgs
-- Technical demo video: https://youtu.be/QJJrjnDbFy8
+## Why it exists
 
-## The problem
+AI agents can already do real work, but paying for an API is still built for humans: sign up,
+type a card, buy prepaid credit, copy a key, and repeat for every provider.
 
-An agent that needs a paid API (OCR, translation, an LLM) hits a flow built for humans: sign
-up, type a card, buy prepaid credit, copy a key, and do it all again for every provider.
+| Problem                                | Numbers                                                                                                                                                                                                                                                                                 |
+| -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Cards cannot charge cents              | 2.9% + $0.30 on a $0.01 call is a **3,003%** fee ([Stripe pricing](https://stripe.com/pricing))                                                                                                                                                                                         |
+| Prepaid credit is locked per vendor    | OpenAI asks **$5 minimum**, credit expires after a year ([OpenAI billing](https://help.openai.com/en/articles/8264644-setting-up-and-managing-prepaid-api-billing))                                                                                                                     |
+| Brazil pays more, or cannot pay at all | **3.5% IOF** on every international card purchase ([Wise](https://wise.com/br/blog/iof-cartao-internacional)), and **~25%** of adults have no credit card ([Serasa](https://diariodopara.com.br/seu-bolso/quase-25-dos-brasileiros-nao-tem-cartao-de-credito-aponta-estudo-da-serasa/)) |
+| Nobody trusts an agent with a card     | **51%** of API teams fear excessive or unauthorized agent calls ([Postman, State of the API 2025](https://www.postman.com/state-of-api/2025/))                                                                                                                                          |
 
-- **Cards cannot charge cents.** 2.9% + US$0.30 on a US$0.01 request is a **3,003%** fee; the
-  card fee only drops below 10% at about US$4.23 per ticket.
-- **Prepaid credit is locked per vendor.** OpenAI: US$5 minimum, expires after one year,
-  non-refundable. Every provider is another balance, account and key.
-- **Brazil doubles the pain.** 3.5% IOF on every international card purchase (since
-  2025-07-17), and about **25%** of Brazilians have no credit card at all (Serasa).
-- **Agents are an afterthought.** Only 24% of teams design APIs with agents in mind, and 51%
-  fear excessive or unauthorized agent calls (Postman, State of the API 2025).
+On Solana the same call costs a fraction of a cent and settles in about a second. x402 already
+moves the money. What is missing is the **account** around it: limits a human sets, an agent
+cannot exceed, and a clear record of every payment. That is 402Lab.
 
-On-chain the same request costs a fraction of a cent, and x402 already settles it. What is
-missing is the **account**: limits a human sets, an agent cannot exceed, and a statement at the
-end of the month. Sources in [`docs/research/`](docs/research/).
+## How it works
 
-## Demo in six steps
+1. **The human sets the limits.** Connect a Solana wallet on the dashboard and give an agent an
+   allowance, for example $0.02 per call and $1 per day.
+2. **The agent pays per call.** It calls a paid API, gets `402 Payment Required` with a price,
+   signs a USDC transfer and retries. 402Lab checks the allowance _before_ any money moves.
+3. **Providers get paid.** Every 30 seconds one Solana transaction splits the revenue:
+   **85%** to the provider, **5%** to the integrator, **10%** to the platform.
+4. **The human stays in control.** Live feed on the web and the phone, a pause button, and one
+   statement a month with what the same calls would have cost on a card.
 
-1. The human connects Phantom on the dashboard and creates a 5 USDC allowance for the agent
-   "research-bot": US$0.02 per call, US$1 per day.
-2. In Claude (through the 402Lab MCP server) they ask: _"extract the text from this image,
-   translate it to English and summarize it"_.
-3. The agent discovers the services, gets a 402, and pays three providers on its own, with no
-   popup. Dashboard and phone show each payment live, with its Solscan signature.
-4. 30 s later one split transaction pays providers, integrator and platform, with a Solscan link.
-5. On the phone the human taps **Pause**. The agent's next call is refused.
-6. Counter: _"3 calls, US$0.017 paid; by card + IOF they would cost US$0.95"_.
+```mermaid
+sequenceDiagram
+    autonumber
+    participant A as Agent (MCP)
+    participant L as 402Lab API
+    participant F as x402 facilitator
+    participant S as Solana devnet
+    A->>L: GET /svc/translate
+    L-->>A: 402 Payment Required (price, USDC, payTo)
+    A->>A: sign USDC TransferChecked
+    A->>L: GET /svc/translate + PAYMENT-SIGNATURE
+    L->>L: allowance policy: paused? per-call cap? daily cap?
+    L->>F: verify and settle
+    F->>S: send transaction (facilitator pays the fee)
+    S-->>F: confirmed in ~1 s
+    L->>L: write the payment to the ledger, push it live
+    L-->>A: 200 + result + PAYMENT-RESPONSE
+    Note over L,S: every 30 s the split worker sends one transaction<br/>paying provider 85%, integrator 5%, platform 10%
+```
 
-## On-chain proof (devnet)
+## The protocol: HTTP 402 and x402
 
-`npm run e2e:devnet` against the production API on 2026-10-12: an agent session wallet paid each
-service through HTTP 402, and the split worker paid providers, integrator and platform in one
-transaction.
+`402 Payment Required` has been in the HTTP spec since the 1990s, reserved for "future use".
+[x402](https://x402.org) turns it into a real payment flow: the server answers 402 with what it
+costs, the client pays with a signed stablecoin transfer and retries, and a facilitator settles
+it on chain. Any HTTP client, including an AI agent, can pay without accounts or keys.
 
-| Payment                                                       | Price  | Transaction                                                                                                                                |
-| ------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| OCR · Azure                                                   | $0.005 | [29GrHm3Q…](https://solscan.io/tx/29GrHm3QiHvcysghDZgTowmaHm22sUjo5qunewsDsF9wKdQaUPdnxU3Xw1ReXUydn5dNXGQNPtGaqZ4zudWsh4co?cluster=devnet) |
-| Translate · AWS                                               | $0.002 | [3MZ6XPM7…](https://solscan.io/tx/3MZ6XPM7LWc5JLPrN2pCHbMaNaRwQ1Dc5r3LBDpApJER2L98tcRHJLoLpSgaNfJdhhzXKGXTQcZxofdzDYUmzz4B?cluster=devnet) |
-| Chat · OpenAI                                                 | $0.008 | [5NoGgg5y…](https://solscan.io/tx/5NoGgg5yuQtdRYFkPQejDJ8jJShq7a779khG8aUr1YxcecKKHBC65q4JTaCZMqDYyc9LVXrZACFcTupddKcnBmzm?cluster=devnet) |
-| Speech · ElevenLabs                                           | $0.006 | [298CYBjv…](https://solscan.io/tx/298CYBjvv44x5EAtcUs91RZ92A3KdjeaLcrYXTQGugKwiwh92n2CiVpta6kqwrAg4DHHygvTSui8Qy7hERPAXPVM?cluster=devnet) |
-| **Split batch**: providers 85% · integrator 5% · platform 10% |        | [36LqwABG…](https://solscan.io/tx/36LqwABGFN2ZJ7BFEr3BUR9pBkNbjD9kcfYV9nXHdgaUKYDxvc7umyzgXxxanjvf6VFazhky4km6LzrotevYQ8Rn?cluster=devnet) |
+- x402 overview: https://x402.org
+- Specification: [x402 v2](https://github.com/x402-foundation/x402/blob/main/specs/x402-specification-v2.md) ·
+  [exact scheme on Solana](https://github.com/x402-foundation/x402/blob/main/specs/schemes/exact/scheme_exact_svm.md)
+- x402 on Solana: https://solana.com/x402
+- HTTP 402 status: [MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/402)
+
+402Lab is not another x402 gateway. x402 is the rail; 402Lab is the account on top of it.
 
 ## Screens
 
-### Web dashboard
+**Landing.** What 402Lab is in one screen, with a live log of 402 payments settling.
 
-**Landing.** What 402Lab is in one screen: agents pay any API per call in USDC on Solana, with a live log of 402 payments settling.
+<img src="docs/screens/landing.png" alt="Landing page" width="100%">
 
-<img src="docs/design/screens/readme/landing.png" alt="Landing" width="100%">
+**Payments.** Every call an agent paid for: service, amount and a link to the transaction on
+Solscan.
 
-**Owner overview.** Everything the owner needs at a glance: total spend, calls, spend per agent over 24 hours, calls per provider and every allowance with its budget.
+<img src="docs/screens/payments.png" alt="Payments ledger" width="100%">
 
-<img src="docs/design/screens/readme/overview.png" alt="Owner overview" width="100%">
+**Revenue splits.** How the money is shared between providers, integrator and platform, batched
+into Solana transactions.
 
-**Payments.** Every call an agent paid for, with the service, the amount and a link to the transaction on Solscan.
+<img src="docs/screens/provider-splits.png" alt="Revenue splits per provider" width="100%">
 
-<img src="docs/design/screens/readme/payments.png" alt="Payments" width="100%">
+**Monthly statement.** One statement per agent per month: total spent, what the same calls would
+cost on a card, and the breakdown by service and recipient. Prints to PDF.
 
-**Revenue splits.** How the money is shared: every settlement pays 85% to the provider, 5% to the integrator and 10% to the platform, batched into Solana transactions.
+<img src="docs/screens/statement.png" alt="Monthly statement" width="100%">
 
-<img src="docs/design/screens/readme/provider-splits.png" alt="Revenue splits" width="100%">
-
-**Monthly statement.** One statement per agent per month: total spent, what the same calls would cost on a card, and the breakdown by service and recipient. Prints to PDF.
-
-<img src="docs/design/screens/readme/statement.png" alt="Monthly statement" width="100%">
-
-### Android app
-
-The owner's phone: see what each agent spent today, follow the live payment stream and pause an agent with one tap. It pairs with the dashboard by scanning a QR code.
+**Android app.** The owner's phone: what each agent spent today, the live payment stream and a
+pause button. It pairs with the dashboard by QR code and holds no keys.
 
 <table>
   <tr>
-    <td align="center" width="33%"><img src="docs/design/screens/readme/mobile-agents.png" alt="Your agents" width="240"><br><b>Your agents</b><br><sub>Spend and status of every agent</sub></td>
-    <td align="center" width="33%"><img src="docs/design/screens/readme/mobile-agent-detail.png" alt="Agent detail" width="240"><br><b>Agent detail</b><br><sub>Today's allowance, live payments and the pause button</sub></td>
-    <td align="center" width="33%"><img src="docs/design/screens/readme/mobile-pair.png" alt="Pairing" width="240"><br><b>Pairing</b><br><sub>Scan the QR on the dashboard, no keys on the phone</sub></td>
+    <td align="center" width="33%"><img src="docs/screens/mobile-agents.png" alt="Your agents" width="240"><br><b>Your agents</b><br><sub>Spend and status of every agent</sub></td>
+    <td align="center" width="33%"><img src="docs/screens/mobile-agent-detail.png" alt="Agent detail" width="240"><br><b>Agent detail</b><br><sub>Today's allowance, live payments, pause</sub></td>
+    <td align="center" width="33%"><img src="docs/screens/mobile-pair.png" alt="Pairing" width="240"><br><b>Pairing</b><br><sub>Scan the QR on the dashboard</sub></td>
   </tr>
 </table>
 
-## How the monorepo works
+## Try it
 
-```
-402lab/
-├── apps/
-│   ├── api/          Fastify 5 + @x402/fastify + Drizzle/Postgres  (port 8080, Swagger at /docs)
-│   ├── web/          Next.js 16: landing page (/) and owner panel (/app) in one app  (port 3000)
-│   └── mobile/       Expo SDK 57: owner app: live payments, pause, pairing
-├── packages/
-│   ├── shared/       @402lab/shared: Zod schemas, money (bigint USDC), split, policy, catalog
-│   ├── mcp/          @402lab/mcp: MCP server that lets an agent pay with x402
-│   └── mocks/        @402lab/mocks: MSW fixtures for web and mobile demo mode
-├── compose.yaml      postgres + api + web (+ web-mock profile)
-└── package.json      "workspaces": ["apps/*", "packages/*"]
-```
+| What                 | Where                                                                                                                             |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| Dashboard on devnet  | https://web-production-1b5d1.up.railway.app (connect Phantom or Solflare on devnet)                                               |
+| Dashboard, no wallet | https://web-demo-production-0d9a.up.railway.app/app                                                                               |
+| API and Swagger      | https://api-production-570e4.up.railway.app/docs                                                                                  |
+| Android app          | [`402lab-live.apk`](https://github.com/emersonjds/402lab/releases/download/v1.2.1/402lab-live.apk), pairs with the live dashboard |
+| Let an agent pay     | [MCP server](#let-an-agent-pay-mcp-server), below                                                                                 |
 
-It is a plain [npm workspaces](https://docs.npmjs.com/cli/using-npm/workspaces) monorepo, with no
-Turborepo and no Nx:
+### On-chain proof (devnet)
 
-- **One `npm install` at the root** reads `workspaces` from the root `package.json`, installs
-  the dependencies of every package into one shared, hoisted `node_modules` at the root, and
-  writes one `package-lock.json`.
-- **Internal packages are symlinks.** `@402lab/shared`, `@402lab/mocks` and `@402lab/mcp` are
-  linked into `node_modules/@402lab/` and point at the folders under `packages/`. An edit in
-  `packages/shared/src` is seen by the API, web and mobile at once, without publishing or
-  rebuilding (they ship TypeScript sources; Next transpiles them via `transpilePackages`).
-- **Scripts run per package or across all of them:**
+Real payments made through HTTP 402 against the production API on 2026-10-12, followed by one
+split transaction:
 
-  ```sh
-  npm run dev -w @402lab/web                       # one package (-w = --workspace)
-  npm run typecheck --workspaces --if-present      # every package that has the script
-  npm install some-lib -w @402lab/api              # add a dependency to one package
-  ```
+| Payment                                                 | Price  | Transaction                                                                                                                                |
+| ------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| OCR · Azure                                             | $0.005 | [29GrHm3Q…](https://solscan.io/tx/29GrHm3QiHvcysghDZgTowmaHm22sUjo5qunewsDsF9wKdQaUPdnxU3Xw1ReXUydn5dNXGQNPtGaqZ4zudWsh4co?cluster=devnet) |
+| Translate · AWS                                         | $0.002 | [3MZ6XPM7…](https://solscan.io/tx/3MZ6XPM7LWc5JLPrN2pCHbMaNaRwQ1Dc5r3LBDpApJER2L98tcRHJLoLpSgaNfJdhhzXKGXTQcZxofdzDYUmzz4B?cluster=devnet) |
+| Chat · OpenAI                                           | $0.008 | [5NoGgg5y…](https://solscan.io/tx/5NoGgg5yuQtdRYFkPQejDJ8jJShq7a779khG8aUr1YxcecKKHBC65q4JTaCZMqDYyc9LVXrZACFcTupddKcnBmzm?cluster=devnet) |
+| Speech · ElevenLabs                                     | $0.006 | [298CYBjv…](https://solscan.io/tx/298CYBjvv44x5EAtcUs91RZ92A3KdjeaLcrYXTQGugKwiwh92n2CiVpta6kqwrAg4DHHygvTSui8Qy7hERPAXPVM?cluster=devnet) |
+| **Split**: providers 85% · integrator 5% · platform 10% |        | [36LqwABG…](https://solscan.io/tx/36LqwABGFN2ZJ7BFEr3BUR9pBkNbjD9kcfYV9nXHdgaUKYDxvc7umyzgXxxanjvf6VFazhky4km6LzrotevYQ8Rn?cluster=devnet) |
 
-Root scripts:
+## Let an agent pay (MCP server)
 
-| Script                | What it does                                                        |
-| --------------------- | ------------------------------------------------------------------- |
-| `npm run dev`         | API (`:8080`, migrations at boot) and web (`:3000`) with hot reload |
-| `npm run dev:mobile`  | Expo dev server (Metro) for the mobile app                          |
-| `npm run db:up`       | Only Postgres 16 in Docker, on `localhost:5432`                     |
-| `npm run docker:up`   | Whole stack in Docker: postgres, api, web                           |
-| `npm run docker:mock` | Only the web, on mock data, in Docker (`:3001`)                     |
-| `npm run docker:down` | Stops every container of the stack (data volume kept)               |
-| `npm run typecheck`   | `tsc --noEmit` at the root and in every workspace                   |
-| `npm run lint`        | ESLint over the whole repo                                          |
-| `npm run format`      | Prettier over the whole repo                                        |
-| `npm run e2e:devnet`  | Pays ocr, translate and summarize on devnet and waits for the split |
-| `npm run spike:pay`   | One x402 payment from a devnet keypair (`scripts/devnet-pay.ts`)    |
-
-## Run it
-
-Three ways, from "one command" to "just the phone". All of them run on Solana devnet.
-
-### Environment
-
-The API reads `apps/api/.env`. Start from [`.env.example`](.env.example), which documents every
-variable:
-
-```sh
-cp .env.example apps/api/.env
-```
-
-| Variable                                                                                                 | Needed for                                          |
-| -------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
-| `TREASURY_ADDRESS`                                                                                       | receives every x402 payment (public base58 address) |
-| `PROVIDER_OCR_ADDRESS`, `PROVIDER_TRANSLATE_ADDRESS`, `PROVIDER_SUMMARIZE_ADDRESS`, `INTEGRATOR_ADDRESS` | split recipients                                    |
-| `JWT_SECRET`                                                                                             | session cookie and mobile pairing token, 32+ chars  |
-| `NODE_ENV`                                                                                               | `development` locally (cookie without `Secure`)     |
-| `TREASURY_SECRET_KEY`                                                                                    | split worker and demo on-ramp; blank = worker off   |
-| `AZURE_VISION_*`, `AWS_*`, `ANTHROPIC_API_KEY`                                                           | live upstreams; blank = deterministic demo mode     |
-
-The web reads [`apps/web/.env.example`](apps/web/.env.example) (`API_URL`, `NEXT_PUBLIC_*`) and
-the mobile app [`apps/mobile/.env.example`](apps/mobile/.env.example).
-
-### A. Docker
-
-All you need is Docker (OrbStack or Docker Desktop). There are two environments.
-
-**1. Demo, zero setup.** No `.env`, no wallet, no USDC.
-
-```sh
-npm run docker:mock
-```
-
-Open http://localhost:3001/app. The dashboard runs on built-in demo data and **Connect wallet**
-works without a browser extension.
-
-**2. Full stack on Solana devnet.** API, web and Postgres, with real devnet payments.
-
-```sh
-cp .env.example apps/api/.env   # fill the devnet addresses and JWT_SECRET (see Environment)
-npm run docker:up
-```
-
-| URL                           | What                                        |
-| ----------------------------- | ------------------------------------------- |
-| http://localhost:3000         | landing page                                |
-| http://localhost:3000/connect | connect a wallet, then the dashboard `/app` |
-| http://localhost:8080/docs    | API Swagger UI                              |
-| `localhost:5432`              | Postgres (`lab` / `lab`, database `lab402`) |
-
-Database migrations run when the API boots.
-
-**Stop everything** (the Postgres data is kept):
-
-```sh
-npm run docker:down
-```
-
-<details>
-<summary>Busy ports, build args and pairing a phone</summary>
-
-Every host port is a variable:
-`WEB_PORT=13000 API_PORT=18080 POSTGRES_PORT=15432 npm run docker:up` (demo port: `WEB_MOCK_PORT`).
-
-The web image reads `API_URL` and every `NEXT_PUBLIC_*` value at build time, so change one and
-run `docker:up` again (it always rebuilds). To pair a phone with the Docker stack, build with the
-API's LAN address: `API_PUBLIC_URL=http://192.168.1.20:8080 npm run docker:up`.
-
-</details>
-
-### B. Local, without Docker for the apps
-
-Requirements: Node 24, npm 11, and Postgres 16 (`npm run db:up` gives you one in Docker, or
-point `DATABASE_URL` at your own).
-
-```sh
-npm install
-npm run db:up                          # Postgres 16 on localhost:5432
-cp .env.example apps/api/.env          # fill the devnet wallet addresses and JWT_SECRET
-npm run dev                            # api on :8080 + web on :3000, hot reload
-```
-
-Web on mock data, no API: `NEXT_PUBLIC_API_MOCKING=enabled npm run dev -w @402lab/web`.
-
-### C. Mobile
-
-Expo does not run usefully in Docker: the phone needs the Metro dev server on your local network
-(or an installed build), so the mobile app runs from the host.
-
-**Expo Go.** Requirements: Node 24, the [Expo Go](https://expo.dev/go) app, phone and computer
-on the same Wi-Fi.
-
-```sh
-npm install
-npm run dev:mobile                                   # scan the QR with Expo Go
-EXPO_PUBLIC_API_MOCKING=enabled npm run dev:mobile   # demo data, no API needed
-```
-
-To pair with a real API, the phone must reach it by the computer's LAN IP: set
-`NEXT_PUBLIC_API_PUBLIC_URL=http://<your-lan-ip>:8080` for the web (or `API_PUBLIC_URL` for
-Docker) and scan the **Pair your phone** QR on an allowance page. On demo data, tap **Explore the
-app** on the pairing screen.
-
-**Android APK.** Pair it with your dashboard, or tap **Explore the app** to look around. It is the EAS
-`preview` build, so it also receives over-the-air updates (below):
-
-- Paired with production: [download `402lab-live.apk`](https://github.com/emersonjds/402lab/releases/download/v1.2.1/402lab-live.apk) and scan the **Pair your phone** QR on an allowance page of the live dashboard.
-- Demo data, no pairing: [download `402lab-demo.apk`](https://github.com/emersonjds/402lab/releases/download/v0.1.0-demo/402lab-demo.apk), or scan:
-
-  <img src="docs/design/screens/apk-qr.png" alt="QR code that downloads the 402Lab demo APK" width="160">
-
-- Expo install page with its own QR:
-  [expo.dev build `7318f4c8`](https://expo.dev/accounts/emersonjdss/projects/402lab/builds/7318f4c8-1cc2-4484-b41a-ae066c8f8e80)
-
-**EAS preview channel.** EAS project `@emersonjdss/402lab`. Builds on the `preview` profile
-(Node 24.19.0, Android image `latest`, see [`apps/mobile/eas.json`](apps/mobile/eas.json)) ship
-`expo-updates` on the `preview` channel: the installed app downloads the latest JavaScript when
-it opens, with no reinstall.
-
-```sh
-cd apps/mobile
-eas build -p android --profile preview                     # cloud APK build, prints install link + QR
-eas update --channel preview --environment preview         # ship new JS to installed preview builds
-```
-
-### Let Claude pay (MCP server)
-
-`packages/mcp` is an MCP server that gives any agent (Claude Code, Claude Desktop, other MCP
-clients) a wallet that pays 402Lab services inside its allowance. The steps below use the live
-devnet deployment, so you do not need to run the API locally.
+`packages/mcp` is an [MCP](https://modelcontextprotocol.io) server that gives any agent (Claude
+Code, Claude Desktop, other MCP clients) a wallet that pays 402Lab services inside its
+allowance. These steps use the live devnet deployment, so nothing else runs locally.
 
 **1. Build it**
 
@@ -396,8 +193,8 @@ in `~/.402lab/session.json`.
 claude mcp add 402lab -e API_URL=https://api-production-570e4.up.railway.app -- node "$PWD/packages/mcp/dist/cli.js"
 ```
 
-**5. Ask Claude to use it**, for example: _"List the 402Lab services, then translate 'good
-morning' to Portuguese."_ Each call is paid in USDC and shows up live on the dashboard.
+**5. Ask Claude**, for example: _"List the 402Lab services, then translate 'good morning' to
+Portuguese."_ Each call is paid in USDC and shows up live on the dashboard.
 
 | Tool            | What it does                                                   |
 | --------------- | -------------------------------------------------------------- |
@@ -405,80 +202,105 @@ morning' to Portuguese."_ Each call is paid in USDC and shows up live on the das
 | `call_service`  | calls one service and pays for it, refused above the allowance |
 | `get_allowance` | shows the allowance status, caps, spent today and USDC balance |
 
-Running the stack locally instead? Drop `WEB_URL` and `API_URL`: they default to
+Running the stack locally? Leave out `WEB_URL` and `API_URL`; they default to
 `http://localhost:3000` and `http://localhost:8080`.
 
-## Architecture
+## Run it locally
 
-```
-agent (MCP)                      apps/api                          x402.org facilitator      Solana devnet
-session keypair ──GET /svc/ocr──▶ 402 PAYMENT-REQUIRED
-                ◀──────────────── accepts[exact, devnet, USDC, payTo=TREASURY]
-signs TransferChecked
-──GET + PAYMENT-SIGNATURE──────▶ allowance policy ──verify──▶ ok
-                                 runs the service
-                                 settle ─────────────────────────▶ sends tx (pays the fee) ─▶ USDC → treasury
-                                 writes payment to the ledger + event
-◀──────── 200 + PAYMENT-RESPONSE
-```
+All you need is Docker (OrbStack or Docker Desktop) and Node 24.
 
-```
-split worker (every 30 s) ── unbatched payments ── sum per recipient ── 1 tx with N TransferChecked ── Solscan
-```
-
-- The allowance policy (paused, per-call cap, daily cap) runs in the x402 `onAfterVerify` hook:
-  a refusal never reaches the facilitator's `/settle`.
-- Money is `bigint` atomic USDC (6 decimals) end to end; JSON carries integer strings.
-- Split per payment: provider 85%, integrator 5% (both floored), platform keeps the rest.
-- Each upstream has a live adapter (Azure AI Vision, AWS Translate, Anthropic
-  `claude-haiku-4-5`) and a deterministic demo adapter; responses say `mode: live | demo`.
-
-## Security
-
-Every money and auth path went through an adversarial review before merging:
-
-- **Concurrent daily cap.** Spend is reserved per allowance between verify and settle, under a
-  per-allowance lock, and released if settlement is aborted.
-- **Idempotent split.** Batch, payouts and payment links are written in one DB transaction;
-  the signature is stored _before_ sending and checked before any retry, so a crash cannot pay
-  a provider twice.
-- **Lagging RPC nodes.** A batch is retried only after its blockhash expiry is stable; RPC
-  calls time out and pin commitment, so a stale node cannot trigger a double payout.
-- **Auth.** Sign-In With Solana with single-use, expiring nonces; session JWT in an httpOnly
-  cookie served first-party through the web proxy; another owner's allowance answers 404,
-  never 403; facilitator and upstream error text never reaches clients.
-- Keys (treasury, JWT, upstreams) come only from environment variables and are never logged.
-
-## Checks
+**Demo, zero setup.** No `.env`, no wallet, no USDC.
 
 ```sh
-npm run typecheck && npm run lint && npm run build -w @402lab/web
-npm run smoke               # production health: catalog, 402 paywall, web, proxy, demo
-npm run e2e:devnet          # real devnet payments + split (manual)
+npm run docker:mock
 ```
 
-## Deploy
+Open http://localhost:3001/app. The dashboard runs on built-in demo data.
 
-API, web, demo web and Postgres on one Railway project (each service picks its Dockerfile),
-mobile through Expo Go and EAS. CI runs on every pull request; a merge into `main` deploys
-all three services and smoke-tests production. Step by step in [`docs/deploy.md`](docs/deploy.md).
+**Full stack on Solana devnet.** API, web and Postgres, with real devnet payments.
+
+```sh
+cp .env.example apps/api/.env   # fill the devnet addresses and JWT_SECRET, documented in the file
+npm run docker:up
+```
+
+| URL                           | What                                        |
+| ----------------------------- | ------------------------------------------- |
+| http://localhost:3000         | landing page                                |
+| http://localhost:3000/connect | connect a wallet, then the dashboard `/app` |
+| http://localhost:8080/docs    | API Swagger UI                              |
+
+Database migrations run when the API boots. Stop everything with `npm run docker:down` (the data
+is kept).
+
+<details>
+<summary>Without Docker, ports and the mobile app</summary>
+
+**Without Docker for the apps** (Postgres still from Docker, or your own `DATABASE_URL`):
+
+```sh
+npm install
+npm run db:up                   # Postgres 16 on localhost:5432
+cp .env.example apps/api/.env
+npm run dev                     # API on :8080 + web on :3000, hot reload
+```
+
+**Busy ports?** Every host port is a variable:
+`WEB_PORT=13000 API_PORT=18080 POSTGRES_PORT=15432 npm run docker:up`.
+
+**Mobile app** with [Expo Go](https://expo.dev/go), phone and computer on the same Wi-Fi:
+
+```sh
+npm run dev:mobile                                   # scan the QR with Expo Go
+EXPO_PUBLIC_API_MOCKING=enabled npm run dev:mobile   # demo data, no API needed
+```
+
+To pair with a local API, build the web with your LAN address
+(`API_PUBLIC_URL=http://192.168.1.20:8080 npm run docker:up`) and scan **Pair your phone** on an
+allowance page.
+
+</details>
+
+## Project structure
+
+```
+402lab/
+├── apps/
+│   ├── api/      Fastify + x402 + Postgres ledger + split worker  (Swagger at /docs)
+│   ├── web/      Next.js: landing page and owner dashboard
+│   └── mobile/   Expo: live payments, pause, QR pairing
+└── packages/
+    ├── shared/   domain: money (bigint USDC), split, allowance policy, catalog
+    ├── mcp/      MCP server that lets an agent pay with x402
+    └── mocks/    demo data for the web and mobile demo mode
+```
+
+An npm workspaces monorepo in TypeScript end to end. Stack: Solana `@solana/kit`, `@x402/*`,
+Fastify 5, Drizzle and PostgreSQL 16, Next.js 16 and React 19, Expo SDK 57, Zod, TanStack Query,
+Vitest and MSW. CI runs typecheck, lint and tests on every pull request and push; a merge into `main` deploys API,
+web and the demo web to Railway and smoke-tests production.
+
+## Design decisions
+
+- **The allowance is checked before money moves.** The policy (paused, per-call cap, daily cap)
+  runs in the x402 `onAfterVerify` hook, so a refused call never reaches settlement.
+- **No double charges, no double payouts.** Daily spend is reserved under a per-allowance lock
+  between verify and settle. The split worker saves the transaction signature _before_ sending
+  and checks it before any retry, so a crash cannot pay a provider twice.
+- **Money is exact.** Amounts are `bigint` atomic USDC (6 decimals) end to end; the split floors
+  provider and integrator shares and the platform keeps the remainder.
+- **Owners only see their own data.** Sign-In With Solana with single-use nonces, an httpOnly
+  session cookie, and another owner's allowance answers 404.
+- **Keys never ship.** Treasury and upstream keys come only from environment variables; the
+  phone holds no keys at all.
 
 ## Roadmap
 
-- **Mainnet** with real money. Holding treasury funds for ~30 s requires BCB authorization
-  (Res. 519/520) or a licensed PSAV partner.
-- **Real Pix** on-ramp (simulated and labeled in the demo) and **NFS-e** invoices from the
+- **Mainnet** with a licensed custody partner (in Brazil, BCB Res. 519/520).
+- **Pix on-ramp** for people without a card (simulated on devnet today) and invoices from the
   monthly statement.
-- **Atomic split** inside the payment itself (x402 PR #3221) or an Anchor splitter program.
-- **Proof of session possession** for the MCP's public allowance lookup; **passkeys** for
-  owners without a wallet.
-
-## Links
-
-- Repository: https://github.com/emersonjds/402lab · release [v1.0.0](https://github.com/emersonjds/402lab/releases/tag/v1.0.0)
-- API docs: Swagger UI at `/docs` on the API (http://localhost:8080/docs locally)
-- Spec: [`docs/specs/`](docs/specs/) · research: [`docs/research/`](docs/research/) · deploy: [`docs/deploy.md`](docs/deploy.md)
-- Design system: [`DESIGN.md`](DESIGN.md) · Google Stitch exports: [`docs/design/stitch/`](docs/design/stitch/) · screens: [`docs/design/screens/`](docs/design/screens/)
+- **Atomic split** inside the payment itself, through an on-chain splitter program.
+- **Passkeys** for owners without a wallet.
 
 ## License
 

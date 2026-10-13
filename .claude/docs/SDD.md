@@ -11,7 +11,7 @@ One design spec per product decision, written before any code:
 
 It fixes the problem, the stage moment of the demo, what is in and out of scope, the domain
 (allowance, payment, split batch, payout), and the business rules (policy, split, auth,
-statement). Market research behind it lives in `docs/research/`.
+statement). Market research behind it lives in `.claude/docs/research/`.
 
 ## 2. Plan
 

@@ -47,7 +47,7 @@ interface RootLayoutProps {
 const RootLayout = ({ children }: RootLayoutProps) => (
   <html
     lang="en"
-    // Dark is the only theme this product ships (DESIGN.md); light is reserved
+    // Dark is the only theme this product ships (.claude/docs/DESIGN.md); light is reserved
     // for a future printable statement, so there is no runtime toggle yet.
     className={`dark ${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable}`}
   >
