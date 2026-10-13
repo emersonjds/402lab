@@ -268,17 +268,15 @@ export const restHandlers = [
     }
 
     const { amount, cardEquivalent, monthPayments } = statementTotalsOf(allowance.id, month);
-    const byService = MOCK_SERVICE_IDS
-      .map((serviceId) => {
-        const forService = monthPayments.filter((payment) => payment.serviceId === serviceId);
+    const byService = MOCK_SERVICE_IDS.map((serviceId) => {
+      const forService = monthPayments.filter((payment) => payment.serviceId === serviceId);
 
-        return {
-          serviceId,
-          count: forService.length,
-          amount: atomicToApi(forService.reduce((sum, payment) => sum + payment.amount, 0n)),
-        };
-      })
-      .filter((row) => row.count > 0);
+      return {
+        serviceId,
+        count: forService.length,
+        amount: atomicToApi(forService.reduce((sum, payment) => sum + payment.amount, 0n)),
+      };
+    }).filter((row) => row.count > 0);
 
     const byProviderMap = new Map<string, PayoutLine>();
     for (const payment of monthPayments) {
@@ -287,7 +285,11 @@ export const restHandlers = [
         const share = (payment.amount * BigInt(payout.bps)) / 10_000n;
         const key = `${payout.role}:${payout.recipient}`;
         const previous = byProviderMap.get(key)?.amount ?? 0n;
-        byProviderMap.set(key, { recipient: payout.recipient, role: payout.role, amount: previous + share });
+        byProviderMap.set(key, {
+          recipient: payout.recipient,
+          role: payout.role,
+          amount: previous + share,
+        });
       }
     }
 
