@@ -10,6 +10,8 @@ Your agents pay for any API, one call at a time, in USDC on Solana.<br>
 You set the limits, watch every payment live and stop them with one tap.</p>
 
 <p align="center">
+  <a href="https://youtu.be/-d2uFvVrVgs"><b>Pitch video</b></a> ·
+  <a href="https://youtu.be/QJJrjnDbFy8"><b>Technical demo</b></a> ·
   <a href="https://web-production-1b5d1.up.railway.app"><b>Live app</b></a> ·
   <a href="https://web-demo-production-0d9a.up.railway.app/app"><b>Demo panel</b></a> ·
   <a href="https://api-production-570e4.up.railway.app/docs"><b>API docs</b></a> ·
@@ -100,6 +102,8 @@ Built for the Colosseum Crypto World's Fair (Solana track). Runs on **devnet**.
 - Landing and panel (devnet): https://web-production-1b5d1.up.railway.app
 - Panel on demo data (no wallet needed): https://web-demo-production-0d9a.up.railway.app/app
 - API and Swagger: https://api-production-570e4.up.railway.app/docs
+- Pitch video: https://youtu.be/-d2uFvVrVgs
+- Technical demo video: https://youtu.be/QJJrjnDbFy8
 
 ## The problem
 
